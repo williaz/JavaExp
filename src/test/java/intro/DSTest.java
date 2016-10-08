@@ -1,3 +1,5 @@
+package intro;
+
 import org.junit.Test;
 
 import java.util.Iterator;
