@@ -2,7 +2,7 @@ package thread;
 
 /**
  * Created by williaz on 10/11/16.
- * producer-consumer using yield sample
+ * producer-consumer using yield sample, no relating moniter
  */
 public class YieldDemo extends Thread
 {
