@@ -64,6 +64,9 @@ public class AsmTest {
         }
     }
 
+    /**
+     * #3, swtich fall withou break
+     */
     @Test
     public void test_SwitchWithoutBreak(){
         int y = 4;
