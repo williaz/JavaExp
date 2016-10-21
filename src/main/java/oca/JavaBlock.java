@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by williaz on 10/18/16.
+ * Created by williaz on 10/18/16. 2.5d
  * # Secure: Java code runs inside the JVM. This creates a sandbox that
  *   makes it hard for Java code to do evil things to the computer it is running on.
  * ###for the exam, your goal is to know details about the language and not have the IDE hide them for you.
@@ -34,6 +34,8 @@ import java.util.List;
  * When the class is found in multiple packages, Java gives you the compiler error
  * -->If you explicitly import a class name, it takes precedence over any wildcards present.
  * --->fully qualified class name
+ *
+ * # When running a Java program, you pass just the name of the class without the .class extension.
  *
  */
 public class JavaBlock {
@@ -180,6 +182,10 @@ public class JavaBlock {
         int octNum = 013;
         int hexNum = 0x31a;
         int biNum = 0b101011;
+
+        short ss = 3;
+        long ll = 44543L;
+        double dd = 34;
 
         System.out.println("Different Base: "+octNum+ " "+ hexNum+ " "+ biNum);
 
