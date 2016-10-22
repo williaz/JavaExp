@@ -105,6 +105,154 @@ public class AsmTest {
         assertEquals(y, 19);
         assertEquals(s, 20);
     }
+
+    /**
+     * !!!!!!!!
+     * Prior to Java 5.0, this variable could only be int values
+     * or those values that could be promoted to int, specifically
+     * byte, short, char, or int.
+     * When enum was added in Java 5.0, support was added to switch statements to support enum values.
+     * In Java 7, switch statements were further updated to allow matching on String values.
+     * Finally, the switch statement also supports any of the primitive numeric wrapper classes,
+     * such as Byte, Short, Character, or Integer.
+     *
+     * Data types supported by switch statements include the following:
+     * int and Integer
+     * byte and Byte
+     * short and Short
+     * char and Character
+     * int and Integer
+     * String
+     * enum values
+     *
+     * Note that boolean and long, and their associated wrapper classes, are not supported by switch statements.
+     *
+     *  The values in each case statement must be compile-time constant values of the same data type
+     *  as the switch value. This means you can use only literals, enum constants,
+     *  or final constant variables of the same data type. No function parameter directly.
+     *
+     *
+     */
+    @Test
+    public void Test_Switch(){
+        String will = "best";
+        final String bo ="Bo";
+        int level = 0;
+
+        switch(will){
+            case "Best": level =1; break;
+
+            case "best": level =2; break;
+
+            case "secondary": level =3; break;
+
+            case bo: level =4; break;
+
+            default: level = 5;
+        }
+
+        assertEquals(2, level);
+
+        level =0;
+        Integer i = 5;
+        char cc = 'b';
+
+
+        switch(cc){
+            case 5 : level =1; break;
+
+            case 'a': level =2; break;
+        }
+
+
+        assertEquals(level, 0);
+
+    }
+
+    @Test
+    public void Test_WhileAndDoWhile(){
+        int counter1 = 0;
+        int counter2 = 0;
+        int i = 0;
+
+        while(i<10){
+            counter1++;
+            i++;
+        }
+        assertEquals(10, counter1);
+
+        i = 0;
+        do{
+            counter2++;
+            i++;
+        }while(i<10);
+
+        assertEquals(10, counter2);
+
+
+    }
+    /**
+     * Note that the semicolons separating the three sections are required,
+     * as for( ; ) and for( ) will not compile
+     *
+     * When for-each was introduced in Java 5, it was added as a compile-time enhancement.
+     * This means that Java actually converts the for-each loop into a standard for loop during compilation.
+     */
+    @Test(timeout = 1000L)
+    public void Test_InfiniteLoopUsingFor(){
+        int i=0;
+        for( ; ; ){
+            i++;
+        }
+
+    }
+
+    /**
+     * multi-term in for, only one data type can be used initialization part
+     */
+    @Test
+    public void Test_MultiTermForLoop(){
+        int i =0;
+        for (long x = 0,y =4; y<10 && x<10; x++, y++){
+            i++;
+
+        }
+
+        assertEquals(6, i);
+    }
+
+    /**
+     * For readability, they are commonly expressed in uppercase,
+     * with underscores between words, to distinguish them from regular variables.
+     *
+     * if-then statements, switch statements, and loops all can have optional labels
+     */
+    @Test
+    public void Test_BreakWithLabel(){
+        int[][] list = {{1,13,5},{1,2,5},{2,7,2}};
+        int searchValue = 2;
+        int positionX = -1;
+        int positionY = -1;
+
+
+        PARENT_LOOP: for(int i=0; i<list.length; i++) {
+            for(int j=0; j<list[i].length; j++) {
+                if(list[i][j]==searchValue) {
+                    positionX = i;
+                    positionY = j;
+                    break PARENT_LOOP;
+                }
+            }
+        }
+
+        assertEquals(positionX,1);
+        assertEquals(positionY,1);
+
+
+    }
+
+
+
 //
 //    private String color;
 //

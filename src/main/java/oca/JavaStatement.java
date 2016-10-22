@@ -18,6 +18,11 @@ package oca;
  *   $Exclusive OR is only true if the operands are different.
  * #5  Another common place the exam may try to lead you astray is by providing code
  *     where the boolean expression inside the if-then statement is not actually a boolean expression.
+ *
+ *     i = i++;
+ *     boolean f = false; while(f = true){}
+ *     scope with block!
+ *
  */
 public class JavaStatement {
 
@@ -49,6 +54,7 @@ public class JavaStatement {
         before performing an operation
          */
         String str = "Short circuit operator";
+
 
         if(str != null && str.length()>10){
             System.out.println(str);
