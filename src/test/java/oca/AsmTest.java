@@ -65,7 +65,7 @@ public class AsmTest {
     }
 
     /**
-     * #3, swtich fall withou break
+     * #3, swtich fall without break
      */
     @Test
     public void test_SwitchWithoutBreak(){
@@ -83,6 +83,27 @@ public class AsmTest {
         }
 
         assertEquals(i, 5);
+    }
+
+    /**
+     * As of Java 7, only one of the right-hand expressions of
+     the ternary operator will be evaluated at runtime.
+
+     Note that it is often helpful for readability to add parentheses around the expressions in
+     ternary operations, although it is certainly not required.
+     */
+    @Test
+    public void Test_ShortCircuitOfTernaryOperator(){
+        int x = 1;
+        int y = 20;
+        int z = (x < 10)? (x++) : (y--);
+        assertEquals(x, 2);
+        assertEquals(y, 20);
+        assertEquals(z, 1);
+        int s = (y < 10)? (x++) : (y--);
+        assertEquals(x, 2);
+        assertEquals(y, 19);
+        assertEquals(s, 20);
     }
 //
 //    private String color;

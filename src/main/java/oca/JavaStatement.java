@@ -16,11 +16,27 @@ package oca;
  *   Alternatively, when they’re applied to numeric data types, they’re referred to as bitwise operators,
  *   as they perform bitwise comparisons of the bits that compose the number.
  *   $Exclusive OR is only true if the operands are different.
- *
+ * #5  Another common place the exam may try to lead you astray is by providing code
+ *     where the boolean expression inside the if-then statement is not actually a boolean expression.
  */
 public class JavaStatement {
 
     public static void main(String[] args) {
+
+        /*
+        As of Java 7, only one of the right-hand expressions of
+        the ternary operator will be evaluated at runtime.
+         */
+        int y3 = 1;
+        int z3 = 1;
+        final int x3 = y3<10 ? y3++ : z3++;
+        System.out.println(y3+","+z3); // Outputs 2,1
+        /*
+        There is no requirement that second and third expressions
+        in ternary operations have the same data types
+         */
+        int y33 =6;
+        System.out.println((y33 > 5) ? 21 : "Zebra");
 
         /*
         If the numeric values are of different data types,
