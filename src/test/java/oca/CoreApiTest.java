@@ -2,6 +2,10 @@ package oca;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static java.lang.Integer.valueOf;
 import static org.junit.Assert.*;
 
 /**
@@ -197,10 +201,116 @@ public class CoreApiTest {
         assertFalse(sb1.equals(sb2));
         assertNotEquals(sb1, sb2);
 
+    }
 
+    /**
+     * you can type the [] before or after the name, and adding a space is optional
+     *
+     */
+    @Test
+    public void Test_Array(){
+        int num[] = new int[5];
+        int num3 [] = new int[9];
+        int[] num1 = new int[]{3, 5, 1, 3};
+        int [] num2 = {12, 34, 15, 41};
+        assertEquals("[3, 5, 1, 3]", Arrays.toString(num1));
+
+        String[] strings = {"will best", "Who?", "Where?","123", "655"};
+        Object[] objects = strings;
+        objects[0] = new String(); // type safe
+       // objects[0] = new Object(); // mistype, ArrayStoreException
+        assertEquals(5, num.length);  // final length
+        assertEquals(num[3], 0);
+
+        /*
+        alphabetic order: Numbers sort before letters
+        and uppercase sorts before lowercase,
+         */
+        Arrays.sort(num2);
+        assertArrayEquals(new int[]{12, 15, 34, 41}, num2);
+        Arrays.sort(strings);
+        assertArrayEquals(new String[]{"123", "655", "Where?", "Who?", "will best"}, strings);
+
+        /*
+        No Found -- Negative value showing one smaller than the negative of index,
+        where a match needs to be inserted to preserve sorted order
+
+        As soon as you see the array isn’t sorted,
+        look for an answer choice about unpredictable output.
+         */
+        assertEquals(2, Arrays.binarySearch(num2, 34));
+        assertEquals(-3, Arrays.binarySearch(num2, 35));
+
+        //Varargs
+        assertEquals(12, getSum(num1));
+
+        int a =3;
+        int b =5;
+
+        assertEquals(getSum(a, b), 8);
+
+        int[][] arr = new int[3][];
+        arr[0] = new int[4];
+        arr[1] = new int[2];
+        arr[2] = new int[6];
 
 
     }
+
+    public int getSum(int... args){
+        int sum =0;
+
+        for(int i: args){
+            sum += i;
+        }
+
+        return sum;
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void Test_ArrayOutOfBound(){
+        int num[] = new int[5];
+        //num[5] = 4; //1
+        for (int i =0; i<= num.length; i++){
+            num[i]++;
+        } //2
+
+
+    }
+
+    @Test
+    public void Test_ArrayList(){
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(2);
+        list.add(5);
+        list.add(0, 3);// insert, not replace
+        list.add(12);
+        assertEquals(list.toString(), "[3, 2, 5, 12]");
+
+        ArrayList<Integer> list1 = new ArrayList<>(list);
+        assertEquals(list, list1);
+        assertFalse(list == list1);
+
+        assertEquals(new Integer(5), list1.remove(2));  // index
+        assertTrue(list1.remove(new Integer(2)));  // E object
+
+        int gotReplaced = Integer.valueOf( list.set(0, new Integer(12)) );
+        assertEquals(3, gotReplaced);
+
+        assertFalse(list.isEmpty());
+        assertEquals(list.size(), 4);
+        assertEquals(list1.size(), 2);
+
+        list1.clear();
+        assertTrue(list1.isEmpty());
+
+        assertTrue(list.contains(new Integer(5)));
+
+        assertFalse(list.equals(list1));
+
+    }
+
+
 
 
 }
