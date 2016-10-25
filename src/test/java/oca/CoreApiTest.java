@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static java.lang.Integer.valueOf;
 import static org.junit.Assert.*;
@@ -216,11 +218,6 @@ public class CoreApiTest {
         assertEquals("[3, 5, 1, 3]", Arrays.toString(num1));
 
         String[] strings = {"will best", "Who?", "Where?","123", "655"};
-        Object[] objects = strings;
-        objects[0] = new String(); // type safe
-       // objects[0] = new Object(); // mistype, ArrayStoreException
-        assertEquals(5, num.length);  // final length
-        assertEquals(num[3], 0);
 
         /*
         alphabetic order: Numbers sort before letters
@@ -239,7 +236,16 @@ public class CoreApiTest {
         look for an answer choice about unpredictable output.
          */
         assertEquals(2, Arrays.binarySearch(num2, 34));
-        assertEquals(-3, Arrays.binarySearch(num2, 35));
+        assertEquals(-4, Arrays.binarySearch(num2, 35));
+
+        Object[] objects = strings;
+        objects[0] = new String(); // type safe
+       // objects[0] = new Object(); // mistype, ArrayStoreException
+        assertEquals(5, num.length);  // final length
+        assertEquals(num[3], 0);
+
+
+
 
         //Varargs
         assertEquals(12, getSum(num1));
@@ -292,6 +298,7 @@ public class CoreApiTest {
         assertFalse(list == list1);
 
         assertEquals(new Integer(5), list1.remove(2));  // index
+        //assertEquals(5, list1.remove(2));  // index, no auto unboxing,
         assertTrue(list1.remove(new Integer(2)));  // E object
 
         int gotReplaced = Integer.valueOf( list.set(0, new Integer(12)) );
@@ -309,6 +316,88 @@ public class CoreApiTest {
         assertFalse(list.equals(list1));
 
     }
+
+    /**
+     * String --->
+     * The parse methods, such as parseInt(), return a primitive,
+     * and the valueOf() method returns a wrapper class
+     *
+     * the Character class doesn’t participate in the parse/ valueOf methods.
+     */
+
+    @Test
+    public void Test_WrapperClass(){
+        int primitives = Integer.parseInt("234");
+        Integer wrapper = Integer.valueOf("234");
+
+        assertEquals(new Integer(primitives), wrapper);
+
+        Boolean bWrapper = Boolean.valueOf("TRUe"); //equalsIgnoreCase()
+
+        assertEquals(bWrapper, true);
+
+        List<Integer> nums = new ArrayList<>();
+        nums.add(1);
+        nums.add(4);
+        nums.add(7);
+        nums.remove(1); // it is the index, no the object stored
+        assertEquals(nums.get(0), new Integer(1));
+
+    }
+
+    /**
+     * If you like, you can suggest a larger array to be used instead.
+     */
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void Test_toArray_NoLinked(){
+        List<Integer> nums = new ArrayList<>();
+        nums.add(1);
+        nums.add(4);
+        nums.add(7);
+        nums.add(2);
+
+        Integer[] ints = nums.toArray(new Integer[10]);
+        ints[4] = 13;
+
+        assertEquals( nums.get(4), new Integer(13));
+
+
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void Test_asList_LinkedButFixed(){
+        String[] strs ={"Will", "is", "Best", "of", "All", "!"};
+        List<String> list = Arrays.asList(strs);
+        list.add("True");
+    }
+
+    @Test
+    public void Test_asList_Linked(){
+        String[] strs ={"Will", "is", "Best", "of", "All", "!"};
+        List<String> list = Arrays.asList(strs); //It is a fixed-size, backed version of a List.
+        String toReplace ="the Best";
+        list.set(2, toReplace);
+        assertEquals(strs[2], toReplace);
+
+        strs[4] = "the world";
+        assertEquals(list.get(4), strs[4]);
+
+        //asList() takes varargs, which let you pass in an array or just type out the String values.
+        List<Double> doubles = Arrays.asList(23.12, 3.4, 44.4, 15.1); //handy when testing
+
+    }
+
+    @Test
+    public void Test_CollectionsSort(){
+        List<Double> doubles = Arrays.asList(23.12, 3.4, 44.4, 15.1); //handy when testing
+        Collections.sort(doubles);
+        Double[] doubles1 ={3.4, 15.1, 23.12, 44.4};
+        assertArrayEquals(doubles.toArray(new Double[0]), doubles1);
+
+    }
+
+
 
 
 
