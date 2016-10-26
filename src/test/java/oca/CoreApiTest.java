@@ -2,10 +2,10 @@ package oca;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.*;
 
 import static java.lang.Integer.valueOf;
 import static org.junit.Assert.*;
@@ -330,6 +330,7 @@ public class CoreApiTest {
         int primitives = Integer.parseInt("234");
         Integer wrapper = Integer.valueOf("234");
 
+
         assertEquals(new Integer(primitives), wrapper);
 
         Boolean bWrapper = Boolean.valueOf("TRUe"); //equalsIgnoreCase()
@@ -397,7 +398,192 @@ public class CoreApiTest {
 
     }
 
+    static public class reverseOrder implements Comparator<Integer>{
 
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return (o2 - o1);
+        }
+    }
+
+
+    @Test
+    public void Test_ReverseOrdering(){
+        final List<Integer> numbers = Arrays.asList(4, 7, 1, 6, 3, 5, 4);
+        final List<Integer> expected = Arrays.asList(7, 6, 5, 4, 4, 3, 1);
+
+        Collections.sort(numbers, new reverseOrder());
+        assertEquals(numbers, expected);
+    }
+
+
+    /**
+     * LocalDate Contains just a date—no time and no time zone.
+     * LocalTime Contains just a time—no date and no time zone.
+     * LocalDateTime Contains both a date and time but no time zone.
+     * If you do need to communicate across time zones, ZonedDateTime handles them.
+     *
+     * In the United States, the month is written before the date.
+     * Java tends to use a 24-hour clock even though the United States uses a 12-hour clock with a.m./p.m.
+     *
+     * For months in the new date and time methods, Java counts starting from 1 like we human beings do.
+     *
+     * # The date and time classes have private constructors to force you to use the static methods.
+     *
+     * #The date and time classes are immutable, just like String was.
+     */
+    @Test
+    public void Test_TimeApi(){
+        LocalDate date1 = LocalDate.of(2016, Month.OCTOBER, 26);
+        LocalDate date2 = LocalDate.of(2016, 10, 26);
+
+        assertEquals(date1, date2);
+
+
+        LocalTime time1 = LocalTime.of(14, 59); // hour, min
+        LocalTime time2 = LocalTime.of(14, 59, 23); // hour, min, sec
+        LocalTime time3 = LocalTime.of(14, 59, 23, 1234); // hour, min, nano
+
+        assertTrue(time1.isBefore(time2));
+        assertTrue(time3.isAfter(time2));
+
+        LocalDateTime dateTime1 = LocalDateTime.of(2016, 10, 26, 14, 59);
+        LocalDateTime dateTime2 = LocalDateTime.of(date1, time1);
+        assertEquals(dateTime1, dateTime2);
+
+        LocalDateTime rightNow = LocalDateTime.now();
+        LocalDate today = LocalDate.now();
+
+        assertTrue(today.getMonth().equals(rightNow.getMonth()));
+
+        //immutable
+        LocalTime time4 = time1.plusHours(2);
+        assertTrue(time1.isBefore(time2));
+        assertTrue(time4.isAfter(time2));
+
+        date2 = date2.minusMonths(5);
+        assertTrue(date2.isBefore(date1));
+
+        //Java is smart enough to hide the seconds and nanoseconds when we aren’t using them
+        System.out.println(dateTime1);
+        dateTime1 = dateTime1.minusDays(5).minusHours(2).minusNanos(34);
+        System.out.println(dateTime1);
+
+        /*
+        LocalDate and LocalDateTime have a method to convert them into long equivalents in relation to 1970.
+        What’s special about 1970? That’s what UNIX started using for date standards, so Java reused it.
+
+        Greenwich is in England and GMT does not participate in daylight savings time.
+        This makes it a good reference point.
+
+         */
+
+        Period annuly = Period.ofYears(1);
+        Period quartly = Period.ofMonths(3);
+        Period everyOther23Day = Period.ofDays(23);
+        Period weekly = Period.ofWeeks(1);
+        Period someDays = Period.of(1, 6, 23); //year, month, day
+
+        //You cannot chain methods when creating a Period.
+        Period wrong = annuly.ofMonths(6).ofDays(23);
+        //Only the last method is used because the Period.ofXXX methods are static methods.
+        assertNotEquals(wrong, someDays);
+        assertEquals(wrong, everyOther23Day);
+
+        //For Duration, you can specify the number of days, hours, minutes, seconds, or nanoseconds.
+        LocalDate date3 = LocalDate.of(2016, 10, 1);
+        LocalDate date4 = LocalDate.of(2016, 10, 24);
+        date3 = date3.plus(everyOther23Day); //TemporalType
+        assertEquals(date3, date4);
+
+        LocalDateTime dateTime3 = LocalDateTime.of(2016, 10, 1, 15, 12);
+        assertEquals(dateTime3.getMonth(), Month.OCTOBER);  //only month return enum
+        assertEquals(dateTime3.getDayOfMonth(), 1);  //int
+        assertEquals(dateTime3.getMonthValue(), 10);
+        assertEquals(dateTime3.getYear(), 2016);
+
+        //DateTimeFormatter can be used to format any type of date and/or time object.
+        System.out.println(dateTime3.format(DateTimeFormatter.ISO_DATE_TIME));
+
+        DateTimeFormatter shortDT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+        DateTimeFormatter medianDT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+        DateTimeFormatter longDT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);  //involve time zones
+        DateTimeFormatter fullDT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL);  //involve time zones
+
+        System.out.println("==========");
+        DateTimeFormatter[] formatters ={ shortDT, medianDT};
+        for(DateTimeFormatter f : formatters){
+            System.out.println(f.format(dateTime3));
+        }
+
+        //either would be OK!
+        assertEquals(dateTime3.format(shortDT), shortDT.format(dateTime3));
+
+        //
+        System.out.println("======skip the part omitted");
+        DateTimeFormatter shortD = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+        DateTimeFormatter shortT = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+        System.out.println(shortD.format(dateTime3));
+        System.out.println(shortT.format(dateTime3));
+
+        /*
+        yyyy: y represents the year. yy outputs a two-digit year and yyyy outputs a four-digit year.
+        MMMM: M outputs 1, MM outputs 01, MMM outputs Jan, and MMMM outputs January.
+        dd: d represents the date in the month. dd means to include the leading zero for a single-digit month.
+        hh: h represents the hour. local; HH: 24
+        mm: m represents the minute.
+        , Use , if you want to output a comma
+        : Use : if you want to output a colon.
+
+         */
+        System.out.println("======customize");
+        DateTimeFormatter myFormat = DateTimeFormatter.ofPattern("yyyy MMM, d H:m");
+        System.out.println(myFormat.format(dateTime3));
+
+
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("MM dd yyyy");
+        LocalDate date = LocalDate.parse("01 02 2015", f);
+        LocalTime time = LocalTime.parse("11:22");
+        System.out.println(date); // 2015-01-02
+        System.out.println(time); // 11:22
+        //Here we show using both a custom formatter and a default value.
+        LocalDateTime ldt = LocalDateTime.parse("2016 Oct, 1 3:12", myFormat);
+        System.out.println(ldt);
+
+        DateTimeFormatter f1 = DateTimeFormatter.ofPattern("MM/dd, yyyy");
+        LocalDate dateM = LocalDate.parse("01/02, 2015", f1);
+        System.out.println(dateM); // 2015-01-02
+
+        DateTimeFormatter f2 = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime timeM = LocalTime.parse("11:22", f2);
+        System.out.println(timeM);
+
+        /*
+        Use DateTimeFormatter.ofPattern("kk mm"); for 12 hour clock
+        DateTimeFormatter.ofPattern("HH mm") for 24 hour clock
+        If you want to parse time with hh you must combine it wih a where you define AM or PM:
+         */
+
+
+        DateTimeFormatter myFormat1 = DateTimeFormatter.ofPattern("h:m a");
+        LocalTime t = LocalTime.parse("3:12 PM", myFormat1);
+        System.out.println(t);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
 
