@@ -7,14 +7,25 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 
-import static java.lang.Integer.valueOf;
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 10/23/16.
+ * Created by williaz on 10/23/16 - 10/27 : 5d
+ *
+ * tricky -> careful, compile, method usage right!
+ *
+ * # check "The code does not compile." first!!
  *
  * # Placing one String before the other String and combining them together
  *   is called string concatenation
+ *
+ * # Immutable objects can be garbage collected just like mutable objects.!!!
+ *
+ * # answer "The result is undefined." for Arrays.binarySearch() on unsorted array
+ *
+ * # Arrays.asList(arr) !!
+ *
+ * # LocalData vs LocalTime, be careful the usage of respective methods!!!
  */
 public class CoreApiTest {
     /**
@@ -123,6 +134,12 @@ public class CoreApiTest {
         assertEquals("abcde", str2);
         assertFalse(str1 == str2);
 
+        // substring
+        String string = "will best of best";
+        StringBuilder stringBuilder = new StringBuilder(string);
+        stringBuilder.substring(4, 9);  // return new String  !!!
+        assertNotEquals("best", stringBuilder);
+
     }
 
     /**
@@ -131,6 +148,8 @@ public class CoreApiTest {
      *
      * Often StringBuilder is used internally for performance purposes
      * but the end result needs to be a String.
+     *
+     * Be careful! StringBuilder b = "rumble"; XXXXX
      */
     @Test
     public void Test_StringBuilderMethods(){
@@ -208,6 +227,8 @@ public class CoreApiTest {
     /**
      * you can type the [] before or after the name, and adding a space is optional
      *
+     * Although it is legal to leave out the size for later dimensions of a multidimensional array,
+     * the first one is required. !
      */
     @Test
     public void Test_Array(){
@@ -286,6 +307,17 @@ public class CoreApiTest {
 
     @Test
     public void Test_ArrayList(){
+        int[] a ={1, 3, 4};
+        int[] b ={1, 3, 4};
+        assertNotEquals(a, b); // array no override equals()
+
+        List<Integer> aI = Arrays.asList(1, 4, 5);
+        List<Integer> bI = Arrays.asList(1, 4, 5);
+        List<Integer> cI = Arrays.asList(1, 5, 4);
+        assertEquals(aI, bI);  // List override equals()
+        assertEquals(aI, cI);  // List override equals() keep ordering
+
+
         ArrayList<Integer> list = new ArrayList<>();
         list.add(2);
         list.add(5);
@@ -319,8 +351,8 @@ public class CoreApiTest {
 
     /**
      * String --->
-     * The parse methods, such as parseInt(), return a primitive,
-     * and the valueOf() method returns a wrapper class
+     * The parse methods, such as parseInt(), return a primitive,  !!!
+     * and the valueOf() method returns a wrapper class  !!
      *
      * the Character class doesn’t participate in the parse/ valueOf methods.
      */
@@ -330,6 +362,7 @@ public class CoreApiTest {
         int primitives = Integer.parseInt("234");
         Integer wrapper = Integer.valueOf("234");
 
+        assertEquals(234, primitives);
 
         assertEquals(new Integer(primitives), wrapper);
 
@@ -485,7 +518,7 @@ public class CoreApiTest {
         Period someDays = Period.of(1, 6, 23); //year, month, day
 
         //You cannot chain methods when creating a Period.
-        Period wrong = annuly.ofMonths(6).ofDays(23);
+        Period wrong = annuly.ofMonths(6).ofDays(23);  //!!!!
         //Only the last method is used because the Period.ofXXX methods are static methods.
         assertNotEquals(wrong, someDays);
         assertEquals(wrong, everyOther23Day);
@@ -566,25 +599,59 @@ public class CoreApiTest {
 
 
         DateTimeFormatter myFormat1 = DateTimeFormatter.ofPattern("h:m a");
-        LocalTime t = LocalTime.parse("3:12 PM", myFormat1);
+        LocalTime t = LocalTime.parse("3:12 PM", myFormat1);  //only AM or PM
         System.out.println(t);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
 
+
+    @Test
+    public void Test_CollectionEqualsMethod(){
+        Set<Integer> set1 = new HashSet<>();
+        set1.add(4);
+        set1.add(6);
+        set1.add(9);
+
+        Set<Integer> set2 = new HashSet<>();
+        set2.add(9);
+        set2.add(4);
+        set2.add(6);
+
+        assertEquals(set1, set2);
+
+        Map<Integer, String> map1 = new HashMap<>();
+        map1.put(1, "will");
+        map1.put(3, "bill");
+        map1.put(5, "action");
+
+        Map<Integer, String> map2 = new HashMap<>();
+        map2.put(1, "will");
+        map2.put(3, "bill");
+        map2.put(5, "action");
+
+        assertEquals(map1, map2);
+
+        Queue<Integer> queue1 = new LinkedList<>();
+        queue1.add(3);
+        queue1.add(1);
+        queue1.add(2);
+
+        Queue<Integer> queue2 = new LinkedList<>();
+        queue2.add(3);
+        queue2.add(1);
+        queue2.add(2);
+
+        Queue<Integer> queue3 = new LinkedList<>();
+        queue3.add(1);
+        queue3.add(3);
+        queue3.add(2);
+
+        assertEquals(queue1, queue2);
+        assertNotEquals(queue1, queue3); // in order
+
+
+    }
 
 
 
