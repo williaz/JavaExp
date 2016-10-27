@@ -19,6 +19,8 @@ import javax.inject.Inject;
  * Showcase for Spring bean lifecycle
  *
  * #Both @Qualifer and @Resource can't be used on constructor
+ * # @Autowired == @Inject == @Resource
+ * # @Autowired + @Qualifier(name) with Both @Bean(name) or @Bean @Qualifier(name) == @Resource(name) with @bean(name)
  *
  * # to address ambiguity in autowiring:
  * 1. @primary: @Primary can be used either alongside @Component for beans that are component-scanned
@@ -65,7 +67,7 @@ public class BeanLife implements InitializingBean, DisposableBean{
         this.otherName = bean.getName();
     }
 
-    @Resource(name = "beanS")
+    @Resource(name = "beanR")
     public void setBI(BeanInjected BI) {
         System.out.println("2. Setter BI Injection.");
         this.BI = BI;

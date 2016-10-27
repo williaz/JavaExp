@@ -1,5 +1,6 @@
 package spring;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 
 /**
@@ -18,8 +19,19 @@ public class MyConfig {
         return c;
     }
 
-    @Bean(name = "beanS")
-    //or @Qualifier
+    @Bean(name = "beanR")
+    //or
+    //@Qualifier("beanS")
+    public BeanInjected getBeanR(){
+        BeanInjected s = new BeanInjected();
+        s.setName("Bean R");
+        s.setNums(55);
+
+        return s;
+    }
+
+    @Bean
+    @Qualifier("beanS")
     public BeanInjected getBeanS(){
         BeanInjected s = new BeanInjected();
         s.setName("Bean S");
