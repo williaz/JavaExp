@@ -44,6 +44,7 @@ public class Primes {
             System.exit(1);
         }
 
+        // -----
         Socket clientSocket = null;
 
         try {
@@ -56,6 +57,7 @@ public class Primes {
             System.exit(1);
         }
 
+        //------
         ObjectOutputStream out = new ObjectOutputStream(
                 clientSocket.getOutputStream());
         ObjectInputStream in = new ObjectInputStream(
@@ -72,7 +74,7 @@ public class Primes {
         }
 
 
-        System.out.println ("Server recieved random numbers" + randomInts.toString() +"from Client");
+        System.out.println ("Server received random numbers" + randomInts.toString() +"from Client");
 
         Map<Integer, Boolean> answers = new HashMap<>();
 

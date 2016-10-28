@@ -132,7 +132,7 @@ public class MethodTest {
      * # final for primitive and reference type
      */
 
-    private final static double PI = 3.1415926;
+    private final static double MATH_PI = 3.1415926;
 
     /**
      * # Static initializers add the static keyword to specify
