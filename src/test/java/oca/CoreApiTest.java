@@ -68,6 +68,7 @@ public class CoreApiTest {
         String str2 = new String("will");
 
         assertEquals(str1, str2);
+        assertFalse(str1 == str2);
     }
 
     /**
