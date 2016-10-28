@@ -1,12 +1,13 @@
 package spring;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +38,7 @@ import javax.inject.Inject;
  *
  */
 @Component
-public class BeanLife implements InitializingBean, DisposableBean{
+public class BeanLife implements BeanNameAware, BeanFactoryAware, ApplicationContextAware, InitializingBean, DisposableBean{
     @Value("Bean life cycle")
     private String name;
 
@@ -96,6 +97,23 @@ public class BeanLife implements InitializingBean, DisposableBean{
     @PreDestroy
     public void preDestroy(){
         System.out.println("8. call PreDestroy.");
+    }
+
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+
+        System.out.println("A2 BeanFactoryAware: "+ beanFactory.getClass().getSimpleName());
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("A1 BeanNameAware: "+ name);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        System.out.println("A3 ApplicationContextAware: "+ applicationContext.getClass().getSimpleName());
     }
 
     //TODO @Bean(initMethod, destroyMethod)
