@@ -1,6 +1,6 @@
 package datastructure;
 
-import dataStructure.hashtable.MyMap;
+import dataStructure.hash.MyMap;
 import org.junit.Test;
 
 import java.util.HashMap;

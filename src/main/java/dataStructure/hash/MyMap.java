@@ -1,7 +1,6 @@
-package dataStructure.hashtable;
+package dataStructure.hash;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Speed Versus Memory use

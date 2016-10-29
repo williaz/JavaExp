@@ -13,6 +13,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
+ * When you see such questions on the exam, write down the values of each variable.
+ *
  * Created by williaz on 10/28/16.
  *
  * # return type must be after access modifier, and followed by function name !!!
@@ -27,6 +29,12 @@ import static org.junit.Assert.*;
  * # Extending means creating a subclass that has access to any protected or public members of the parent class.
  *
  *   Subclasses and classes in the same package are the only ones allowed to access protected members.
+ *
+ * # Watch for this on the exam. Ignored returned values are tricky.
+ *
+ * # The exam will often use the same name to try to confuse you.
+ *
+ *
  */
 public class MethodTest {
 
@@ -170,7 +178,212 @@ public class MethodTest {
         System.out.println(list);
     }
 
+    /**
+     * # Java is a “pass-by-value” language. -->for Variable Assignments !!!
+     *   This means that a copy of the variable is made and the method receives that copy.
+     */
 
+    public void changeInt(int a){
+        a = 10;
+    }
+
+    public void changeSb(StringBuilder sb){
+        sb.append("some");
+    }
+
+    @Test
+    public void Test_Java_PassByValue(){
+
+        int a = 5;
+        StringBuilder sb = new StringBuilder("awe");
+
+        changeInt(a);
+        changeSb(sb);
+
+        assertEquals(a, 5);
+        assertEquals(sb.toString(), "awesome");
+
+    }
+
+    /**
+     * # Method overloading occurs when there are different method signatures
+     *   with the same name but different type or numbers of  parameters.
+     *
+     * # there can be different access modifiers, specifiers (like static), return types, and exception lists.
+     *
+     * # [Array vs Varargs]: Trick question: Remember that Java treats varargs as if they were an array.
+     *   you can only call the varargs version with stand-alone parameters
+     */
+
+    public String changeName(String name){
+        return name+"son";
+    }
+
+    private String changeName(StringBuilder firstName, StringBuilder lastName) throws NullPointerException{
+        return firstName.append(" ").append(lastName).append("son").toString();
+    }
+
+    @Test
+    public void Test_MethodOverloading(){
+        String name ="Will Tomp";
+        StringBuilder first = new StringBuilder("Will");
+        StringBuilder last = new StringBuilder("Tomp");
+
+        name = changeName(name);
+        String name1 = changeName(first, last);
+
+        assertEquals(name, name1);
+
+    }
+
+    public int addOne(int a){
+        return a+1;
+    }
+
+    public Integer addOne(Integer a){
+        return a+1;
+    }
+
+    public String rename(String s){
+        return s+"y";
+    }
+
+    public Object rename(Object o){
+        return o+"son";
+    }
+
+    /**
+     * Java tries to use the most specific parameter list it can find.
+     * Note that Java can only accept wider types.
+     * autoboxing and varargs come last when Java looks at overloaded methods.(1.5 -)
+     *
+     * # It cannot handle converting in two steps: int -> long, long->Long
+     *   OK: int -> Integer = Object
+     */
+    @Test
+    public void Test_AutoboxingWithOverloading(){
+        Integer i = new Integer(3);
+
+        assertEquals(4, addOne(3));
+        assertEquals(new Integer(4), addOne(i));
+
+        assertEquals("Willy", rename("Will"));
+        assertEquals("1son", rename(1)); // use Object version through Autoboxing
+
+    }
+
+    /**
+     * Constructors are used when creating a new object.
+     * This process is called instantiation because it creates a new instance of the class.
+     *
+     * A constructor is typically used to initialize instance variables
+     *
+     * # Java sees no constructor was coded and generated default no-argument constructor.
+     *   This happens during the compile step.
+     *
+     * # Having a private constructor in a class tells the compiler not to provide a default noargument constructor.
+     *   It also prevents other classes from instantiating the class.
+     *   This is useful when a class only has static methods
+     *   or the class wants to control all calls to create new instances of itself.
+     *
+     * # the this() call must be the first non-commented statement in the constructor
+     *
+     * # constructor chaining] is to have each constructor add one parameter until getting to the constructor
+     * that does all the work.
+     *
+     * # The constructor is part of the initialization process,
+     *   so it is allowed to assign final instance variables in it.
+     *   By the time the constructor completes,
+     *   all final instance variables must have been set.
+     */
+
+
+    static public class Mouse {
+        private int numTeeth;
+        private int numWhiskers;
+        private int weight;
+        public Mouse(int weight) {
+            this(weight, 16); // calls constructor with 2 parameters
+        }
+        public Mouse(int weight, int numTeeth) {
+            this(weight, numTeeth, 6); // calls constructor with 3 parameters
+            // new Mouse(weight, numTeeth, 6); lost
+        }
+        public Mouse(int weight, int numTeeth, int numWhiskers) {
+            this.weight = weight;
+            this.numTeeth = numTeeth;
+            this.numWhiskers = numWhiskers;
+        }
+        public String print() {
+            return (weight + " " + numTeeth + " " + numWhiskers);
+        }
+    }
+
+    @Test
+    public void Test_ConstructorChaining(){
+        Mouse mouse = new Mouse(15);
+        assertEquals("15 16 6", mouse.print());
+    }
+
+    /**
+     * # [Order of Initialization]
+     * 1. If there is a superclass, initialize it first
+     * 2. Static variable declarations and static initializers in the order they appear in the file.
+     * 3. Instance variable declarations and instance initializers in the order they appear in the file.
+     * 4. The constructor.
+     *
+     * # Keep in mind that the four rules apply only if an object is instantiated.
+     *   If the class is referred to without a new call, only rules 1 and 2 apply.
+     *   The other two rules relate to instances and constructors.
+     *   They have to wait until there is code to instantiate the object.
+     */
+
+
+    /**
+     * Encapsulation means we set up the class so only methods in the class
+     * with the variables can refer to the instance variables.
+     *
+     * For encapsulation, remember that data (an instance variable) is private and getters/setters are public.
+     * Java defines a naming convention that is used in JavaBeans.
+     * JavaBeans are reusable software components. JavaBeans call an instance variable a property.
+     */
+
+    /**
+     * immutable is only measured after the object is constructed.
+     * Immutable classes are allowed to have values. They just can't change after instantiation.
+     *
+     * A solution is to make a copy of the mutable object. This is called a defensive copy.
+     * Another approach for the getter is to return an immutable object:
+     */
+
+    static public final class ImmutableStringBuider{
+
+        StringBuilder sb;
+
+        public ImmutableStringBuider(StringBuilder sb) {
+            this.sb = sb;
+        }
+
+        public StringBuilder getSB(){
+            return new StringBuilder(sb); // defensive copy
+        }
+
+
+    }
+
+    @Test
+    public void Test_ImmutableObject(){
+        StringBuilder sb = new StringBuilder("will");
+
+        ImmutableStringBuider iSB = new ImmutableStringBuider(sb);
+
+
+    }
+
+    /**
+     * Encapsulation refers to preventing callers from changing the instance variables directly.
+     * Immutability refers to preventing callers from changing the instance variables at all.
+     */
 
 
 }
