@@ -4,6 +4,50 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Speed Versus Memory use
+ * *********************************************************
+ * HashMap:
+ * HashMap keys are immutable
+ *
+ * # When we pass Key and Value object  to put() method on Java HashMap,
+ *   HashMap implementation calls hashCode method on Key object
+ *   and applies returned hashcode into its own hashing function
+ *   to find a bucket location for storing Entry object,
+ *   important point to mention is that HashMap in Java stores both key and value object as Map.
+ *
+ * # [immutable Key] using immutable, final object with proper equals() and hashcode() implementation
+ *   would act as perfect Java HashMap  keys and improve the performance of Java HashMap  by reducing collision.
+ *   Immutability also allows caching their hashcode of different keys which makes overall retrieval process very fast
+ *   nd suggest that String and various wrapper classes e.g. Integer very good keys in Java HashMap.
+ *
+ * #[Rehashing, double size] If the size of the Map exceeds a given threshold defined by load-factor
+ *   e.g. if the load factor is .75 it will act to re-size the map once it filled 75%.
+ *   Similar to other collection classes like ArrayList,
+ *   Java HashMap re-size itself by creating a new bucket array of size twice of the previous size of HashMap
+ *   and then start putting every old element into that new bucket array.
+ *   This process is called rehashing because it also applies the hash function to find new bucket location.
+ *
+ * # there is potential race condition exists while resizing HashMap
+ *
+ * # ConcurrentHashMap provides better concurrency by only locking portion of map determined by concurrency level.
+ *
+ * # usage: 1. a HashMap may be used to map each symbol's name to a linkedList
+ *   containing the values for the corresponding fields of the symbol as cache.
+ *   2. maps between a field name and a field index (HashMap)
+ *   and inversely between a field index and field name (the field array).
+ *
+ *
+ * 1. call get() method and then HashMap uses Key Object's hashcode()
+ *    to find out bucket location
+ * 2. after finding bucket location, we will call keys.equals() method
+ *    to identify a correct node in LinkedList
+ *    and return associated value object for that key in Java HashMap.
+ *
+ * # Disadvantage: 1. poor hash function makes hashmap to linkedlist
+ *   2. cost more memory, resize double, vs ArrayList increases 50%
+ *
+ * ******************************************************************************
+ *
  * Created by williaz on 10/28/16.
  *
  * this map is an array of Buckets, every Bucket store a LinkedList of Entry, Entry stores the key and value pair
@@ -104,6 +148,7 @@ public class MyMap<K, V> {
     }
 
     /**
+     *remove
      *
      * @param key key of the entry you want to remove, uses its hashcode(), equals
      * @return
