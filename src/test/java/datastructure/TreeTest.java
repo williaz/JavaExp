@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
  */
 public class TreeTest {
     private TreeNode<Integer> bst; // binary search tree
+
     @Before
     public void setUp() throws Exception {
         // instantiate and initialize bst
@@ -30,7 +31,7 @@ public class TreeTest {
     }
 
     @Test
-    public void Test_findNodeInBST(){
+    public void Test_findNodeInBST() {
 
         assertTrue(findNodeInBST(bst, 5).getValue() == 5);
         assertEquals(findNodeInBST(bst, 45), null);
@@ -39,35 +40,34 @@ public class TreeTest {
     }
 
     @Test
-    public void Test_PreOrderTraverse(){
+    public void Test_PreOrderTraverse() {
         List<Integer> list = preOrderTraverse(bst);
         System.out.println(list);
     }
 
     @Test
-    public void Test_PreOrderIteration(){
+    public void Test_PreOrderIteration() {
         List<Integer> list = preOrderIteration(bst);
         List<Integer> list1 = preOrderTraverse(bst);
         assertEquals(list, list1);
     }
 
     @Test
-    public void Test_GetHeight(){
+    public void Test_GetHeight() {
         TreeNode<Integer> t27 = new TreeNode<Integer>(null, null, 27);
         TreeNode<Integer> t42 = new TreeNode<Integer>(bst, t27, 42);
         assertEquals(4, getHeight(t42));
     }
 
     @Test
-    public void Test_GetLeavesNums(){
+    public void Test_GetLeavesNums() {
         assertEquals(3, getLeavesNums(bst));
     }
 
     @Test
-    public void Test_GetLcaInBST(){
+    public void Test_GetLcaInBST() {
         assertTrue(5 == getLcaInBST(bst, 3, 8).getValue());
     }
-
 
 
     @After
