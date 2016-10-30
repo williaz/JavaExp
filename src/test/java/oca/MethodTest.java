@@ -10,12 +10,23 @@ import java.util.function.Predicate;
  * Static imports are for importing static members of classes.
  *
  * Java would give it preference over the imported one and the method we coded would be used.
+ *
+ * lenient -- more freedom
+ * <p></p>
+ * Tricky!!! You can't call the default constructor written by the compiler using this().
+ * Because you can only call this() in a constructor, once you have this constructor,
+ * compiler won't write the default one for you any more.
+ * <p></>
+ * default constructor will only exist when there is no user defined constructor
+ * including the user define public no-arg constructor!!
  */
 import static org.junit.Assert.*;
 
 /**
  * When you see such questions on the exam, write down the values of each variable. <p> Created by
- * williaz on 10/28/16. <p> # return type must be after access modifier, and followed by function
+ * williaz on 10/28/16 - 10/30, 3D
+ * <p>
+ * # return type must be after access modifier, and followed by function
  * name !!! <p> The exam creators like to trick you by putting method elements in the wrong order or
  * using incorrect values. <p> # Java allows the optional specifiers to appear before the access
  * modifier. <p> tricky - There is a return statement, but it doesn’t always get run. --> compile
@@ -107,7 +118,7 @@ public class MethodTest {
      * <p>
      * The exam creators will try to trick you
      * into thinking a NullPointerException is thrown
-     * because the variable happens to be null. Don’t be fooled!
+     * because the variable happens to be null. Don’t be fooled!!!!!
      * <p>
      * You can use an instance of the object to call a static method.
      */
@@ -361,6 +372,7 @@ public class MethodTest {
 
     /**
      * Encapsulation refers to preventing callers from changing the instance variables directly.
+     * <- Instance variables must be private for this to work.
      * Immutability refers to preventing callers from changing the instance variables at all.
      */
 
@@ -371,6 +383,7 @@ public class MethodTest {
         private boolean isFly;
 
         public Animal(String speciesName, boolean hopper, boolean swimmer) {
+
             this(speciesName, hopper, swimmer, false);
         }
 
@@ -412,6 +425,9 @@ public class MethodTest {
      * have a type declared. <br> there isn’t a rule that says you must use all defi ned parameters.
      * <p></p> Remember the one method in Predicate interface called boolean test(T t). <p> Any
      * change need not be duplicated into multiple places. It improves manageability of code. </p>
+     * <p></>
+     * It is tricky to use types in a lambda when they are implicitly specified.
+     * Remember to check the interface for the real type.
      */
 
     @Test
@@ -429,7 +445,7 @@ public class MethodTest {
 
     }
 
-
+    //Predicate<Animal>
     private static void print(List<Animal> animals, CheckTrait checker) {
         for (Animal animal : animals) {
             if (checker.test(animal)) // the general check
@@ -450,6 +466,7 @@ public class MethodTest {
      * OOP: duplicate declarations
      */
     static public class CheckIfHopper implements CheckTrait {
+
         public boolean test(Animal a) {
             return a.canHop();
         }
