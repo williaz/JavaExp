@@ -104,11 +104,42 @@ public class TreeUtil<T> {
 
     }
 
-    //TODO DFS: In-order traverse
+    //TODO DFS: In-order traverse *
+
 
     //TODO DFS: Post-order traverse
 
-    //TODO Breath First Search
+    /**
+     * Breath First Search: using queue
+     *
+     * @param root
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> levelOrderIteration(TreeNode<T> root) {
+        Queue<TreeNode<T>> queue = new LinkedList<>();
+        List<T> list = new ArrayList<>();
+
+        if (root == null) {
+            return list;
+        }
+
+        queue.offer(root); //add at end
+        while (!queue.isEmpty()) {
+            TreeNode<T> node = queue.poll();// retrieve from head
+            if (node.getLeft() != null){
+                queue.offer(node.getLeft());
+            }
+            if (node.getRight() != null){
+                queue.offer(node.getRight());
+            }
+            list.add(node.getValue()); // push value
+
+        }
+
+        return list;
+
+    }
 
     //TODO Depth First Search
 

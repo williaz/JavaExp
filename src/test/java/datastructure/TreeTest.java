@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static dataStructure.tree.TreeUtil.*;
@@ -67,6 +68,12 @@ public class TreeTest {
     @Test
     public void Test_GetLcaInBST() {
         assertTrue(5 == getLcaInBST(bst, 3, 8).getValue());
+    }
+
+    @Test
+    public void Test_LevelOrderIteration(){
+
+        assertEquals(Arrays.asList(10, 5, 13, 3, 8, 20), levelOrderIteration(bst));
     }
 
 
