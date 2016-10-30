@@ -165,12 +165,24 @@ public class TreeUtil<T> {
 
     }
 
-    //TODO lowest common ancestor on BST
+    //
     //An ancestor of a node is any other node for which the node is a descendant
     /*
     your target values are both less than the current node, you go left.
     When they are both greater, you go right.
     The first node you encounter that is between your target values is the lowest common ancestor.
+     */
+
+    /**
+     * <p>your target values are both less than the current node, you go left.
+     *     When they are both greater, you go right.
+     *     The first node you encounter that is between your target values is the lowest common ancestor.</p>
+     *
+     * @param root the BST
+     * @param a the value of the Node
+     * @param b Node's value
+     * @param <T> any implements Comparable
+     * @return lowest common ancestor
      */
     public static<T extends Comparable<? super T>> TreeNode<T> getLcaInBST (TreeNode<T> root, T a, T b){
 

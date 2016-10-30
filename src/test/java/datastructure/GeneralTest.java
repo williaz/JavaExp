@@ -29,5 +29,46 @@ public class GeneralTest {
 
     }
 
+    /**
+     * every Object uses new to instantiate but without initialization, will get the default value
+     *
+     * <p>String, primitive uses literal in local scope, should be guarantee be initialized
+     */
+    @Test
+    public void Test_LocalArrayDefaultValue(){
+        int[] arr = new int[5];
+        assertEquals(0, arr[4]);
+
+        boolean[] bs = new boolean[4];
+        assertEquals(false, bs[3]);
+
+    }
+
     //TODO Window Sum
+    public int[] getWindowSum(int[] arr, int range){
+        final int SIZE = arr.length - range + 1;
+        if(SIZE <= 0){
+            return null;
+        }
+        int[] sum = new int[SIZE];
+
+        for(int j = 0; j < range; j++){
+            sum[0] += arr[j];
+        }
+
+        for(int i = 1; i < SIZE; i++){
+            sum[i] = sum[i - 1] - arr[i - 1] + arr[i + range - 1];
+
+        }//end i
+
+        return sum;
+    }
+
+    @Test
+    public void Test_GetWindowSum(){
+        int[] arr = {4, 2, 73, 11, -5};
+        int[] sum2 = {6, 75, 84, 6};
+
+        assertArrayEquals(sum2, getWindowSum(arr, 2));
+    }
 }
