@@ -36,13 +36,28 @@ import java.util.List;
  * --->fully qualified class name
  *
  * # When running a Java program, you pass just the name of the class without the .class extension.
- *
+ * <p>
+ *  # [Order of Initialization]
+ * 1. If there is a superclass, initialize it first
+ * 2. Static variable declarations and ( then static initializers in the order they appear in the file ).
+ * 3. ( Instance variable declarations and instance initializers ) in the order they appear in the file.
+ * 4. The constructor.
  */
 public class JavaBlock {
     int a =1 ; // 1 -> 5 -> 7
     int b =4;  // 4 ->6
     int e;
     private String name;
+
+    static int s1 = 100;
+
+
+    static {
+        s1 = 300;
+        s2 = 400; // no compile error
+    }
+
+    static int s2 = 200;
 
     //instance initializer
     /**
@@ -159,6 +174,9 @@ public class JavaBlock {
 
 
     public static void main(String[] args) {
+
+        System.out.println("Static initializer 300 after s1 declaration and initialization 100 :"+ s1);
+        System.out.println("Static initializer 400 before s2 declaration and initialization 200 :"+ s2);
 
         String _s1 = "Will", $s2 = "Is", s3 = "Best";
         JavaBlock jb = new JavaBlock();
