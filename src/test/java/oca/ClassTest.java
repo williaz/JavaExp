@@ -3,7 +3,11 @@ package oca;
 import org.junit.Test;
 
 import oca.ood.Animal;
+import oca.ood.Fish;
 import oca.ood.Lion;
+import oca.ood.Orca;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by williaz on 10/31/16.
@@ -51,10 +55,32 @@ import oca.ood.Lion;
  *     5. must static on both parent and child methods<br>
  *     avoid hiding static methods in your own work
  *
+ * <P>
+ * final - 1. you forbid a child class from overriding this method.
+ *         2. you cannot hide a static method in a parent class if it is marked as final.
+ *         3. For guarantee certain behavior of a method in the parent class,
+ *         regardless of which child is invoking the method.
+ * </P>
+ *. An abstract class is a class that is marked with the abstract keyword and cannot be instantiated.
+ * An abstract method is a method marked with the abstract keyword defined in an abstract class,
+ * for which no implementation is provided in the class in which it is declared.
+ * # we note that an abstract class / methods cannot be marked as final.
+ * # a method may not be marked as both abstract and private.
+ * A concrete class is the fi st nonabstract subclass that extends an abstract class
+ * and is required to implement all inherited abstract methods.
+ * <p></p>
+ * The exam creators are fond of questions like this one,
+ * which mixes nonabstract classes with abstract methods.
+ * They are also fond of questions with methods marked as abstract
+ * for which an implementation is also defined.
+ * <P>
+ * a concrete subclass is not required to provide an implementation for an abstract method
+ * if an intermediate abstract class provides the implementation.
+ * </P>
  */
 public class ClassTest {
     @Test
-    public void Test_PrivateField() {
+    public void Test_ScopeInClass() {
         Animal animal = new Animal(4);
         animal.setAge(10);
         Lion lion = new Lion(4);
@@ -64,7 +90,28 @@ public class ClassTest {
         lion.roar();
         Animal lion1 = new Lion(21);
         lion1.setAge(13);
+        /*
+        # Overriding a method: a child method replaces the parent method in calls defined in both the parent and child.
+        # At runtime the child version of an overridden method is always executed for an instance
+        regardless of whether the method call is defined in a parent or child class method. -> toString()
+         */
+
+        System.out.println(lion);
+        System.out.println(lion1);
+
+        lion1.testInAnimal();
+        lion.testInLion();
 
 
     }
+
+    @Test
+    public void Test_AbstractAndConcreteClass() {
+        Fish killer = new Orca("Dolphin", "Will");
+        assertEquals("Will", killer.getName());
+        assertEquals("Whale", killer.getSpecies());
+
+
+    }
+
 }

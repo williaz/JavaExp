@@ -6,14 +6,17 @@ package oca.ood;
 public class Animal {
     private int age;
     protected String name;
-    public Animal(int age){
+
+    public Animal(int age) {
         super();
         this.age = age;
         name = "Animal";
     }
+
     public int getAge() {
         return age;
     }
+
     public void setAge(int age) {
         this.age = age;
     }
@@ -26,11 +29,32 @@ public class Animal {
         this.name = name;
     }
 
-    protected Animal getSample(){
+    protected Animal getSample() {
         return new Animal(4);
     }
 
-    private void makeSound(){
+    private void makeSound() {
         System.out.println("ZzzZzz...");
+    }
+
+    public static String getInfo() {
+        return "in Animal static";
+    }
+
+    public String getInfoInst() {
+        return "in Animal overridden method";
+    }
+
+    public void testInAnimal(){
+        System.out.println("For static hiding in parent class(Animal) : "
+                + getInfo() + " For overriding method : " + getInfoInst());
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "age=" + age +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
