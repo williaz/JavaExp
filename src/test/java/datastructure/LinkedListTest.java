@@ -77,26 +77,33 @@ public class LinkedListTest {
     }
 
     @Test
-    public void Test_remove() {
+    public void Test_RemoveFirst() {
         System.out.println(asList(list));
-        list = remove(list, 4);     //m
+        list = removeFirst(list, 4);     //m
         System.out.println(asList(list));
-        list = remove(list, 5);     //h
+        list = removeFirst(list, 5);     //h
         System.out.println(asList(list));
-        list = remove(list, 7);     //t
+        list = removeFirst(list, 7);     //t
         System.out.println(asList(list));
+
 
     }
 
     @Test
-    public void Test_Reverse(){
+    public void Test_RemoveAll() {
+        Node<Integer> n5 = new Node<Integer>(5, list);
+        System.out.println(asList(removeAll(n5, 5) ));
+    }
+
+    @Test
+    public void Test_Reverse() {
         System.out.println(asList(list));
         System.out.println(asList(reverse(list)));
         System.out.println(asList(list));
     }
 
     @Test
-    public void Test_Merge(){
+    public void Test_Merge() {
         System.out.println(asList(sorted));
         System.out.println(asList(sorted1));
         System.out.println(asList(mergeTwoSortedList(sorted, sorted1)));
@@ -104,16 +111,19 @@ public class LinkedListTest {
     }
 
     @Test
-    public void Test_GetMiddleNode(){
+    public void Test_GetMiddleNode() {
+
+        System.out.println(asList(sorted1));
+        System.out.println(asList(list));
 
         assertTrue(28 == getMiddleNode(sorted1).getValue());
-        assertTrue(8 == getMiddleNode(list).getValue());
+        assertTrue(4 == getMiddleNode(list).getValue());
         Node<Integer> n7 = new Node<Integer>(7, null);
         Node<Integer> n6 = new Node<Integer>(6, n7);
         Node<Integer> n8 = new Node<Integer>(8, n6);
         Node<Integer> n4 = new Node<Integer>(4, n8);
         assertTrue(6 == getMiddleNode(n8).getValue()); //3
-        assertTrue(6 == getMiddleNode(n4).getValue());  //4
+        assertTrue(8 == getMiddleNode(n4).getValue());  //4
         assertTrue(6 == getMiddleNode(n6).getValue());  //2
 
     }

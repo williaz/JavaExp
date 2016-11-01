@@ -75,7 +75,7 @@ public class NodeUtil {
      *
      * @return new list in case removed head
      */
-    public static <T> Node<T> remove(Node<T> list, T value) {
+    public static <T> Node<T> removeFirst(Node<T> list, T value) {
         Node<T> temp = list.getNext();
         Node<T> prev = list;
         //head removal
@@ -92,6 +92,26 @@ public class NodeUtil {
             temp = temp.getNext();
         }
         return list;
+    }
+
+    public static <T> Node<T> removeAll(Node<T> list, T value) {
+        Node<T> head = new Node<T>(null);
+        head.setNext(list);
+
+        Node<T> prev = head;
+        Node<T> temp = list;
+
+        while (temp != null){
+            if (temp.getValue().equals(value)) {
+                prev.setNext(temp.getNext());
+                temp = temp.getNext();
+                continue;
+            }
+            prev = prev.getNext();
+            temp = temp.getNext();
+        }
+        return head.getNext();
+
     }
 
     /**
@@ -182,13 +202,11 @@ public class NodeUtil {
         // odd or even
         Node<T> fast = list;
         Node<T> slow = list;
-        while (fast != null) {
+        while (fast.getNext() != null) {
             fast = fast.getNext();
-            if (fast != null) {
+            if (fast.getNext() != null) {
                 fast = fast.getNext();
                 slow = slow.getNext();
-            } else {
-                break;
             }
 
         }
@@ -196,4 +214,5 @@ public class NodeUtil {
         return slow;
 
     }
+
 }
