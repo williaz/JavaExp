@@ -8,4 +8,10 @@ public abstract class Bird implements CanFly, CanWalk{
     public String getAbility() {
         return "flyer and walker";
     }
+    public String getName() {
+        return "Bird";
+    }
+    public String displayInfo() {
+        return getName();
+    }
 }

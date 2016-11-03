@@ -6,10 +6,12 @@ import oca.ood.Animal;
 import oca.ood.Bird;
 import oca.ood.CanFly;
 import oca.ood.CanWalk;
+import oca.ood.CanadaGoose;
 import oca.ood.Fish;
 import oca.ood.Lion;
 import oca.ood.Orca;
 import oca.ood.Swan;
+import oca.ood.Whale;
 
 import static org.junit.Assert.*;
 
@@ -160,5 +162,55 @@ public class ClassTest {
         assertEquals("Flying", CanFly.printAction());
         assertEquals("Walking", CanWalk.printAction());  // Both interface get implements in Bird, no conflict for static methods
     }
+
+
+    /**
+     * Java supports polymorphism, the property of an object to take on many different forms.<br>
+     * a Java object may be accessed (passed) using a reference with the same type as the object,
+     * a reference that is a superclass of the object,
+     * or a reference that def nes an interface the object implements, either directly or through a superclass
+     * <p>access scope
+     * 1. The type of the object determines which properties exist within the object in memory.
+     * 2. The type of the reference to the object determines which methods and variables are accessible to the Java program.
+     * explicit casting: no related - cannot compile
+     * <p>A virtual method( can be overridden) is a method in which the specific implementation is not determined until runtime
+     * if you call a method on an object that overrides a method, you get the overridden method,
+     * even if the call to the method is on a parent reference or within the parent class.
+     * </p>
+     * polymorphic parameters of a method
+     * use interface type as the polymorphic parameter type - reusable
+     * access overridden methods using a reference to the parent class
+     * -> override: 1. broader access, 2. stricter exception, 3. covariant return type
+     */
+
+    @Test
+    public void Test_Polymorphism() {
+        Bird goose = new CanadaGoose();
+        assertEquals("Canada goose", goose.displayInfo());
+        feed(new Swan());
+        feed(new CanadaGoose());
+
+    }
+
+    //polymorphic parameters
+    public static void feed (Bird bird){
+        System.out.println("Feeding " + bird.displayInfo());
+    }
+
+    @Test(expected = ClassCastException.class)
+    public void Test_DownCasting() {
+        Bird swan = new Swan();
+        CanadaGoose goose = (CanadaGoose) swan;
+        /*
+        instanceof operator can be used to check whether an object belongs to a particular class
+        and to prevent ClassCastExceptions at runtime.
+
+        if (swan instanceof CanadaGoose) {
+            CanadaGoose goose = (CanadaGoose) swan;
+        }
+        */
+
+    }
+
 
 }
