@@ -3,9 +3,13 @@ package oca;
 import org.junit.Test;
 
 import oca.ood.Animal;
+import oca.ood.Bird;
+import oca.ood.CanFly;
+import oca.ood.CanWalk;
 import oca.ood.Fish;
 import oca.ood.Lion;
 import oca.ood.Orca;
+import oca.ood.Swan;
 
 import static org.junit.Assert.*;
 
@@ -77,6 +81,12 @@ import static org.junit.Assert.*;
  * a concrete subclass is not required to provide an implementation for an abstract method
  * if an intermediate abstract class provides the implementation.
  * </P>
+ * An interface is an abstract data type that defines a list of abstract public methods
+ * that any class implementing the interface must provide.
+ * An interface can also include a list of constant variables and default methods
+ * use uppercase letters to denote constant values within a class.
+ * <p>
+ *
  */
 public class ClassTest {
     @Test
@@ -112,6 +122,43 @@ public class ClassTest {
         assertEquals("Whale", killer.getSpecies());
 
 
+    }
+
+    /**
+     * All methods in interfaces are assumed to be public.
+     *  abstract methods
+     * Interface variable - public static final
+     * <p>
+     * A default method is a method defined  an abstract method provide a default implementation
+     * which you can choose to override, but not require to
+     * within an interface with the default keyword in which a method body is provided.
+     * <p></p>
+     * A default method is not assumed to be static, final, or abstract,
+     * as it may be used or overridden by a class that implements the interface.
+     * # They can not be marked as final or abstract,
+     * because they are allowed to be overridden in subclasses
+     * but are not required to be overridden.
+     * # the interface may redeclare the method as abstract,
+     * requiring classes that implement the new interface to explicitly provide a method body
+     * # having a class that implements or inherits two duplicate default methods
+     * forces the class to implement a new version of the method, or the code will not compile.
+     * <p>
+     * A static method defined in an interface is not inherited in any classes that implement the interface.
+     * -> a class that implements two interfaces containing static methods with the same signature
+     * will still compile at runtime,
+     * </p>
+     */
+
+    @Test
+    public void Test_Interface() {
+        Bird swan = new Swan();
+        Swan swan1 = new Swan();
+        assertEquals(100, swan.MAXIMUM_Height); // access interface constant
+        assertEquals(100, swan1.MAXIMUM_Height); // access interface constant
+        assertEquals(30, swan.getSpeed()); // override for two interface
+        assertEquals("flyer and walker", swan.getAbility()); // default methods in two interface
+        assertEquals("Flying", CanFly.printAction());
+        assertEquals("Walking", CanWalk.printAction());  // Both interface get implements in Bird, no conflict for static methods
     }
 
 }
