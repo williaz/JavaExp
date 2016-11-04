@@ -16,7 +16,7 @@ import oca.ood.Whale;
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 10/31/16.
+ * Created by williaz on 10/31/16 - 11/4 5D
  * <p>
  * At its core, proper Java class design is about code
  * reusability, increased functionality, and standardization.
@@ -181,6 +181,14 @@ public class ClassTest {
      * use interface type as the polymorphic parameter type - reusable
      * access overridden methods using a reference to the parent class
      * -> override: 1. broader access, 2. stricter exception, 3. covariant return type
+     * <p>
+     * static methods in interface must have body.
+     * </p>
+     * 1. interface itself doesn't inherit Object, only class.<br>
+     * 2. watch out final for overriding<br>
+     * 3. private method can only be hidden, not overriden, just it is used depend on the reference type.
+     * 4. watch out abstract method should not have {}.
+     *
      */
 
     @Test
@@ -189,6 +197,10 @@ public class ClassTest {
         assertEquals("Canada goose", goose.displayInfo());
         feed(new Swan());
         feed(new CanadaGoose());
+        Swan swan = new Swan();
+        Swan goose1 = new Swan();
+        swan.getFlawNum();
+        assertEquals(3, goose1.getFlawNum());
 
     }
 
@@ -211,6 +223,13 @@ public class ClassTest {
         */
 
     }
+
+    @Test
+    public void Test_Singleton() {
+        assertEquals("Samuel", Single.getSingle().getName());
+        assertTrue(Single.getSingle() == Single.getSingle());
+    }
+
 
 
 }
