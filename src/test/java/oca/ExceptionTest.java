@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 11/5/16.
+ * Created by williaz on 11/5/16 - 11/6 2D
  * exceptions alter the program flow.
  * In general, try to avoid return codes(==use special value for return).
  * <p></p>
@@ -20,6 +20,11 @@ import static org.junit.Assert.*;
  * about unreachable code occurs. This happens when a superclass is caught before a subclass.<br>
  * To review catching multiple exceptions, remember that at most one catch block will run
  * and it will be the first catch block that can handle it.
+ * <p></p>
+ * you can handle or declare Throwable class and its subclass (Exception and error)
+ * finally must run.
+ * catch clauses only catch exception thrown from try clause.
+ * you can throw runtime exceptions anytime, anywhere. no restrictions.
  */
 public class ExceptionTest {
     @Test(expected = ArrayIndexOutOfBoundsException.class)
