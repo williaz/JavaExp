@@ -1,0 +1,7 @@
+1. Override - broader access for child methods
+2. Predicate - Autoboxing works for collection, not inferring predicates
+3. Switch - stop until reach break, or the end.
+4. Hidden - VS override, if the method is private, depends on the reference type.
+5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
+               Runtime exceptions are commonly thrown by both.
+6.
