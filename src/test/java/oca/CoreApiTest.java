@@ -66,14 +66,20 @@ public class CoreApiTest {
     public void Test_StringLiteral(){
         String str1 = "will";
         String str2 = new String("will");
+        StringBuilder sb = new StringBuilder("will");
 
         assertEquals(str1, str2);
         assertFalse(str1 == str2);
+        assertFalse(str1 == sb.toString());
     }
 
     /**
      * For all these methods, you need to remember that a string is a sequence of characters
      * and Java counts from 0 when indexed.
+     * length(), charAt(), indexOf(), substring(),
+     * toUpperCase(), toLowerCase(), equals(), equalsIgnoreCase(),
+     * startWith(), endWith(), contains(), replace(),
+     * trim()
      */
     @Test
     public void Test_String13Methods(){
@@ -108,6 +114,14 @@ public class CoreApiTest {
 
         // Method Chaining
         assertEquals("AnimAl", "aniMaL is food".substring(0, 6).toLowerCase().replace('a', 'A'));
+        //immutable, all create a nw String
+        String str1 = "aniMaL is food";
+        String str2 = str1.substring(0, 6);
+        String str3 = str2.toLowerCase();
+        String str4 = str3.replace('a', 'A');
+        assertFalse(str1.equals(str2));
+        assertFalse(str2.equals(str3));
+        assertFalse(str3.equals(str4));
 
     }
 
@@ -141,6 +155,9 @@ public class CoreApiTest {
         stringBuilder.substring(4, 9);  // return new String  !!!
         assertNotEquals("best", stringBuilder);
 
+        //
+        assertEquals("will is trying", stringBuilder.substring(0, 4).concat(" is trying") );
+
     }
 
     /**
@@ -151,6 +168,8 @@ public class CoreApiTest {
      * but the end result needs to be a String.
      *
      * Be careful! StringBuilder b = "rumble"; XXXXX
+     * append(), capacity(), length(), indexOf(),
+     * toString(), reverse()
      */
     @Test
     public void Test_StringBuilderMethods(){
@@ -262,6 +281,7 @@ public class CoreApiTest {
 
         Object[] objects = strings;
         objects[0] = new String(); // type safe
+       // objects[2] = new StringBuilder(); //ArrayStoreException
        // objects[0] = new Object(); // mistype, ArrayStoreException
         assertEquals(5, num.length);  // final length
         assertEquals(num[3], 0);
@@ -378,6 +398,7 @@ public class CoreApiTest {
         nums.remove(1); // it is the index, no the object stored
         assertEquals(nums.get(0), new Integer(1));
 
+
     }
 
     /**
@@ -398,6 +419,17 @@ public class CoreApiTest {
         assertEquals( nums.get(4), new Integer(13));
 
 
+    }
+    @Test
+    public void Test_toArray_NoLinked1() {
+        List<Integer> nums = new ArrayList<>();
+        nums.add(1);
+        nums.add(4);
+        nums.add(7);
+        nums.add(2);
+        Integer[] ints = nums.toArray(new Integer[10]);
+        nums.set(2, 44);
+        assertFalse( nums.get(2).equals(ints[2]) );
     }
 
     @Test(expected = UnsupportedOperationException.class)

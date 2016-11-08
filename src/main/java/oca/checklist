@@ -37,5 +37,11 @@
 27. main - check main(), psv
 28. ce - once there is a compiler error option, chech syntax thoroughly,
          including method name, scope, catch order
-29. StringBuilder - substring(), toString() cannot be chained, as return String.
+29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
+31. equals() - no override: array, StringBuilder, StringBuffer,
+               override: String, Collection(keep ordering),
+32. List - add(int index, E e), get(int index), remove(int index)/ remove(E e)
+33. asList - get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
+             toArray no fixed
+34. Period - no chaining when creating, static method: ofXxx()
