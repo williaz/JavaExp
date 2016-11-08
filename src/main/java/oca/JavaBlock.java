@@ -76,8 +76,8 @@ public class JavaBlock {
     int c = 8; // 4 ->8
 
     /**
-     * #The purpose of a constructor is to initialize fi elds, although you can put any code in there.
-     * Another way to initialize fi elds is to do so directly on the line on which they’re declared.
+     * #The purpose of a constructor is to initialize fields, although you can put any code in there.
+     * Another way to initialize fields is to do so directly on the line on which they’re declared.
      *
      * #!!Fields and instance initializer blocks are run in the order in which they appear in the file.
      *
@@ -159,7 +159,7 @@ public class JavaBlock {
      *  You can also initialize any or all of those values inline.
      *  The shortcut to declare multiple variables in the same statement only works when they share a type.
      *
-     *  #The name must begin with a letter or the symbol $ or _.
+     *  #The name must begin with a letter or the symbol $ or _
      *  Subsequent characters may also be numbers.
      *  You cannot use the same name as a Java reserved word.
      *  ---->The exam will mostly use CamelCase common conventions for identifiers, but not always.

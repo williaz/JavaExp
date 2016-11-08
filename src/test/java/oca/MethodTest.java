@@ -155,7 +155,7 @@ public class MethodTest {
     }
 
     /**
-     * Using static and instance initializers can make your code much harder to read. Everything
+     * Using static and instance initializer can make your code much harder to read. Everything
      * that could be done in an instance initializer could be done in a constructor instead. <p>
      * There is a common case to use a static initializer: when you need to initialize a static
      * field and the code to do so requires more than one line.
@@ -210,6 +210,8 @@ public class MethodTest {
      * question: Remember that Java treats varargs as if they were an array. you can only call the
      * varargs version with stand-alone parameters
      */
+    //public int getLen(int[] arr) { return arr.length; } // doesn't count overload
+    public int getLen(int... arr) {return arr.length; }
 
     public String changeName(String name) {
         return name + "son";
@@ -256,8 +258,11 @@ public class MethodTest {
      * # It cannot handle converting in two steps: int -> long, long->Long
      * OK: int -> Integer = Object
      */
+    public String getStr (long l) { return Long.toString(l); };
+    public String getStr (Integer i) {return Integer.toString(i)+"X"; }
     @Test
     public void Test_AutoboxingWithOverloading() {
+        assertEquals("34", getStr(34));
         Integer i = new Integer(3);
 
         assertEquals(4, addOne(3));
@@ -273,7 +278,7 @@ public class MethodTest {
      * because it creates a new instance of the class. <p> A constructor is typically used to
      * initialize instance variables <p> # Java sees no constructor was coded and generated default
      * no-argument constructor. This happens during the compile step. <p> # Having a private
-     * constructor in a class tells the compiler not to provide a default noargument constructor. It
+     * constructor in a class tells the compiler not to provide a default no argument constructor. It
      * also prevents other classes from instantiating the class. This is useful when a class only
      * has static methods or the class wants to control all calls to create new instances of itself.
      * <p> # the this() call must be the first non-commented statement in the constructor <br> #
@@ -318,8 +323,8 @@ public class MethodTest {
     /**
      * # [Order of Initialization]
      * 1. If there is a superclass, initialize it first
-     * 2. Static variable declarations and static initializers in the order they appear in the file.
-     * 3. Instance variable declarations and instance initializers in the order they appear in the file.
+     * 2. Static variable declarations and static initializer in the order they appear in the file.
+     * 3. Instance variable declarations and instance initializer in the order they appear in the file.
      * 4. The constructor.
      *
      * # Keep in mind that the four rules apply only if an object is instantiated.
@@ -412,6 +417,7 @@ public class MethodTest {
     }
 
     /**
+     * parameter -> body
      * <p>Functional programming is a way of writing code more declaratively. You specify what you
      * want to do rather than dealing with the state of objects. You focus more on expressions than
      * loops.</p> <p>A lambda expression is a block of code that gets passed around. -> anonymous

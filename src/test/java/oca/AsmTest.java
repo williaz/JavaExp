@@ -252,6 +252,14 @@ public class AsmTest {
 
     }
 
+    @Test(timeout = 100)
+    public void test_IfMisuseBooleanExpression() {
+        boolean flag = false;
+        while (flag = true) {
+            System.out.println("Help!");
+        }
+    }
+
 
 
 //

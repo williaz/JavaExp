@@ -1,7 +1,24 @@
-1. Override - broader access for child methods
+1. Override - broader access modifier for child methods
 2. Predicate - Autoboxing works for collection, not inferring predicates
 3. Switch - stop until reach break, or the end.
 4. Hidden - VS override, if the method is private, depends on the reference type.
 5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
                Runtime exceptions are commonly thrown by both.
-6.
+6. Class - at most one of the classes in the file is allowed to be public.
+7. Method - a method signature is the method name and the number and type of its parameters.
+            Return types and thrown exceptions are not considered to be a part of the method signature.
+8. Scope - Local variables must be initialized before use. Instance and Class variables do not require.
+9. Operator - byte, short, and char, are first promoted to int
+               any time they’re used with a Java binary arithmetic operator
+               Note that unary operators are excluded from this rule.
+10. Statement - if ( boolean expression ) require, watch out = VS ==
+11. Operator - Short Circuit: &&, ||, ternary operator
+12. API - the authors of StringBuilder did not implement equals().
+13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
+14. Overload - you can implicit conversion, or autoboxing, but now in the same time.
+15. Vararg - You can even omit the vararg values in the method call
+             and Java will create an array of length zero for you.
+             treated as array, no overloading
+16. Overload - autoboxing and varargs come last when Java looks at overloaded methods.
+               Implicit conversion > Autoboxing
+17. final - By the time the constructor completes, all final instance variables must have been set.
