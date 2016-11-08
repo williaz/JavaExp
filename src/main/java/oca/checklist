@@ -1,5 +1,8 @@
-1. Override - broader access modifier for child methods
-2. Predicate - Autoboxing works for collection, not inferring predicates
+1. Override - broader access modifier for child methods,
+              watch out package against public, protected,
+              be wary of final
+2. Predicate - Autoboxing works for collection, not inferring predicates.
+               refer parameters' type and number.
 3. Switch - stop until reach break, or the end.
 4. Hidden - VS override, if the method is private, depends on the reference type.
 5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
@@ -16,9 +19,21 @@
 12. API - the authors of StringBuilder did not implement equals().
 13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
 14. Overload - you can implicit conversion, or autoboxing, but now in the same time.
+16.            autoboxing and varargs come last when Java looks at overloaded methods.
+               Implicit conversion > Autoboxing
 15. Vararg - You can even omit the vararg values in the method call
              and Java will create an array of length zero for you.
              treated as array, no overloading
-16. Overload - autoboxing and varargs come last when Java looks at overloaded methods.
-               Implicit conversion > Autoboxing
 17. final - By the time the constructor completes, all final instance variables must have been set.
+18. Loop - only for have increment clause
+19. String - charAt return char, watch out
+23.          all String literals are automatically instantiated into a String object.
+20. import - line 1 missing import, watch out
+21. Compile - .class per class
+22. ForEach - the reference on the left hand side only be superclass type of the right.
+24. braces - try, catch, finally require. if, else, while, do-while, for do not.
+25. char - char is equivalent to an unsigned short.
+26. initializer - anonymous initializer is only allowed in the declaration.
+27. main - check main(), psv
+28. ce - once there is a compiler error option, chech syntax thoroughly,
+         including method name, scope, catch order

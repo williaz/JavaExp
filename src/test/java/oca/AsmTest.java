@@ -2,6 +2,9 @@ package oca;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -257,6 +260,22 @@ public class AsmTest {
         boolean flag = false;
         while (flag = true) {
             System.out.println("Help!");
+        }
+
+    }
+
+    @Test(timeout = 100)
+    public void test_DoWhileWithoutBraces() {
+
+        do System.out.println("ww");
+        while(true);
+    }
+
+    @Test
+    public void test_ForEachWithSuperclassType() {
+        List<String> strs = Arrays.asList("will", "abc", "wang", "xxx", "xyz");
+        for (Object o : strs) {
+            System.out.println(o);
         }
     }
 
