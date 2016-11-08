@@ -37,3 +37,5 @@
 27. main - check main(), psv
 28. ce - once there is a compiler error option, chech syntax thoroughly,
          including method name, scope, catch order
+29. StringBuilder - substring(), toString() cannot be chained, as return String.
+30. JavaBean - mutator: setter; accessor: getter, isXxx.
