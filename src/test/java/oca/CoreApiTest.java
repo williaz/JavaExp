@@ -686,6 +686,15 @@ public class CoreApiTest {
 
     }
 
+    @Test
+    public void test_MapToString() {
+        Map<String, Integer> scores = new HashMap<>();
+        scores.put("Math", 120);
+        scores.put("Chinese", 115);
+        scores.put("English", 110);
+        System.out.println(scores);
+
+    }
 
 
 }

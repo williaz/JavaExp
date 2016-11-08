@@ -71,8 +71,8 @@ public class JavaStatement {
         so the system “wraps around” to the next lowest value and counts up from there.
         There’s also an analogous underflow, when the number is too low to fit in the data type.
          */
-        System.out.println(2147483647+1);
-        System.out.println(2147483647+2);
+        System.out.println("overflow "+(2147483647+1) );//-2147483648
+        System.out.println(2147483647+2);//-2147483647
 
         boolean t = true;
         boolean f = false;

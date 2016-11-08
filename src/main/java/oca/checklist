@@ -4,6 +4,7 @@
 2. Predicate - Autoboxing works for collection, not inferring predicates.
                refer parameters' type and number.
 3. Switch - stop until reach break, or the end.
+            a case must be a constant expression.
 4. Hidden - VS override, if the method is private, depends on the reference type.
 5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
                Runtime exceptions are commonly thrown by both.
@@ -13,7 +14,8 @@
 8. Scope - Local variables must be initialized before use. Instance and Class variables do not require.
 9. Operator - byte, short, and char, are first promoted to int
                any time they’re used with a Java binary arithmetic operator
-               Note that unary operators are excluded from this rule.
+              Note that unary operators are excluded from this rule.
+              Compound operators can save us from having to explicitly cast a value.
 10. Statement - if ( boolean expression ) require, watch out = VS ==
 11. Operator - Short Circuit: &&, ||, ternary operator
 12. API - the authors of StringBuilder did not implement equals().
@@ -21,6 +23,7 @@
 14. Overload - you can implicit conversion, or autoboxing, but now in the same time.
 16.            autoboxing and varargs come last when Java looks at overloaded methods.
                Implicit conversion > Autoboxing
+               Match Order: exact match -> widening primitives -> autoboxing -> varargs
 15. Vararg - You can even omit the vararg values in the method call
              and Java will create an array of length zero for you.
              treated as array, no overloading
@@ -41,7 +44,24 @@
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
 31. equals() - no override: array, StringBuilder, StringBuffer,
                override: String, Collection(keep ordering),
+               contract with hashCode()
 32. List - add(int index, E e), get(int index), remove(int index)/ remove(E e)
 33. asList - get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
              toArray no fixed
 34. Period - no chaining when creating, static method: ofXxx()
+35. binarySearch - if no found, negate the should-be index and subtract 1;-> unpredictable output
+36. Size - array: length; String: length(); Collection: size().
+37. Replace - List: set(); String, StringBuilder: replace().
+38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
+39. toString - All Java objects have a toString() method, which is invoked when you try and print the object.
+               Arrays.toString(arr), Collection / Map: toString()
+40. Overloading VS Overriding VS Hiding - Overloaded methods share the same method name but different signature,
+                                                     and have no polymorphic relationship.
+                                          Overridden methods share the same method signature and are replaced at runtime
+                                                     in all places it is defined.
+                                          Hidden methods share the same method signature but are only replaced
+                                                     in the subclasses for which they are defined.
+41. Virtual - only non-final, non-static, non-private methods are virtual in Java.
+42. Assignment - the result of the assignment is an expression in and of itself,
+                 equal to the value of the assignment.
+
