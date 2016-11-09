@@ -4,7 +4,7 @@
 2. Predicate - Autoboxing works for collection, not inferring predicates.
                refer parameters' type and number.
 3. Switch - stop until reach break, or the end.
-            a case must be a constant expression.
+            a case must be a constant expression. -> final
 4. Hidden - VS override, if the method is private, depends on the reference type.
 5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
                Runtime exceptions are commonly thrown by both.
@@ -30,7 +30,8 @@
 17. final - By the time the constructor completes, all final instance variables must have been set.
 18. Loop - only for have increment clause
 19. String - charAt return char, watch out
-23.          all String literals are automatically instantiated into a String object.
+23.          all String literals are automatically instantiated into a String object from String pool.
+             String concat() and + return new String() object, not from String pool
 20. import - line 1 missing import, watch out
 21. Compile - .class per class
 22. ForEach - the reference on the left hand side only be superclass type of the right.
@@ -41,19 +42,25 @@
 28. ce - once there is a compiler error option, chech syntax thoroughly,
          including method name, scope, catch order
 29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
+                    watch out assign String literal to SB.
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
-31. equals() - no override: array, StringBuilder, StringBuffer,
+31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
                override: String, Collection(keep ordering),
                contract with hashCode()
 32. List - add(int index, E e), get(int index), remove(int index)/ remove(E e)
-33. asList - get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
+33. asList() - Arrays.asList(): get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
              toArray no fixed
+    toArray() - Collection toArray()
 34. Period - no chaining when creating, static method: ofXxx()
-35. binarySearch - if no found, negate the should-be index and subtract 1;-> unpredictable output
-36. Size - array: length; String: length(); Collection: size().
-37. Replace - List: set(); String, StringBuilder: replace().
+35. binarySearch() - Arrays.binarySearch(): if no found, negate the should-be index and subtract 1;-> unpredictable / undefined output
+36. Size - array: length; String / StringBuilder: length(); Collection: size().
+37. Replace - List: set(); String, StringBuilder: replace();
+    Insert - List: add(index, e); StringBuilder: insert().
 38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
-39. toString - All Java objects have a toString() method, which is invoked when you try and print the object.
+           watch out which method used for DateTimeFormatter: ofXxxXxx(), to format which type
+           illegal value for date throw runtime exception
+           immutable LocalDate LocalTime, plusXxx must assign or no effect
+39. toString() - All Java objects have a toString() method, which is invoked when you try and print the object.
                Arrays.toString(arr), Collection / Map: toString()
 40. Overloading VS Overriding VS Hiding - Overloaded methods share the same method name but different signature,
                                                      and have no polymorphic relationship.
@@ -64,4 +71,12 @@
 41. Virtual - only non-final, non-static, non-private methods are virtual in Java.
 42. Assignment - the result of the assignment is an expression in and of itself,
                  equal to the value of the assignment.
-
+43. import - For the same class name, since importing classname explicitly
+44. package - the package name represents any folders underneath the current path.
+45. primitive - 0xE can assign to double
+46. pic - package, import, class order
+47. watch out - infinite loop; variable out of scope; compile error; boolean b = true in if expression;
+48. == - you cannot use == to compare different object type
+49. capacity() - ArrayList no support, StringBuilder support
+50. null - unbox null throw NullPointerException
+51.

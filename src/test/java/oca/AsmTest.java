@@ -173,6 +173,15 @@ public class AsmTest {
 
         assertEquals(level, 0);
 
+        final int xx = 5;
+        //final char xx = 'c';
+
+        switch(cc){
+            case xx : level =1; break;
+
+            case 'a': level =2; break;
+        }
+
     }
 
     @Test

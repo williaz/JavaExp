@@ -2,6 +2,12 @@ package datastructure;
 
 import org.junit.Test;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -70,5 +76,90 @@ public class GeneralTest {
         int[] sum2 = {6, 75, 84, 6};
 
         assertArrayEquals(sum2, getWindowSum(arr, 2));
+    }
+
+    public int reverseInteger(int n) {
+        int sign = 1;
+        if (n < 0) { sign = -1; }
+        String s = ""+sign*n;
+        StringBuilder sb = new StringBuilder(s);// constructor accept String
+        sb.reverse();
+        int i = Integer.parseInt(sb.toString());
+        return sign * i;
+    }
+
+    @Test
+    public void test_ReverseInteger() {
+        assertEquals(345, reverseInteger(543));
+        assertEquals(-345, reverseInteger(-543));
+        assertEquals(0, reverseInteger(0));
+    }
+
+    public boolean isCouple(char s1, char s2) { // left, right
+        if (s1 == '(' && s2 == ')') return true;
+        else if (s1 == '[' && s2 == ']') return true;
+        else if (s1 == '{' && s2 == '}') return true;
+        else return false;
+    }
+    public boolean isValidParentheses(String s) {
+        if (s == null || s.isEmpty()) { return true; }
+        Deque<Character> stack = new ArrayDeque<>();
+        char[] arr = s.toCharArray();
+        for (char c : arr) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else if (c == ')' || c == ']' || c == '}') {
+                if (stack.isEmpty()) return false;
+                char left = stack.pop();
+                if (!isCouple(left, c)) {
+                    return false;
+                }
+            }
+        }
+        if (stack.isEmpty()) return true;
+        else return false;
+    }
+    @Test
+    public void test_ValidParentheses() {
+        String s = "()";
+        assertTrue(isValidParentheses(s));
+        s = "(x,y) {[xc[]xy]}";
+        assertTrue(isValidParentheses(s));
+    }
+
+
+    public int[] plusOne(int[] digits) {
+        if (digits == null || digits.length == 0 ) { return digits; }
+        int one = 1;
+        List<Integer> list = new ArrayList();
+        for (int i = 0; i < digits.length; i++) {
+            list.add(digits[i]);
+        }
+
+
+        // no asList directly
+        for (int i = list.size() - 1; i >= 0; i--) {
+            int sum = list.get(i) + one;
+            if (sum <= 9) {
+                list.set(i, sum);
+                one = 0;
+                break;
+            } else {
+                list.set(i, sum -10);
+            }
+        }
+        if (one == 1) {
+            list.add(0, 1);
+        }
+        int[] re = new int[list.size()];
+        for (int i =0; i < list.size(); i++) {
+            re[i] = list.get(i);
+        }
+        return re;
+    }
+    @Test
+    public void test_PlusOne() {
+        assertTrue(Arrays.equals(new int[] {1}, plusOne(new int[] {0})));
+        assertTrue(Arrays.equals(new int[] {1,0,0,0}, plusOne(new int[] {9,9,9})));
     }
 }

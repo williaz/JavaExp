@@ -186,6 +186,7 @@ public class CoreApiTest {
         assertEquals(2, sb.indexOf("l")); // first one
         assertEquals('i', sb.charAt(1));
         assertEquals("il", sb.substring(1,3));
+        assertFalse("il" == sb.substring(1,3));
 
         char[] cc= {'a', 'b'};
         StringBuilder sb1 = new StringBuilder()
@@ -694,6 +695,28 @@ public class CoreApiTest {
         scores.put("English", 110);
         System.out.println(scores);
 
+    }
+    @Test
+    public void test_MapUpdateValue() {
+        Map<String, Integer> scores = new HashMap<>();
+        scores.put("Math", 120);
+        scores.put("Chinese", 115);
+        scores.put("English", 110);
+        for (String s : scores.keySet()) {
+            if (s.equals("Chinese")) {
+                scores.put(s, scores.get(s)+1);
+            }
+        }
+        assertTrue(116 == scores.get("Chinese"));
+    }
+    @Test
+    public void BackwardTraverseUsingListIterator() {
+        List<Integer> list = Arrays.asList(3, 5, 12, 34, 76);
+        ListIterator<Integer> li = list.listIterator(list.size());
+        while (li.hasPrevious()) {
+            Integer i = li.previous();
+            System.out.println(i);
+        }
     }
 
 

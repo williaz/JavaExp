@@ -150,6 +150,7 @@ public class JavaBlock {
      * int, float: 32bit, 4 byte
      * long, double: 64bit, 8 byte
      *
+     * 0, 0X, 0b
      * octal (digits 0–7), which uses the number 0 as a prefix—for example, 017
      * hexadecimal (digits 0–9 and letters A–F), which uses the number 0 followed by x or X as a prefix—for example, 0xFF
      *   A - 10, B 11, C 12, D 13, E 14, F 15
@@ -174,6 +175,11 @@ public class JavaBlock {
 
 
     public static void main(String[] args) {
+        int xx = 0x343;
+        double xx1 = 0x34;
+        short xx2 = 0x23;
+        byte xx3 = 0x12;
+
 
         System.out.println("Static initializer 300 after s1 declaration and initialization 100 :"+ s1);
         System.out.println("Static initializer 400 before s2 declaration and initialization 200 :"+ s2);
