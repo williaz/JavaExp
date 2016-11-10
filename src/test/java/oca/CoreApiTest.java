@@ -123,6 +123,9 @@ public class CoreApiTest {
         assertFalse(str2.equals(str3));
         assertFalse(str3.equals(str4));
 
+        String sss = "1234";
+        assertEquals('2', sss.charAt(1));
+
     }
 
     /**

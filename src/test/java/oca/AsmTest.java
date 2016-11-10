@@ -290,6 +290,26 @@ public class AsmTest {
         }
     }
 
+    @Test
+    public void test_OperatorWithChar() {
+        char a = 'a';
+        char b = 'b';
+        int i = a + b;
+        char c = (char)i;
+        System.out.println(c);
+    }
+    @Test
+    public void test_PrintArray() {
+        int[] arr = {3, 4, 5, 112, 34, 56};
+        System.out.println(arr); //[I@4cdf35a9
+        System.out.println(Arrays.toString(arr));//[3, 4, 5, 112, 34, 56]
+        System.out.println(Arrays.asList(arr)); //[[I@4cdf35a9], as one Object
+        System.out.println(Arrays.asList(Arrays.toString(arr))); // as one String
+        Integer[] arr1 = {3, 4, 5, 112, 34, 56};
+        System.out.println(Arrays.asList(arr1)); // parameter should be T
+
+
+    }
 
 
 

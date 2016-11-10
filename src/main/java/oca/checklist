@@ -13,15 +13,15 @@
             Return types and thrown exceptions are not considered to be a part of the method signature.
 8. Scope - Local variables must be initialized before use. Instance and Class variables do not require.
 9. Operator - byte, short, and char, are first promoted to int
-               any time they’re used with a Java binary arithmetic operator
-              Note that unary operators are excluded from this rule.
-              Compound operators can save us from having to explicitly cast a value.
+               any time they’re used with a Java binary arithmetic operator +
+              Note that unary operators are excluded from this rule. ++
+              Compound operators can save us from having to explicitly cast a value. +=
 10. Statement - if ( boolean expression ) require, watch out = VS ==
 11. Operator - Short Circuit: &&, ||, ternary operator
 12. API - the authors of StringBuilder did not implement equals().
 13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
-14. Overload - you can implicit conversion, or autoboxing, but now in the same time.
-16.            autoboxing and varargs come last when Java looks at overloaded methods.
+14. Overload - you can implicit conversion, or autoboxing, but not in the same time.
+               autoboxing and varargs come last when Java looks at overloaded methods.
                Implicit conversion > Autoboxing
                Match Order: exact match -> widening primitives -> autoboxing -> varargs
 15. Vararg - You can even omit the vararg values in the method call
@@ -30,14 +30,14 @@
 17. final - By the time the constructor completes, all final instance variables must have been set.
 18. Loop - only for have increment clause
 19. String - charAt return char, watch out
-23.          all String literals are automatically instantiated into a String object from String pool.
+             all String literals are automatically instantiated into a String object from String pool.
              String concat() and + return new String() object, not from String pool
-20. import - line 1 missing import, watch out
+20. import - line 1 missing import, watch out; java className
 21. Compile - .class per class
-22. ForEach - the reference on the left hand side only be superclass type of the right.
+22. ForEach - the reference on the left hand side can be superclass type of the right.
 24. braces - try, catch, finally require. if, else, while, do-while, for do not.
 25. char - char is equivalent to an unsigned short.
-26. initializer - anonymous initializer is only allowed in the declaration.
+26. initializer - anonymous initializer is only allowed in the array declaration.
 27. main - check main(), psv
 28. ce - once there is a compiler error option, chech syntax thoroughly,
          including method name, scope, catch order
@@ -59,24 +59,29 @@
 38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
            watch out which method used for DateTimeFormatter: ofXxxXxx(), to format which type
            illegal value for date throw runtime exception
-           immutable LocalDate LocalTime, plusXxx must assign or no effect
+           immutable LocalDate LocalTime, plusXxx must assign or no effect; but watch out misusing method
 39. toString() - All Java objects have a toString() method, which is invoked when you try and print the object.
                Arrays.toString(arr), Collection / Map: toString()
-40. Overloading VS Overriding VS Hiding - Overloaded methods share the same method name but different signature,
+40. Overloading VS Overriding VS Hiding - Overloaded methods share the {same method name} but different signature,
                                                      and have no polymorphic relationship.
-                                          Overridden methods share the same method signature and are replaced at runtime
-                                                     in all places it is defined.
-                                          Hidden methods share the same method signature but are only replaced
-                                                     in the subclasses for which they are defined.
+                                          Overridden methods share the {same method signature} and are {replaced} at runtime
+                                                     in {all} places it is defined.
+                                          Hidden methods share the {same method signature} but are only replaced
+                                                     in the {subclasses} for which they are defined.
 41. Virtual - only non-final, non-static, non-private methods are virtual in Java.
 42. Assignment - the result of the assignment is an expression in and of itself,
                  equal to the value of the assignment.
-43. import - For the same class name, since importing classname explicitly
+43. import - For the same class name conflict, importing classname explicitly
 44. package - the package name represents any folders underneath the current path.
 45. primitive - 0xE can assign to double
 46. pic - package, import, class order
 47. watch out - infinite loop; variable out of scope; compile error; boolean b = true in if expression;
-48. == - you cannot use == to compare different object type
+48. == - you cannot use == to compare different object type, ce
 49. capacity() - ArrayList no support, StringBuilder support
 50. null - unbox null throw NullPointerException
-51.
+51. for - for (initialization; termination; increment):
+          initialization: once, as begins;
+          termination: evaluate before each iteration;
+          increment: after each iteration;
+          all three expressions are optional.
+52. void - in void method, you still can use "return;" to exit the method.
