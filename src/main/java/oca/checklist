@@ -85,3 +85,73 @@
           increment: after each iteration;
           all three expressions are optional.
 52. void - in void method, you still can use "return;" to exit the method.
+API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Period, DateTimeFormatter, Predicate
+53. StringBuilder - constructor: no-args, int capacity, String, CharSequence
+              this  append(T): add at the end, return {this}, (Appendable)
+              this  insert(index, T): add at the specified point, return {this}
+              this  replace(): return {this}
+              this  reverse(): return {this}
+              this  delete(startIndexInc, endIndexExc): remove substring, return {this}
+                          deleteCharAt(index):
+            String  substring(): return new String()
+            String  toString(): return new String()
+              char  charAt(index): return char (CharSequence)
+               int  indexOf(String): first occurrence, return int
+                          indexOf(string, fromIndexInc)
+               int  lastIndexOf(): rightmost
+               int  length(): return int
+               int  capacity(int): return int current capacity
+           boolean  equals(): ==
+54. String - constructor: no-args, byte[], char[], int[], String, StringBuilder, StringBuffer
+        int  length()
+       char  charAt()
+        int  indexOf()
+     String  concat(): return new String()
+     String  substring()
+     String  splice()
+     String  replace()
+     String  toUpperCase()
+     String  toLowerCase(): return new String() or this if no change
+    boolean  startWith()
+    boolean  endWith()
+    boolean  contains()
+    boolean  equals():
+55. ArrayList - The size, isEmpty, get, set, iterator, and listIterator operations run in constant time. add is O(n)
+                fail-fast: if the list is structurally modified at any time after the iterator is created,
+                           in any way except through the iterator's own remove or add methods,
+                           the iterator will throw a ConcurrentModificationException.
+                constructor: no-args, Collection, int initCapacity
+                add(E): append
+                add(index, E): insert
+                addAll()
+                set(index, E): replace
+                clear()
+                remove(Object)
+                remove(index): return the object removed
+                size()
+                equals()
+                isEmpty()
+56. Arrays - asList()
+             sort()
+             binarySearch()
+             toString()
+             equals()
+57. LocalDateTime - static  of(), now()
+                    static  parse(CharSequence): return LocalDataTime
+             LocalDateTime  parse(CharSequence, DateTimeFormatter): return LocalDataTime
+     LocalDataTime  plus(Period), plusXxx(long): return LocalDataTime
+     LocalDataTime  minus(Period), minusXxx(long):
+     LocalDataTime  withXxx(): replace
+               int  getXxx()
+            String  format(DateTimeFormatter)
+58.DateTimeFormatter -
+               static  ofLocalizedDate(): return DateTimeFormatter
+               static  ofLocalizedTime()
+               static  ofLocalizedDateTime()
+               static  ofPattern(): return DateTimeFormatter
+               String  format(TemporalAccessor)
+
+
+
+
+

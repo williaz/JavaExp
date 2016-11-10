@@ -187,6 +187,8 @@ public class CoreApiTest {
 
         assertEquals(4, sb.length());
         assertEquals(2, sb.indexOf("l")); // first one
+        assertEquals(1, sb.indexOf("il"));
+        assertEquals(3, sb.indexOf("l", 3));
         assertEquals('i', sb.charAt(1));
         assertEquals("il", sb.substring(1,3));
         assertFalse("il" == sb.substring(1,3));
@@ -209,6 +211,9 @@ public class CoreApiTest {
 
         sb.reverse();
         assertEquals("lliw", sb.toString());
+
+        sb.insert(sb.length(), "ill"); // can use <= length(), otherwise StringIndexOutOFBoundException
+        assertEquals("lliwill", sb.toString());
 
 
     }
@@ -340,7 +345,7 @@ public class CoreApiTest {
         List<Integer> bI = Arrays.asList(1, 4, 5);
         List<Integer> cI = Arrays.asList(1, 5, 4);
         assertEquals(aI, bI);  // List override equals()
-        assertEquals(aI, cI);  // List override equals() keep ordering
+        assertNotEquals(aI, cI);  // List override equals() keep ordering
 
 
         ArrayList<Integer> list = new ArrayList<>();
@@ -371,6 +376,10 @@ public class CoreApiTest {
         assertTrue(list.contains(new Integer(5)));
 
         assertFalse(list.equals(list1));
+
+        List<Integer> arr = new ArrayList<>(Arrays.asList(3, 5, 12, 76));
+        arr.add(1, 4);
+        assertTrue(5 == arr.get(2));
 
     }
 
@@ -640,6 +649,12 @@ public class CoreApiTest {
         System.out.println(t);
 
 
+    }
+
+    @Test
+    public void test_TimeWith() {
+        LocalDateTime ldt = LocalDateTime.now();
+        assertEquals(ldt.withMonth(5), ldt.minusMonths(6));
     }
 
 
