@@ -37,4 +37,12 @@ public class TreeNode<T> {
     public T getValue() {
         return value;
     }
+
+    public void setLeft(TreeNode left) {
+        this.left = left;
+    }
+
+    public void setRight(TreeNode right) {
+        this.right = right;
+    }
 }

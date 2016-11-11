@@ -3,11 +3,10 @@ package dataStructure.tree;
 import java.util.*;
 
 /**
- * Created by williaz on 10/29/16. Ref Collections
- * <p>Some basic operations on binary tree
- * <p>Recursion is most useful when moving through multiple branches of a tree or examining some special pattern of nodes.</p>
- * <p>DFS(Depth First Search): pre, in, post order
- * <p>BFS(Breadth First Search): level order
+ * Created by williaz on 10/29/16. Ref Collections <p>Some basic operations on binary tree
+ * <p>Recursion is most useful when moving through multiple branches of a tree or examining some
+ * special pattern of nodes.</p> <p>DFS(Depth First Search): pre, in, post order <p>BFS(Breadth
+ * First Search): level order
  */
 public class TreeUtil<T> {
 
@@ -16,8 +15,8 @@ public class TreeUtil<T> {
      *
      * @param root  target BST
      * @param value target value
-     * @param <T>   T could be any type that implements Comparable<? super T>,
-     *              Comparable<? super T> means that type ? passed to Comparable could be T or any supertype of T.
+     * @param <T>   T could be any type that implements Comparable<? super T>, Comparable<? super T>
+     *              means that type ? passed to Comparable could be T or any supertype of T.
      * @return TreeNode<T> or null
      */
     public static <T extends Comparable<? super T>> TreeNode<T> findNodeInBST(TreeNode<T> root, T value) {
@@ -26,7 +25,7 @@ public class TreeUtil<T> {
             return null;
         }
 
-        // case 2: root is empty or non-empty
+        // case 2: root is the one or not
         T v = root.getValue();
         if (v.compareTo(value) == 0) {
             return root;
@@ -39,13 +38,30 @@ public class TreeUtil<T> {
 
     }
 
+    /**
+     * find the exit
+     *
+     * @return the inserted tree
+     */
+    public static <T extends Comparable<? super T>> TreeNode<T> insertNodeInBST(TreeNode<T> root, T value) {
+        TreeNode<T> head = root;
+        //exit
+        if (root == null) {
+            return new TreeNode<T>(null, null, value);
+        }
+        T v = root.getValue();
+        if (v.compareTo(value) <= 0) {
+            root.setLeft(insertNodeInBST(root.getLeft(), value));
+        } else {
+            root.setRight(insertNodeInBST(root.getRight(), value));
+        }
+        return head;
+
+    }
+
 
     /**
      * DFS: Pre-Oder traverse: root, left, right
-     *
-     * @param root
-     * @param <T>
-     * @return
      */
     public static <T> List<T> preOrderTraverse(TreeNode<T> root) {
         List<T> list = new ArrayList<T>();
@@ -68,14 +84,9 @@ public class TreeUtil<T> {
 
 
     /**
-     * DFS: pre-order no recursion, to show the understanding of recursion
-     * <p>
-     * <p>A more complete and consistent set of LIFO stack operations is provided by the <tt>Deque</> interface
-     * and its implementations, which should be used in preference to stack.</p>
-     *
-     * @param root
-     * @param <T>
-     * @return
+     * DFS: pre-order no recursion, to show the understanding of recursion <p> <p>A more complete
+     * and consistent set of LIFO stack operations is provided by the <tt>Deque</> interface and its
+     * implementations, which should be used in preference to stack.</p>
      */
     public static <T> List<T> preOrderIteration(TreeNode<T> root) {
         Deque<TreeNode<T>> stack = new ArrayDeque<>();
@@ -111,10 +122,6 @@ public class TreeUtil<T> {
 
     /**
      * Breath First Search: using queue
-     *
-     * @param root
-     * @param <T>
-     * @return
      */
     public static <T> List<T> levelOrderIteration(TreeNode<T> root) {
         Queue<TreeNode<T>> queue = new LinkedList<>();
@@ -127,10 +134,10 @@ public class TreeUtil<T> {
         queue.offer(root); //add at end
         while (!queue.isEmpty()) {
             TreeNode<T> node = queue.poll();// retrieve from head
-            if (node.getLeft() != null){
+            if (node.getLeft() != null) {
                 queue.offer(node.getLeft());
             }
-            if (node.getRight() != null){
+            if (node.getRight() != null) {
                 queue.offer(node.getRight());
             }
             list.add(node.getValue()); // push value
@@ -147,10 +154,6 @@ public class TreeUtil<T> {
     /**
      * The <tt>height</tt> of a tree is the maximum distance
      * from the root node to any leaf node.
-     *
-     * @param root
-     * @param <T>
-     * @return
      */
     public static <T> int getHeight(TreeNode<T> root) {
 
@@ -174,10 +177,6 @@ public class TreeUtil<T> {
      * get numbers of leaves
      * <p>
      * <p>The <tt>leaves</tt> are nodes that do not have any children.</p>
-     *
-     * @param root
-     * @param <T>
-     * @return
      */
     public static <T> int getLeavesNums(TreeNode<T> root) {
         int leaves = 0;
@@ -204,9 +203,9 @@ public class TreeUtil<T> {
      */
 
     /**
-     * <p>your target values are both less than the current node, you go left.
-     * When they are both greater, you go right.
-     * The first node you encounter that is between your target values is the lowest common ancestor.</p>
+     * <p>your target values are both less than the current node, you go left. When they are both
+     * greater, you go right. The first node you encounter that is between your target values is the
+     * lowest common ancestor.</p>
      *
      * @param root the BST
      * @param a    the value of the Node

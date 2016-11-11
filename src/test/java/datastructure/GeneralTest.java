@@ -162,4 +162,58 @@ public class GeneralTest {
         assertTrue(Arrays.equals(new int[] {1}, plusOne(new int[] {0})));
         assertTrue(Arrays.equals(new int[] {1,0,0,0}, plusOne(new int[] {9,9,9})));
     }
+
+    @Test
+    public void test_Length() {
+        int [] n0 = new int[0];
+        List l = new ArrayList();
+        String s = "";
+        assertEquals(0, n0.length);
+        assertEquals(0, l.size());
+        assertEquals(0, s.length());
+        assertTrue(s.isEmpty());
+        assertTrue(l.isEmpty());
+    }
+
+    public int strStr(String source, String target) {
+        if (source == null || target == null)
+            return -1;
+        if (target.length() > source.length()) return -1;
+        if (target.length() == 0) return 0;
+        int j = 0;
+        int index = -1;
+        for (int i = 0; i < source.length(); i++) {
+            if (index == -1) {
+                if (target.length() > source.length() - i) {
+                    break;
+                }
+                if (source.charAt(i) == target.charAt(0)) {
+                    index = i;
+                    j = 1;
+                }
+            } else {
+                if (source.charAt(i) != target.charAt(j)) {
+                    i = index;// 1112 112
+                    index = -1;
+                   // j = 0
+
+                } else if (j == target.length() - 1) {
+                    break;
+                }
+                j++;
+
+            }
+
+
+        }
+        return index;
+    }
+    @Test
+    public void test_strStr() {
+        assertEquals(4, strStr("abcde", "e"));
+        assertEquals(2, strStr("abcede", "ce"));
+
+        assertEquals(3, strStr("tartarget", "target"));
+        assertEquals(-1, strStr("source", "rced"));
+    }
 }

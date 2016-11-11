@@ -53,7 +53,8 @@
     toArray() - Collection toArray()
 34. Period - no chaining when creating, static method: ofXxx()
 35. binarySearch() - Arrays.binarySearch(): if no found, negate the should-be index and subtract 1;-> unpredictable / undefined output
-36. Size - array: length; String / StringBuilder: length(); Collection: size().
+36. Size - array: length; String / StringBuilder: length(); Collection: size();
+    isEmpty() - String, Collection; size = 0;
 37. Replace - List: set(); String, StringBuilder: replace();
     Insert - List: add(index, e); StringBuilder: insert().
 38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
@@ -117,7 +118,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
     boolean  contains()
     boolean  equals():
 55. ArrayList - The size, isEmpty, get, set, iterator, and listIterator operations run in constant time. add is O(n)
-                fail-fast: if the list is structurally modified at any time after the iterator is created,
+                fail-fast: if the list is {structurally modified} at any time after the iterator is created,
                            in any way except through the iterator's own remove or add methods,
                            the iterator will throw a ConcurrentModificationException.
                 constructor: no-args, Collection, int initCapacity
