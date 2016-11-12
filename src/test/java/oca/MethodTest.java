@@ -20,6 +20,8 @@ import java.util.function.Predicate;
  * default constructor will only exist when there is no user defined constructor
  * including the user define public no-arg constructor!!
  */
+import oca.ood.Animal;
+
 import static org.junit.Assert.*;
 
 /**
@@ -44,7 +46,7 @@ public class MethodTest {
 
     /**
      * When returning a value, it needs to be assignable to the return type.
-     * you can implicit conversion, or autoboxing, but now in the same time
+     * you can implicit conversion, or autoboxing, but not in the same time
      */
     public long getNums(int a) {
         return a + 10;
@@ -428,8 +430,8 @@ public class MethodTest {
      * doesn’t allow us to redeclare a local variable in lambda expression</p> <p>The parentheses
      * can only be omitted if there is a single parameter and its type is not explicitly stated.
      * Remember that the parentheses are only optional when there is one parameter and it doesn’t
-     * have a type declared. <br> there isn’t a rule that says you must use all defi ned parameters.
-     * <p></p> Remember the one method in Predicate interface called boolean test(T t). <p> Any
+     * have a type declared. <br> there isn’t a rule that says you must use all defined parameters.
+     * <p></p> Remember the one method in Predicate interface called { boolean test(T t) }. <p> Any
      * change need not be duplicated into multiple places. It improves manageability of code. </p>
      * <p></>
      * It is tricky to use types in a lambda when they are implicitly specified.
@@ -461,7 +463,7 @@ public class MethodTest {
     }
 
     /**
-     * in OOP way VS FP, it can work as a FunctionalInterface also.
+     * in OOP way VS FP, it can work as a Functional Interface also.
      */
     public interface CheckTrait {
         boolean test(Animal a);

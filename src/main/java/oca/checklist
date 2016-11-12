@@ -39,8 +39,9 @@
 25. char - char is equivalent to an unsigned short.
 26. initializer - anonymous initializer is only allowed in the array declaration.
 27. main - check main(), psv
-28. ce - once there is a compiler error option, chech syntax thoroughly,
+28. ce - once there is a compiler error option, check syntax thoroughly,
          including method name, scope, catch order
+         number of ce - count the line;
 29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
                     watch out assign String literal to SB.
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
@@ -151,6 +152,18 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                static  ofLocalizedDateTime()
                static  ofPattern(): return DateTimeFormatter
                String  format(TemporalAccessor)
+59. {} - we can only use it in array declaration expression.
+            not in method parameter, assignment directly without new type[]
+60. Predicate<T> - the functional interface assign to the lambda expression
+                   when as a method parameter, its method's body is the right hand side of ->,
+                       and make sure its method parameter's type is right
+61. Lambda -  a -> a.isEmpty()
+             (a) -> a.isEmpty()
+             (int a) -> {return a.isEmpty();}
+             (int a) -> {String f = "ww"; return f.isEmpty();}
+             (a, b) -> a.isEmpty()
+             (int a, int b) -> a.isEmpty()
+62.
 
 
 
