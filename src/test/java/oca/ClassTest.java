@@ -131,7 +131,7 @@ public class ClassTest {
      *  abstract methods
      * Interface variable - public static final
      * <p>
-     * A default method is a method defined  an abstract method provide a default implementation
+     * A default method is a method defined an abstract method provide a default implementation
      * which you can choose to override, but not require to
      * within an interface with the default keyword in which a method body is provided.
      * <p></p>
@@ -168,7 +168,7 @@ public class ClassTest {
      * Java supports polymorphism, the property of an object to take on many different forms.<br>
      * a Java object may be accessed (passed) using a reference with the same type as the object,
      * a reference that is a superclass of the object,
-     * or a reference that def nes an interface the object implements, either directly or through a superclass
+     * or a reference that defines an interface the object implements, either directly or through a superclass
      * <p>access scope
      * 1. The type of the object determines which properties exist within the object in memory.
      * 2. The type of the reference to the object determines which methods and variables are accessible to the Java program.
@@ -186,7 +186,7 @@ public class ClassTest {
      * </p>
      * 1. interface itself doesn't inherit Object, only class.<br>
      * 2. watch out final for overriding<br>
-     * 3. private method can only be hidden, not overriden, just it is used depend on the reference type.
+     * 3. private method can only be hidden, not overridden, just it is used depend on the reference type.
      * 4. watch out abstract method should not have {}.
      *
      */

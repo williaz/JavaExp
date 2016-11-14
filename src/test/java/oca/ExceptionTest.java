@@ -1,6 +1,9 @@
 package oca;
 
 import org.junit.Test;
+
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -162,6 +165,18 @@ public class ExceptionTest {
      * When writing your own code, print out a stack trace or at least a message when catching an exception.
      * Also, consider whether continuing is the best course of action.
      */
+    @Test
+    public void test_SmartCheckUnreachable() {
+        try {
+            int i = 34;
+        } catch (ArithmeticException ae) {
+            System.out.println("can use");
+        }
+        /*catch (IOException ioe) {
+            System.out.println("cannot use");
+        }
+        */
+    }
 
 
 }

@@ -35,20 +35,22 @@
 20. import - line 1 missing import, watch out; java className
 21. Compile - .class per class
 22. ForEach - the reference on the left hand side can be superclass type of the right.
-24. braces - try, catch, finally require. if, else, while, do-while, for do not.
+24. braces - try, catch, finally require; if, else, while, do-while, for do not.
 25. char - char is equivalent to an unsigned short.
 26. initializer - anonymous initializer is only allowed in the array declaration.
 27. main - check main(), psv
 28. ce - once there is a compiler error option, check syntax thoroughly,
          including method name, scope, catch order
          number of ce - count the line;
+         you cannot use == to compare different object type
+         catch checked exception which would not be thrown in the try clause
 29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
                     watch out assign String literal to SB.
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
 31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
                override: String, Collection(keep ordering),
                contract with hashCode()
-32. List - add(int index, E e), get(int index), remove(int index)/ remove(E e)
+32. List - add(int index, E e), get(int index), remove(int index) / remove(E e)
 33. asList() - Arrays.asList(): get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
              toArray no fixed
     toArray() - Collection toArray()
@@ -78,7 +80,6 @@
 45. primitive - 0xE can assign to double
 46. pic - package, import, class order
 47. watch out - infinite loop; variable out of scope; compile error; boolean b = true in if expression;
-48. == - you cannot use == to compare different object type, ce
 49. capacity() - ArrayList no support, StringBuilder support
 50. null - unbox null throw NullPointerException
 51. for - for (initialization; termination; increment):
@@ -163,8 +164,38 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
              (int a) -> {String f = "ww"; return f.isEmpty();}
              (a, b) -> a.isEmpty()
              (int a, int b) -> a.isEmpty()
-62.
+62. hidden - for non-private methods in the parent class, both methods must use static(hidden)
+                 or neither should use static(override) -> no rename
+             variable can only be hidden, regardless of access modifier
+63. abstract - watch out abstract class don't need implement inherited abstract methods,
+                     can have concrete methods, thus its subclass do not implement them again.
+                     tell class or concrete class in options
+               abstract method no body, no {} !!!!
+64. Exception - JVM throw ArithmeticException, ArrayIndexOutOfBoundException, ClassCastException,
+                           NullPointerException and Error.
+                Programmatically throw Checked Exception, IllegalArgumentException, NumberFormatException.
+65. Order of Initialization -
+                1. If there is a superclass, initialize it first
+                2. Static variable declarations and then static initializer in the order they appear in the file.
+                3. Instance variable declarations and instance initializer in the order they appear in the file.
+                4. The constructor.
+66. Overloading VS Overriding VS hiding -
+                1. Hiding for instance / static variable, static method, private method, same rule as overriding
+                2. Overriding for virtual method, which is non-private, non-static, non-final method;
+                   same method signature, broader access, specific exception, covariant return type.
+                3. Overloading same method name, different parameter type / number,
+                   may different return type / exception / access modifier
+67. interface - (public static final) variable;
+                (public abstract) method ();
+                (public) default method () {...};
+                (public) static method() {...}; A static method defined in an interface is not inherited
+                                                  in any classes that implement the interface.
+                                                  !! a reference to the name of the interface must be used.
+68. illegal combination - abstract & static
+                          abstract & final
+                          abstract & private
 
+69.
 
 
 
