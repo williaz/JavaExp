@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  * which are classes that are defined within other classes,
  * <p>
  * Compiler will automatically:
- * 1. inserting code into any class you write that doesn’t extend a specific class.
+ * 1. inserting extends Object into any class you write that doesn’t extend a specific class.
  * 2. insert a default no-argument constructor in the case that no constructor is declared
  * 3. inserts a call to the no-argument constructor super() if the first statement is not a call to the parent constructor.
  * <p>
@@ -72,11 +72,11 @@ import static org.junit.Assert.*;
  * for which no implementation is provided in the class in which it is declared.
  * # we note that an abstract class / methods cannot be marked as final.
  * # a method may not be marked as both abstract and private.
- * A concrete class is the fi st nonabstract subclass that extends an abstract class
+ * A concrete class is the first non-abstract subclass that extends an abstract class
  * and is required to implement all inherited abstract methods.
  * <p></p>
  * The exam creators are fond of questions like this one,
- * which mixes nonabstract classes with abstract methods.
+ * which mixes non-abstract classes with abstract methods.
  * They are also fond of questions with methods marked as abstract
  * for which an implementation is also defined.
  * <P>
