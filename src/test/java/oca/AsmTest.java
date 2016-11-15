@@ -318,9 +318,7 @@ public class AsmTest {
         assertTrue(i == ig);
         Integer in = null;
         assertTrue(i == in);
-
     }
-
 
 
 //

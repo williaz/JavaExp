@@ -56,8 +56,7 @@
                contract with hashCode()
 32. List - add(int index, E e), get(int index), remove(int index) / remove(E e)
 33. asList() - Arrays.asList(): get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
-             toArray no fixed
-    toArray() - Collection toArray()
+    toArray() - toArray no fixed, Collection toArray()
 34. Period - no chaining when creating, static method: ofXxx()
 35. binarySearch() - Arrays.binarySearch(): if no found, negate the should-be index and subtract 1;-> unpredictable / undefined output
 36. Size - array: length; String / StringBuilder: length(); Collection: size();
@@ -111,17 +110,17 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
            boolean  equals(): ==
 54. String - constructor: no-args, byte[], char[], int[], String, StringBuilder, StringBuffer
         int  length()
-       char  charAt()
+       char  charAt(int)
         int  indexOf(int / String)
-     String  concat(): return new String()
+     String  concat(String): return new String()
      String  substring()
-     String  splice()
-     String  replace()
+     String  splice(String reg)
+     String  replace(char/CharSequence old, new)
      String  toUpperCase()
      String  toLowerCase(): return new String() or this if no change
-    boolean  startWith()
-    boolean  endWith()
-    boolean  contains()
+    boolean  startWith(String)
+    boolean  endWith(String)
+    boolean  contains(CharSequence)
     boolean  equals():
 55. ArrayList - The size, isEmpty, get, set, iterator, and listIterator operations run in constant time. add is O(n)
                 fail-fast: if the list is {structurally modified} at any time after the iterator is created,
@@ -130,7 +129,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                 constructor: no-args, Collection, int initCapacity
                 add(E): append
                 add(index, E): insert
-                addAll()
+                addAll(Collection)
                 set(index, E): replace
                 clear()
                 remove(Object)
@@ -200,7 +199,6 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
 68. illegal combination - abstract & static
                           abstract & final
                           abstract & private
-
 69. top-level class - only public / (package) can be used
 70. finalize() - protected void finalize()
 
