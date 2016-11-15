@@ -188,10 +188,10 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
 66. Overloading VS Overriding VS hiding -
                 1. Hiding for instance / static variable, static method, private method, same rule as overriding
                 2. Overriding for virtual method, which is non-private, non-static, non-final method;
-                   same method signature, broader access, specific exception, covariant return type(subclass).
+                   same method signature, broader access, specific exception, covariant return type(subclass, No void).
                 3. Overloading same method name, different parameter type / number,
                    may different return type / exception / access modifier
-67. interface - (public static final) variable; must be initialized when be declared
+67. interface - (public static final) variable; must be initialized when be declared; inherited
                 (public abstract) method ();
                 (public) default method () {...};
                 (public) static method() {...}; A static method defined in an interface is not inherited

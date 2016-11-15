@@ -21,5 +21,9 @@ public interface CanFly {
         return "Flying";
     }
 
+    public static String call(Bird bird) {
+        return bird.getName() + " is flying";
+    }
+
 
 }

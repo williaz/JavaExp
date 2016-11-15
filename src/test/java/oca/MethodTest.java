@@ -222,6 +222,7 @@ public class MethodTest {
     private String changeName(StringBuilder firstName, StringBuilder lastName) throws NullPointerException {
         return firstName.append(" ").append(lastName).append("son").toString();
     }
+    public void changeName(int i) {System.out.println("sure allow in overloading ");}
 
     @Test
     public void Test_MethodOverloading() {
@@ -233,6 +234,7 @@ public class MethodTest {
         String name1 = changeName(first, last);
 
         assertEquals(name, name1);
+        changeName(5);
 
     }
 
@@ -262,6 +264,7 @@ public class MethodTest {
      */
     public String getStr (long l) { return Long.toString(l); };
     public String getStr (Integer i) {return Integer.toString(i)+"X"; }
+
     @Test
     public void Test_AutoboxingWithOverloading() {
         assertEquals("34", getStr(34));

@@ -311,6 +311,15 @@ public class AsmTest {
 
     }
 
+    @Test(expected = NullPointerException.class)
+    public void test_EqualsEquals() {
+        int i = 5;
+        Integer ig = new Integer(5);
+        assertTrue(i == ig);
+        Integer in = null;
+        assertTrue(i == in);
+
+    }
 
 
 
