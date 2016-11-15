@@ -178,5 +178,20 @@ public class ExceptionTest {
         */
     }
 
+    @Test
+    public void test_WithExit() {
+        int i;
+        try {
+            i =0;
+            int d = 9/i;
+            System.exit(2);
+        } catch (Exception e) {
+            i = 3;
+        } finally {
+            i = 5;
+        }
+        assertEquals(5, i);
+    }
+
 
 }

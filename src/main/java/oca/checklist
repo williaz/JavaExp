@@ -3,7 +3,9 @@
               be wary of final
 2. Predicate - Autoboxing works for collection, not inferring predicates.
                refer parameters' type and number.
-3. Switch - stop until reach break, or the end.
+3. Switch - support primitive type can promote to int(byte, short, char, int) and their wrapper class;
+              enum; String
+            stop until reach break, or the end.
             a case must be a constant expression. -> final
 4. Hidden - VS override, if the method is private, depends on the reference type.
 5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
@@ -44,8 +46,10 @@
          number of ce - count the line;
          you cannot use == to compare different object type
          catch checked exception which would not be thrown in the try clause
+         the position of return type in method signature
 29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
                     watch out assign String literal to SB.
+                    X sb.toString() == str
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
 31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
                override: String, Collection(keep ordering),
@@ -108,7 +112,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
 54. String - constructor: no-args, byte[], char[], int[], String, StringBuilder, StringBuffer
         int  length()
        char  charAt()
-        int  indexOf()
+        int  indexOf(int / String)
      String  concat(): return new String()
      String  substring()
      String  splice()
@@ -140,9 +144,9 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
              toString()
              equals()
 57. LocalDateTime - static  of(), now()
-                    static  parse(CharSequence): return LocalDataTime
-             LocalDateTime  parse(CharSequence, DateTimeFormatter): return LocalDataTime
-     LocalDataTime  plus(Period), plusXxx(long): return LocalDataTime
+                    static  parse(CharSequence): return a new LocalDataTime object
+             LocalDateTime  parse(CharSequence, DateTimeFormatter): return a new LocalDataTime object
+     LocalDataTime  plus(Period), plusXxx(long): return a new LocalDataTime object
      LocalDataTime  minus(Period), minusXxx(long):
      LocalDataTime  withXxx(): replace
                int  getXxx()
@@ -164,11 +168,13 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
              (int a) -> {String f = "ww"; return f.isEmpty();}
              (a, b) -> a.isEmpty()
              (int a, int b) -> a.isEmpty()
+             X (int a, b) -> a.isEmpty()
 62. hidden - for non-private methods in the parent class, both methods must use static(hidden)
-                 or neither should use static(override) -> no rename
+                 or neither should use static(override) -> no same method signature, but can overloading
              variable can only be hidden, regardless of access modifier
 63. abstract - watch out abstract class don't need implement inherited abstract methods,
                      can have concrete methods, thus its subclass do not implement them again.
+                     cannot instantiated
                      tell class or concrete class in options
                abstract method no body, no {} !!!!
 64. Exception - JVM throw ArithmeticException, ArrayIndexOutOfBoundException, ClassCastException,
@@ -182,10 +188,10 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
 66. Overloading VS Overriding VS hiding -
                 1. Hiding for instance / static variable, static method, private method, same rule as overriding
                 2. Overriding for virtual method, which is non-private, non-static, non-final method;
-                   same method signature, broader access, specific exception, covariant return type.
+                   same method signature, broader access, specific exception, covariant return type(subclass).
                 3. Overloading same method name, different parameter type / number,
                    may different return type / exception / access modifier
-67. interface - (public static final) variable;
+67. interface - (public static final) variable; must be initialized when be declared
                 (public abstract) method ();
                 (public) default method () {...};
                 (public) static method() {...}; A static method defined in an interface is not inherited
@@ -195,7 +201,8 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                           abstract & final
                           abstract & private
 
-69.
+69. top-level class - only public / (package) can be used
+70. finalize() - protected void finalize()
 
 
 

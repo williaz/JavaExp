@@ -1,5 +1,7 @@
 package oca;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+
 import org.junit.Test;
 
 import java.time.*;
@@ -335,6 +337,15 @@ public class CoreApiTest {
 
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void test_ArrayListOutOfBound() {
+        List<Integer> list = new ArrayList<>();
+        list.add(4);
+        list.add(55);
+        assertEquals(2, list.size());
+        list.get(5);
+    }
+
     @Test
     public void Test_ArrayList(){
         int[] a ={1, 3, 4};
@@ -651,6 +662,20 @@ public class CoreApiTest {
 
     }
 
+    @Test(expected = DateTimeException.class)
+    public void test_AssignMoreDays() {
+        LocalDate ld = LocalDate.of(2015,Month.FEBRUARY, 30);
+
+    }
+
+    @Test
+    public void test_AddMoreDays() {
+        LocalDate ld = LocalDate.of(2015,Month.APRIL, 30);
+        LocalDate ld1 = LocalDate.of(2015,Month.MAY, 2);
+        ld = ld.plusDays(2);
+        assertEquals(ld1, ld);
+    }
+
     @Test
     public void test_TimeWith() {
         LocalDateTime ldt = LocalDateTime.now();
@@ -711,7 +736,7 @@ public class CoreApiTest {
         scores.put("Math", 120);
         scores.put("Chinese", 115);
         scores.put("English", 110);
-        System.out.println(scores);
+        System.out.println(scores);//{English=110, Chinese=115, Math=120}
 
     }
     @Test

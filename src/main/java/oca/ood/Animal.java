@@ -40,6 +40,9 @@ public class Animal {
     public static String getInfo() {
         return "in Animal static";
     }
+    public String getInfo(String ss) {
+        return "www";
+    }
 
     public String getInfoInst() {
         return "in Animal overridden method";
