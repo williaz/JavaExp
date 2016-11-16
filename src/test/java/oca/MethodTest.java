@@ -535,6 +535,21 @@ public class MethodTest {
 
 
     }
+    @Test
+    public void test_RemoveIf_WithPredicate() {
+        List<String> list = new ArrayList<>();
+        list.add("Will");
+        list.add("Bill");
+        list.add("Best");
+        list.add("Man");
+        list.add("world");
+        list.add("REST");
+        list.removeIf(a -> a.startsWith("B"));
+        list.removeIf((String a) -> a.endsWith("an"));
+        list.removeIf((String a) -> { return a.startsWith("wo");});
+        assertFalse(list.contains("Best"));
+        System.out.println(list);
+    }
 
 
 }
