@@ -678,7 +678,7 @@ public class CoreApiTest {
 
     @Test
     public void test_TimeWith() {
-        LocalDateTime ldt = LocalDateTime.now();
+        LocalDateTime ldt = LocalDateTime.now(); // time fades it
         assertEquals(ldt.withMonth(5), ldt.minusMonths(6));
     }
 
@@ -760,6 +760,14 @@ public class CoreApiTest {
             Integer i = li.previous();
             System.out.println(i);
         }
+    }
+    @Test
+    public void test_TimeApi2() {
+        LocalDate ld = LocalDate.now();
+        ld = ld.plusMonths(12);
+        System.out.println(ld);
+
+
     }
 
 

@@ -1,44 +1,29 @@
-1. Override - broader access modifier for child methods,
-              watch out package against public, protected,
-              be wary of final
-2. Predicate - Autoboxing works for collection, not inferring predicates.
-               refer parameters' type and number.
-3. Switch - support primitive type can promote to int(byte, short, char, int) and their wrapper class;
+03. Switch - support primitive type can promote to int(byte, short, char, int) and their wrapper class;
               enum; String
-            stop until reach break, or the end.
-            a case must be a constant expression. -> final
-4. Hidden - VS override, if the method is private, depends on the reference type.
-5. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
-               Runtime exceptions are commonly thrown by both.
-6. Class - at most one of the classes in the file is allowed to be public.
-7. Method - a method signature is the method name and the number and type of its parameters.
-            Return types and thrown exceptions are not considered to be a part of the method signature.
-8. Scope - Local variables must be initialized before use. Instance and Class variables do not require.
-9. Operator - byte, short, and char, are first promoted to int
+              stop until reach break, or the end.
+              a case must be a constant expression. -> final
+06. Class - at most one of the classes in the file is allowed to be public.
+07. Method - a method signature is the method name and the number and type of its parameters.
+             Return types and thrown exceptions are not considered to be a part of the method signature.
+52. void - in void method, you still can use "return;" to exit the method.
+08. Scope - Local variables must be initialized before use. Instance and Class variables do not require.
+09. Operator - byte, short, and char, are first promoted to int
                any time they’re used with a Java binary arithmetic operator +
-              Note that unary operators are excluded from this rule. ++
-              Compound operators can save us from having to explicitly cast a value. +=
-   Operator - Short Circuit: &&, ||, ternary operator
+               Note that unary operators are excluded from this rule. ++
+               Compound operators can save us from having to explicitly cast a value. +=
+    Operator - Short Circuit: &&, ||, ternary operator
 10. Statement - if ( boolean expression ) require, watch out = VS ==
-13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
-14. Overload - you can implicit conversion, or autoboxing, but not in the same time.
-               autoboxing and varargs come last when Java looks at overloaded methods.
-               Implicit conversion > Autoboxing
-               Match Order: exact match -> widening primitives -> autoboxing -> varargs
 15. Vararg - You can even omit the vararg values in the method call
              and Java will create an array of length zero for you.
              treated as array, no overloading
 17. final - By the time the constructor completes, all final instance variables must have been set.
-18. Loop - only for have increment clause
-19. String - charAt return char, watch out
-             all String literals are automatically instantiated into a String object from String pool.
-             String concat() and + return new String() object, not from String pool
-20. import - line 1 missing import, watch out; java className
 21. Compile - .class per class
-22. ForEach - the reference on the left hand side can be superclass type of the right.
-25. char - char is equivalent to an unsigned short.
 26. initializer - anonymous initializer is only allowed in the array declaration.
+59. {} - we can only use it in array declaration expression.
+            not in method parameter, assignment directly without new type[]
+    {} - try, catch, finally require; if, else, while, do-while, for do not.
 27. main - check main(), psv
+--\
 28. ce - once there is a compiler error option, check syntax thoroughly,
          including method name, scope, catch order
          number of ce - count the line;
@@ -46,49 +31,69 @@
          catch checked exception which would not be thrown in the try clause, watch out the smart compiler.
          the position of return type in method signature
          you cannot use uninitialized local variable; but if without using it, no ce.
+47. watch out - infinite loop;
+                variable out of scope;
+                compile error;
+                boolean b = true in if expression;
+--/
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
-31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
-               override: String, Collection(keep ordering),
-               contract with hashCode()
-32. List - add(int index, E e), get(int index), remove(int index) / remove(E e)
-33. asList() - Arrays.asList(): get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
-    toArray() - toArray no fixed, Collection toArray()
-34. Period - no chaining when creating, static method: ofXxx()
-35. binarySearch() - Arrays.binarySearch(): if no found, negate the should-be index and subtract 1;-> unpredictable / undefined output
-36. Size - array: length; String / StringBuilder: length(); Collection: size();
-    isEmpty() - String, Collection; size = 0;
-37. Replace - List: set(); String, StringBuilder: replace();
-    Insert - List: add(index, e); StringBuilder: insert().
-38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
-           watch out which method used for DateTimeFormatter: ofXxxXxx(), to format which type
-           illegal value for date throw runtime exception
-           immutable LocalDate LocalTime, plusXxx must assign or no effect; but watch out misusing method
-39. toString() - All Java objects have a toString() method, which is invoked when you try and print the object.
-               Arrays.toString(arr), Collection / Map: toString()
-40. Overloading VS Overriding VS Hiding - Overloaded methods share the {same method name} but different signature,
-                                                     and have no polymorphic relationship.
-                                          Overridden methods share the {same method signature} and are {replaced} at runtime
-                                                     in {all} places it is defined.
-                                          Hidden methods share the {same method signature} but are only replaced
-                                                     in the {subclasses} for which they are defined.
+--\
+66. Overloading VS Overriding VS hiding -
+                1. Hiding for instance / static variable, static method, private method, same rule as overriding
+                2. Overriding for virtual method, which is non-private, non-static, non-final method;
+                   same method signature, broader access, specific exception, covariant return type(subclass, No void).
+                3. Overloading same method name, different parameter type / number,
+                   may different return type / exception / access modifier
+40. Overloading VS Overriding VS Hiding -
+             Overloaded methods share the {same method name} but different signature, and have no polymorphic relationship.
+             Overridden methods share the {same method signature} and are {replaced} at runtime in {all} places it is defined.
+             Hidden static methods share the {same method signature} but are only replaced in the {subclasses} for which they are defined.
+14. Overload - you can implicit conversion, or autoboxing, but not in the same time.
+               autoboxing and varargs come last when Java looks at overloaded methods.
+               Implicit conversion > Autoboxing
+               Match Order: exact match -> widening primitives -> autoboxing -> varargs
+01. Override - broader access modifier for child methods,
+               watch out package against public, protected,
+               be wary of final
+04. Hidden - VS override, if the method is private, depends on the reference type.
+62. hidden - for non-private methods in the parent class, both methods must use static(hidden)
+                 or neither should use static(override) -> no same method signature,
+                 but can overloading (even one with static, one without - optional)
+             variable can only be hidden, regardless of access modifier
 41. Virtual - only non-final, non-static, non-private methods are virtual in Java.
+--/
 42. Assignment - the result of the assignment is an expression in and of itself,
                  equal to the value of the assignment.
+46. pic - package, import, class order
 43. import - For the same class name conflict, importing classname explicitly
+20. import - line 1 missing import, watch out; java className
 44. package - the package name represents any folders underneath the current path.
 45. primitive - 0xE can assign to double
-46. pic - package, import, class order
-47. watch out - infinite loop; variable out of scope; compile error; boolean b = true in if expression;
-49. capacity() - ArrayList no support, StringBuilder support
+25. char - char is equivalent to an unsigned short.
 50. null - unbox null throw NullPointerException
+--\
+18. Loop - only for have increment clause
 51. for - for (initialization; termination; increment):
           initialization: once, as begins;
           termination: evaluate before each iteration;
           increment: after each iteration;
           all three expressions are optional.
-52. void - in void method, you still can use "return;" to exit the method.
-    API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Period, DateTimeFormatter, Predicate
+22. ForEach - the reference on the left hand side can be superclass type of the right.
+--/
+API:
+39. toString() - All Java objects have a toString() method, which is invoked when you try and print the object.
+               Arrays.toString(arr), Collection / Map: toString()
+API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Period, DateTimeFormatter, Predicate
 12. API - the authors of StringBuilder did not implement equals().
+31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
+               override: String, Collection(keep ordering),
+               contract with hashCode()
+49. capacity() - ArrayList no support, StringBuilder support
+36. Size - array: length; String / StringBuilder: length(); Collection: size();
+    isEmpty() - String, Collection; size = 0;
+37. Replace - List: set(); String, StringBuilder: replace();
+    Insert - List: add(index, e); StringBuilder: insert().
+13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
 53. StringBuilder - constructor: no-args, int capacity, String, CharSequence
               this  append(T): add at the end, return {this}, (Appendable)
               this  insert(index, T): add at the specified point, return {this}
@@ -114,7 +119,7 @@
         int  indexOf(int / String)
      String  concat(String): return new String()
      String  substring()
-     String  splice(String reg)
+   String[]  splice(String reg)
      String  replace(char/CharSequence old, new)
      String  toUpperCase()
      String  toLowerCase(): return new String() or this if no change
@@ -122,6 +127,9 @@
     boolean  endWith(String)
     boolean  contains(CharSequence)
     boolean  equals():
+19. String - charAt return char, watch out
+             all String literals are automatically instantiated into a String object from String pool.
+             String concat() and + return new String() object, not from String pool
 55. ArrayList - The size, isEmpty, get, set, iterator, and listIterator operations run in constant time. add is O(n)
                 fail-fast: if the list is {structurally modified} at any time after the iterator is created,
                            in any way except through the iterator's own remove or add methods,
@@ -137,11 +145,19 @@
                 size()
                 equals()
                 isEmpty()
+32. List - add(int index, E e), get(int index), remove(int index) / remove(E e)
+33. asList() - Arrays.asList(): get a fixed-size, backed version of a List, linked to the array, cannot add but can modify
+    toArray() - toArray no fixed, Collection toArray()
+35. binarySearch() - Arrays.binarySearch(): if no found, negate the should-be index and subtract 1;-> unpredictable / undefined output
 56. Arrays - asList()
              sort()
              binarySearch()
              toString()
              equals()
+38. Time - DateTimeFormatter for formatting LocalDate, LocalTime, and LocalDateTime.
+           watch out which method used for DateTimeFormatter: ofXxxXxx(), to format which type
+           illegal value for date throw runtime exception
+           immutable LocalDate LocalTime, plusXxx must assign or no effect; but watch out misusing method
 57. LocalDateTime - static  of(), now()
                     static  parse(CharSequence): return a new LocalDataTime object
              LocalDateTime  parse(CharSequence, DateTimeFormatter): return a new LocalDataTime object
@@ -150,18 +166,18 @@
      LocalDataTime  withXxx(): replace
                int  getXxx()
             String  format(DateTimeFormatter)
-58.DateTimeFormatter -
+34. Period - no chaining when creating, static method: ofXxx()
+58. DateTimeFormatter -
                static  ofLocalizedDate(): return DateTimeFormatter
                static  ofLocalizedTime()
                static  ofLocalizedDateTime()
                static  ofPattern(): return DateTimeFormatter
                String  format(TemporalAccessor)
-59. {} - we can only use it in array declaration expression.
-            not in method parameter, assignment directly without new type[]
-    {} - try, catch, finally require; if, else, while, do-while, for do not.
 60. Predicate<T> - the functional interface assign to the lambda expression
                    when as a method parameter, its method's body is the right hand side of ->,
                        and make sure its method parameter's type is right
+02. Predicate - Autoboxing works for collection, not inferring predicates.
+                refer parameters' type and number.
 61. Lambda -  a -> a.isEmpty()
              (a) -> a.isEmpty()
              (int a) -> {return a.isEmpty();}
@@ -169,38 +185,31 @@
              (a, b) -> a.isEmpty()
              (int a, int b) -> a.isEmpty()
              X (int a, b) -> a.isEmpty()
-62. hidden - for non-private methods in the parent class, both methods must use static(hidden)
-                 or neither should use static(override) -> no same method signature, but can overloading
-             variable can only be hidden, regardless of access modifier
 63. abstract - watch out abstract class don't need implement inherited abstract methods,
                      can have concrete methods, thus its subclass do not implement them again.
                      cannot instantiated
                      tell class or concrete class in options
                abstract method no body, no {} !!!!
                method without "abstract"
+68. illegal combination - abstract & static
+                          abstract & final
+                          abstract & private
 64. Exception - JVM throw ArithmeticException, ArrayIndexOutOfBoundException, ClassCastException,
                            NullPointerException and Error.
-                Programmatically throw Checked Exception, IllegalArgumentException, NumberFormatException.
+                Programmatically throw Checked Exception, IllegalArgumentException, NumberFormatException(String).
+05. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
+                Runtime exceptions are commonly thrown by both.
 65. Order of Initialization -
                 1. If there is a superclass, initialize it first
                 2. Static variable declarations and then static initializer in the order they appear in the file.
                 3. Instance variable declarations and instance initializer in the order they appear in the file.
                 4. The constructor.
-66. Overloading VS Overriding VS hiding -
-                1. Hiding for instance / static variable, static method, private method, same rule as overriding
-                2. Overriding for virtual method, which is non-private, non-static, non-final method;
-                   same method signature, broader access, specific exception, covariant return type(subclass, No void).
-                3. Overloading same method name, different parameter type / number,
-                   may different return type / exception / access modifier
 67. interface - (public static final) variable; must be initialized when be declared; inherited
                 (public abstract) method ();
                 (public) default method () {...};
                 (public) static method() {...}; A static method defined in an interface is not inherited
                                                   in any classes that implement the interface.
                                                   !! a reference to the name of the interface must be used.
-68. illegal combination - abstract & static
-                          abstract & final
-                          abstract & private
 69. top-level class - only public / (package) can be used
 70. finalize() - protected void finalize()
 
