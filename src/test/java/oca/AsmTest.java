@@ -319,6 +319,18 @@ public class AsmTest {
         Integer in = null;
         assertTrue(i == in);
     }
+    public static void unsignVariable() {
+        int t;
+    }
+
+    @Test
+    public void test_DoWhile_WithoutBraces() {
+        int i = 0;
+        do
+            System.out.println(i++);
+        while (i < 5);
+    }
+
 
 
 //

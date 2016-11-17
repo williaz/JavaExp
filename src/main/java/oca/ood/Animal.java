@@ -52,6 +52,9 @@ public class Animal {
         System.out.println("For static hiding in parent class(Animal) : "
                 + getInfo() + " For overriding method : " + getInfoInst());
     }
+    protected void accessProtected() {
+        System.out.println("you can");
+    }
 
     @Override
     public String toString() {
@@ -60,4 +63,6 @@ public class Animal {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

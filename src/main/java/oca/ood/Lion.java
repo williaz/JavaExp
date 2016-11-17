@@ -69,4 +69,11 @@ public class Lion extends Animal {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public static void main(String[] args) {
+        Lion lion = new Lion(45);
+        lion.accessProtected();
+        Animal a = lion;
+        a.accessProtected();
+    }
 }

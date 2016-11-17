@@ -18,9 +18,8 @@
                any time they’re used with a Java binary arithmetic operator +
               Note that unary operators are excluded from this rule. ++
               Compound operators can save us from having to explicitly cast a value. +=
+   Operator - Short Circuit: &&, ||, ternary operator
 10. Statement - if ( boolean expression ) require, watch out = VS ==
-11. Operator - Short Circuit: &&, ||, ternary operator
-12. API - the authors of StringBuilder did not implement equals().
 13. Immutable - String, wrapper classes, LocalDate, LocalTime, LocalDateTime
 14. Overload - you can implicit conversion, or autoboxing, but not in the same time.
                autoboxing and varargs come last when Java looks at overloaded methods.
@@ -37,7 +36,6 @@
 20. import - line 1 missing import, watch out; java className
 21. Compile - .class per class
 22. ForEach - the reference on the left hand side can be superclass type of the right.
-24. braces - try, catch, finally require; if, else, while, do-while, for do not.
 25. char - char is equivalent to an unsigned short.
 26. initializer - anonymous initializer is only allowed in the array declaration.
 27. main - check main(), psv
@@ -45,11 +43,9 @@
          including method name, scope, catch order
          number of ce - count the line;
          you cannot use == to compare different object type
-         catch checked exception which would not be thrown in the try clause
+         catch checked exception which would not be thrown in the try clause, watch out the smart compiler.
          the position of return type in method signature
-29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
-                    watch out assign String literal to SB.
-                    X sb.toString() == str
+         you cannot use uninitialized local variable; but if without using it, no ce.
 30. JavaBean - mutator: setter; accessor: getter, isXxx.
 31. equals() - no override:  StringBuilder, StringBuffer, array (but can use Arrays.equals(arr1, arr2))
                override: String, Collection(keep ordering),
@@ -91,7 +87,8 @@
           increment: after each iteration;
           all three expressions are optional.
 52. void - in void method, you still can use "return;" to exit the method.
-API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Period, DateTimeFormatter, Predicate
+    API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Period, DateTimeFormatter, Predicate
+12. API - the authors of StringBuilder did not implement equals().
 53. StringBuilder - constructor: no-args, int capacity, String, CharSequence
               this  append(T): add at the end, return {this}, (Appendable)
               this  insert(index, T): add at the specified point, return {this}
@@ -108,6 +105,9 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                int  length(): return int
                int  capacity(int): return int current capacity
            boolean  equals(): ==
+29. StringBuilder - substring(), toString() cannot be chained with other StringBuilder methods, as return String.
+                    watch out assign String literal to SB.
+                    X sb.toString() == str
 54. String - constructor: no-args, byte[], char[], int[], String, StringBuilder, StringBuffer
         int  length()
        char  charAt(int)
@@ -146,7 +146,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                     static  parse(CharSequence): return a new LocalDataTime object
              LocalDateTime  parse(CharSequence, DateTimeFormatter): return a new LocalDataTime object
      LocalDataTime  plus(Period), plusXxx(long): return a new LocalDataTime object
-     LocalDataTime  minus(Period), minusXxx(long):
+     LocalDataTime  minus(Period), minusXxx(long): Do assignment to effect!!!
      LocalDataTime  withXxx(): replace
                int  getXxx()
             String  format(DateTimeFormatter)
@@ -158,6 +158,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                String  format(TemporalAccessor)
 59. {} - we can only use it in array declaration expression.
             not in method parameter, assignment directly without new type[]
+    {} - try, catch, finally require; if, else, while, do-while, for do not.
 60. Predicate<T> - the functional interface assign to the lambda expression
                    when as a method parameter, its method's body is the right hand side of ->,
                        and make sure its method parameter's type is right
@@ -176,6 +177,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                      cannot instantiated
                      tell class or concrete class in options
                abstract method no body, no {} !!!!
+               method without "abstract"
 64. Exception - JVM throw ArithmeticException, ArrayIndexOutOfBoundException, ClassCastException,
                            NullPointerException and Error.
                 Programmatically throw Checked Exception, IllegalArgumentException, NumberFormatException.
