@@ -9,6 +9,7 @@ import java.util.ListIterator;
 /**
  * Created by williaz on 11/15/16.
  * I won't override equals() as the Java API authors did.
+ * SB's parent class AbstractStringBuilder actually uses package access char[] to store
  */
 public final class MyStringBuilder implements CharSequence{
     private final List<Character> value;

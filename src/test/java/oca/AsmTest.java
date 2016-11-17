@@ -173,8 +173,8 @@ public class AsmTest {
 
         assertEquals(level, 0);
 
-        final int xx = 5;
-        //final char xx = 'c';
+        //final int xx = 5;
+        final char xx = 'c';
 
         switch(cc){
             case xx : level =1; break;
@@ -330,6 +330,23 @@ public class AsmTest {
             System.out.println(i++);
         while (i < 5);
     }
+
+    @Test
+    public void test_Array_Assignment() {
+        int[][] arr = new int[2][3];
+        //arr[0] = {1, 3, 4}; // array initializer no allowed here
+        arr[0] = new int[] {1, 3, 4};
+        arr[1] = new int[] {1};
+        for (int[] a : arr)
+            for (int i : a) {
+                System.out.println(i);
+            }
+        arr[1] = new int[] {1, 4, 5, 6, 5, 11}; // No ArrayIndexOutOfBoundException!!
+
+
+    }
+
+
 
 
 

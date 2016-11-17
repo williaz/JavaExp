@@ -347,6 +347,16 @@ public class CoreApiTest {
     }
 
     @Test
+    public void test_ArrayList_Remove() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(2);
+        list.add(5);
+        list.add(0, 3);// insert, not replace
+        list.add(12);
+        list.remove(new Integer(55));
+    }
+
+    @Test
     public void Test_ArrayList(){
         int[] a ={1, 3, 4};
         int[] b ={1, 3, 4};
@@ -365,6 +375,7 @@ public class CoreApiTest {
         list.add(0, 3);// insert, not replace
         list.add(12);
         assertEquals(list.toString(), "[3, 2, 5, 12]");
+        list.remove(new Integer(55));
 
         ArrayList<Integer> list1 = new ArrayList<>(list);
         assertEquals(list, list1);
@@ -682,6 +693,12 @@ public class CoreApiTest {
         assertEquals(ldt.withMonth(5), ldt.minusMonths(6));
     }
 
+    @Test
+    public void test_Date_Period() {
+        LocalDate ld = LocalDate.now();
+        Period p = Period.of(-1, -1, 10);
+        System.out.println(ld.plus(p));
+    }
 
     @Test
     public void Test_CollectionEqualsMethod(){

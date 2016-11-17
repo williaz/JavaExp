@@ -551,5 +551,17 @@ public class MethodTest {
         System.out.println(list);
     }
 
+    @Test
+    public void test_Lambda_Primitive() {
+        List<Integer> list = new ArrayList<>();
+        list.add(23);
+        list.add(12);
+        list.add(5);
+
+        //list.removeIf((int i)-> i<10 ); // cannot use primitive type, Only <T>
+        list.removeIf(i -> i < 10);
+
+        assertFalse(list.contains(5));
+    }
 
 }

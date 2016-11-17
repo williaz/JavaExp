@@ -1,7 +1,7 @@
 03. Switch - support primitive type can promote to int(byte, short, char, int) and their wrapper class;
               enum; String
-              stop until reach break, or the end.
-              a case must be a constant expression. -> final
+             stop until reach break, or the end.
+             a case must be a constant expression. -> final must
 06. Class - at most one of the classes in the file is allowed to be public.
 07. Method - a method signature is the method name and the number and type of its parameters.
              Return types and thrown exceptions are not considered to be a part of the method signature.
@@ -70,7 +70,6 @@
 44. package - the package name represents any folders underneath the current path.
 45. primitive - 0xE can assign to double
 25. char - char is equivalent to an unsigned short.
-50. null - unbox null throw NullPointerException
 --\
 18. Loop - only for have increment clause
 51. for - for (initialization; termination; increment):
@@ -190,7 +189,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                      cannot instantiated
                      tell class or concrete class in options
                abstract method no body, no {} !!!!
-               method without "abstract"
+               method without "abstract", {}
 68. illegal combination - abstract & static
                           abstract & final
                           abstract & private
@@ -199,6 +198,7 @@ API: String, StringBuilder, ArrayList, LocalDate, LocalTime, LocalDateTime, Peri
                 Programmatically throw Checked Exception, IllegalArgumentException, NumberFormatException(String).
 05. Exception - Checked usually by programmer; Errors are intended to be thrown by JVM.
                 Runtime exceptions are commonly thrown by both.
+50. null - unbox null throw NullPointerException
 65. Order of Initialization -
                 1. If there is a superclass, initialize it first
                 2. Static variable declarations and then static initializer in the order they appear in the file.
