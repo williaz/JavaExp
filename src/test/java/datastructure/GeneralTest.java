@@ -216,4 +216,36 @@ public class GeneralTest {
         assertEquals(3, strStr("tartarget", "target"));
         assertEquals(-1, strStr("source", "rced"));
     }
+
+    public static enum Chocalate {
+        MILK (2),  DARK(3),  WHITE(4);
+        private final int i;
+        private Chocalate(int i) {
+            this.i = i;
+        }
+        public int getNum() {
+            return i;
+        }
+    }
+
+    public static int getChocalate(int m, int d, int w) {
+        int chocalateEaten = m + d + w;
+        int[] papers = new int[]{ m, d, w};;
+        int[] min = new int[] { Chocalate.MILK.getNum(), Chocalate.DARK.getNum(), Chocalate.WHITE.getNum()};
+        for (int i = 0; i < 3; i++) {
+            while (papers[i] >= min[i]) {
+                chocalateEaten += papers[i] / min[i];
+                papers[i] = (papers[i] / min[i]) + (papers[i] % min[i]);
+            }
+        }
+        return chocalateEaten;
+
+    }
+
+    @Test
+    public void test_Chocalate() {
+        System.out.println(getChocalate(14, 26, 34));
+        System.out.println(Chocalate.values());
+
+    }
 }
