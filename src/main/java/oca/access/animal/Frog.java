@@ -12,6 +12,9 @@ public class Frog {
     private void run() {System.out.println("Frog's private run()");};
     public void shout() {System.out.println("Frog's public shout()");};
 
+    public static void count() {System.out.println("in Frog static");};
+
+
     public static void main(String[] args) {
         Frog f = new Frog();
         f.shout();

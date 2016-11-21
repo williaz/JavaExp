@@ -97,7 +97,8 @@ public class generalTest {
     public enum Color {
         RED(50), GREEN(100), BLUE(150), YELLOW(200);
         private final int val;
-        private Color (int i) {
+
+        private Color(int i) {
             val = i;
         }
 
