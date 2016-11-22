@@ -127,4 +127,31 @@ public class AdvClassTest {
         }
     }
 
+    /**
+     *   4 type Nested Classes:
+     * 1. Member inner class, like instance variable
+     *      can be any access, no static, can abstract / final,
+     *      can access outer class members including private;
+     *      compile as Outer$Inner.class
+     *      2 level is the deepest for using inner class name directly
+     *      interface can also private
+     *<p>
+     * 2. Local inner class, like local variable in method
+     *      no access modifier to use
+     *      no static,
+     *      can only access effectively final or final
+     *<p>
+     * 3. Anonymous inner class, no name local inner class
+     *      Anonymous inner classes are required to extend an existing class
+     *        or implement an existing interface
+     *      it is an implementation, no abstract / final
+     * 4. Static nested class, like static variable
+     *      Java treats it as a namespace
+     *      enclosing class can refer its member
+     *      import / import static
+     *
+     * @see OuterClass
+     */
+
+
 }
