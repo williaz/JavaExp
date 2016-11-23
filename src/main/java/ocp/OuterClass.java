@@ -7,6 +7,22 @@ public class OuterClass {
     private String name = "Outer";
     private int length = 5;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OuterClass)) return false;
+
+        OuterClass that = (OuterClass) o;
+
+        return name != null ? name.equals(that.name) : that.name == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
+    }
+
     /**
      * Member Inner Class
      */
