@@ -1,5 +1,21 @@
 package ocp;
 
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import ocp.creational.Immutable;
+import ocp.creational.LazySingleton;
+import ocp.creational.MyUrl;
+import ocp.creational.MyUrlBuilder;
+import ocp.creational.Singleton;
+import ocp.creational.factory.Meal;
+import ocp.creational.factory.MealFactory;
+
+import static org.junit.Assert.*;
+
 /**
  * Created by williaz on 11/23/16.
  *   a data model is the representation of our objects and their properties within our application
@@ -16,13 +32,18 @@ package ocp;
  *    in order to reuse the functionality of the other classes
  *    ->an alternate to inheritance
  *      to simulate polymorphic behavior that cannot be achieved via single inheritance.-> reusable
+ * <p>
+ * <br>Design Pattern<br/>
+ * Design patterns are often written to help prevent anti‐patterns from forming.
+ * An anti‐pattern is a common solution to a reoccurring problem
+ *    that tends to lead to unmanageable or difficult‐to‐use code.
  */
 
 public class DesignTest {
     /**
      * For function interface, it has only one abstract method,
      *  # there is no restriction on num of default or static methods;
-     *  compatible return type of FI's abstract methodm ---
+     *  compatible return type of FI's abstract method ---
      *  # When one parameter has a data type listed, though,
      *    all parameters must provide a data type.
      *  Not allow to redeclare lambda parameters.
@@ -51,4 +72,150 @@ public class DesignTest {
      *
      */
 
+    /**
+     * Singleton:
+     * 1. private static final instance
+     * 2. public static getInstance()
+     * 3. private constructor -> implicit final
+     */
+    @Test
+    public void test_Singleton() {
+
+            Thread t1 = new Thread() {
+                @Override
+                public void run() {
+                    Singleton single = Singleton.getInstance();
+                    single.addQuantity(50);
+                    single.consume(20);
+                }
+            };
+
+            Thread t2 = new Thread() {
+                @Override
+                public void run() {
+                    Singleton single = Singleton.getInstance();
+                    single.addQuantity(100);
+                    single.consume(30);
+                }
+            };
+
+
+            try {
+                t1.start();
+                t2.start();
+                t1.join();
+                t2.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        Singleton single1 = Singleton.getInstance();
+        single1.addQuantity(100);
+        single1.consume(30);
+
+        assertEquals(170, single1.getQuantity());
+    }
+
+    @Test
+    public void test_LazySingleton() {
+        Thread t1 = new Thread() {
+            @Override
+            public void run() {
+                LazySingleton single = LazySingleton.getInstance();
+                single.addQuantity(50);
+
+                single.consume(20);
+            }
+        };
+
+        Thread t2 = new Thread() {
+            @Override
+            public void run() {
+                LazySingleton single = LazySingleton.getInstance();
+                single.addQuantity(100);
+                single.consume(30);
+            }
+        };
+
+
+        try {
+            t1.start();
+            t2.start();
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        LazySingleton single1 = LazySingleton.getInstance();
+        single1.addQuantity(100);
+        single1.consume(30);
+
+        assertEquals(170, single1.getQuantity());
+    }
+
+    /**
+     * Immutable:
+     * 1. Use a constructor to set all properties of the object.
+     * 2. Mark all of the instance variables private and final .
+     * 3. Don’t define any setter methods.
+     * 4. Don’t allow referenced mutable objects to be modified or accessed directly.
+     * 5. Prevent methods from being overridden.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void test_Immutable() {
+        List<String> foods = new ArrayList<>();
+        foods.add("fish");
+        foods.add("orange");
+        foods.add("apple");
+        foods.add("steak");
+        foods.add("chopstick");
+
+        Immutable imt = new Immutable("will", 25, foods);
+
+        Immutable other = new Immutable(imt);
+        other.getFood().forEach(System.out::println);
+
+
+        List<String> list = imt.getFood();
+        list.set(1, "KFC"); // cannot modify
+    }
+
+    /**
+     * Builder:
+     * tight- coupling
+     * Avoid too many constructor
+     * Why do not use setters instead? 1. for immutable class; 2. attributes depend on each other
+     * Oftentimes, builder objects are used once and then discarded.
+     * build() method to throw an exception if certain required fields are not set. or set default value
+     * In practice, a builder class is often packaged alongside its target class,
+     *    either as a static inner class within the target class or within the same Java package.
+     * make target class's constructor a private or default package, forcing
+     */
+    @Test
+    public void test_Builder() {
+        MyUrlBuilder mub = new MyUrlBuilder();
+        MyUrl url = mub.setScheme("http").setAuthority("github").setPath("williaz").builder();
+        System.out.println(url);
+        MyUrl url1 = mub.setScheme("https").setAuthority("github").setPath("williaz").setQuery("repo=JavaExp").builder();
+        System.out.println(url1);
+    }
+
+    /**
+     * Factory:
+     * static method -> Factory Method Pattern
+     * let the object package access constructor
+     */
+    @Test
+    public void test_Factory() {
+        Meal meal1 = MealFactory.getMeal(1);
+        meal1.consume();
+
+        Meal meal12 = MealFactory.getMeal(12);
+        meal12.consume();
+
+        Meal meal23 = MealFactory.getMeal(23);
+        meal23.consume();
+    }
 }
