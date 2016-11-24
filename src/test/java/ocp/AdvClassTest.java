@@ -6,13 +6,14 @@ import oca.ood.Animal;
 import oca.ood.Bird;
 import oca.ood.CanFly;
 import oca.ood.CanRun;
+import oca.ood.CanWalk;
 import oca.ood.CanadaGoose;
 import oca.ood.Lion;
 import oca.ood.Swan;
 
 import static org.junit.Assert.*;
 /**
- * Created by williaz on 11/21/16.
+ * Created by williaz on 11/21/16 - 11/23. 2.5d
  * <p>
  * The compilation check only applies when instanceof is called on a class.
  * When checking whether an object is an instanceof an interface, Java waits until runtime to do the check.
@@ -27,24 +28,29 @@ import static org.junit.Assert.*;
  *                    3. transitive: x->y, y->z => x->z
  *                    4. consistent: keep x->y; 5. false for null: x->null =>false, no NullPointerException
  *<p>
- * watch out public boolean equal(Object o), overloading / overriding
- * inner class is not allowed to contain static!!
+ * #watch out public boolean equal(Object o), overloading / overriding
+ * #inner class is not allowed to contain static!!
  * with instance variable, ref type matters,
- * method in interface is public, watch out for overridden method, can only public for it!!
+ * #method in interface is public, watch out for overridden method, can only public for it!!
  * */
 public class AdvClassTest {
 
     /**
      * Bird -> Swan -> CanadaGoose
-     * compiler error may occur when there is no relationship between two sides(class) of instanceof,
+     * #compiler error may occur when there is no relationship between two sides(class) of instanceof,
      * but not for interface
      */
     @Test
     public void test_Instanceof() {
         Bird bird = new CanadaGoose();
         assertTrue(bird instanceof Swan);
+        CanWalk walker = bird;
+        assertFalse(walker instanceof CanRun);
+        assertFalse(walker instanceof Lion);  // no ce!!
 
-        //bird instanceof Lion; // ce
+        CanRun runner = (CanadaGoose)bird;
+
+        //bird instanceof lion; // ce
         assertFalse(bird instanceof CanRun);
         Animal lion = new Lion(12);
         assertFalse(lion instanceof CanFly);
@@ -63,13 +69,22 @@ public class AdvClassTest {
     }
 
     /**
+     * interface static method will not be inherited, back compatible.
+     */
+    @Test
+    public void test_InterfaceConstants() {
+        Bird bird = new CanadaGoose();
+        System.out.println(bird.MAXIMUM_Height);
+    }
+
+    /**
      * It is common to multiply by a prime number
      * when combining multiple fields in the hash code.
      */
 
     /**
      * Enum: it is a type; UPPERCASE convention; static
-     *  1. You cannot extend enum;
+     *  1. You cannot extend enum;#
      *  2. its valueOf(String) - The String passed in must match exactly
      *  3. For using in switch, must be unqualified name
      *  4. must have ; if use (value)

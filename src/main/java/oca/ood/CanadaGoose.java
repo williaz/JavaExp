@@ -3,7 +3,7 @@ package oca.ood;
 /**
  * Created by williaz on 11/3/16.
  */
-public class CanadaGoose extends Swan {
+public class CanadaGoose extends Swan implements CanRun{
     public double getWarmTemp() {
         return 40.1;
     }
