@@ -11,13 +11,14 @@ import ocp.creational.LazySingleton;
 import ocp.creational.MyUrl;
 import ocp.creational.MyUrlBuilder;
 import ocp.creational.Singleton;
+import ocp.creational.factory.ChildMeal;
 import ocp.creational.factory.Meal;
 import ocp.creational.factory.MealFactory;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 11/23/16.
+ * Created by williaz on 11/23/16 - 11/25 3d.
  *   a data model is the representation of our objects and their properties within our application
  * and how they relate to items in the real world.
  * <p>OOP:</p>
@@ -37,6 +38,10 @@ import static org.junit.Assert.*;
  * Design patterns are often written to help prevent anti‐patterns from forming.
  * An anti‐pattern is a common solution to a reoccurring problem
  *    that tends to lead to unmanageable or difficult‐to‐use code.
+ * #watch out:
+ * 1. default, static method in interface must have body!
+ * 2. lambda must have right hand side expression, X ()->
+ * 3. interface cannot final!
  */
 
 public class DesignTest {
@@ -217,5 +222,6 @@ public class DesignTest {
 
         Meal meal23 = MealFactory.getMeal(23);
         meal23.consume();
+
     }
 }

@@ -49,6 +49,7 @@ public class AdvClassTest {
         assertFalse(walker instanceof Lion);  // no ce!!
 
         CanRun runner = (CanadaGoose)bird;
+        //CanRun runner1 = bird; //incompatible type
 
         //bird instanceof lion; // ce
         assertFalse(bird instanceof CanRun);
