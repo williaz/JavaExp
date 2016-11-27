@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,10 +17,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import ocp.compare.Card;
+import ocp.compare.RankFirstComparator;
+import ocp.compare.SuitFirstComparator;
 
 import static org.junit.Assert.*;
 
@@ -99,14 +110,18 @@ public class CollectionTest {
      * Common Choice:
      * List: ArrayList
      * Set: HashSet
-     * Queue: LinkedList
+     * Queue: LinkedList(wth index)
      * Stack: ArrayDeque
      *
+     * # NO null:
+     *   The data structures that involve sorting do not allow nulls. -> TreeSet, TreeMap(null value OK)
+     *   ArrayDeque: poll() uses null
+     *   Hashtable: null key / value
      *
      */
 
     /**
-     * Common collection method(6), Set:
+     * Common collection method(6+1), Set:
      *
      * boolean add(E)
      * boolean remove(Object)
@@ -114,6 +129,8 @@ public class CollectionTest {
      *     int size()
      *    void clear()
      * boolean contains(Object)
+     *
+     * boolean removeIf(Predicate)
      *
      * Iterator<E> iterator()
      */
@@ -294,6 +311,165 @@ public class CollectionTest {
         Collection<Double> values = prices.values();
         values.forEach(System.out::println);
     }
+
+    /**
+     * The point of Comparable is to implement it inside the object being compared.
+     * numbers sort before letters and uppercase letters sort before lowercase letters.
+     * Make compareTo() consistent with equals()
+     * It is common to decide that nulls sort before any other values.
+     * Comparator  let you separate sort order from the object to be sorted.
+     */
+
+    @Test
+    public void test_Comparable() {
+        Card c11 = new Card(Card.Suit.CLUB, 11);
+        Card s13 = new Card(Card.Suit.SPADE, 13);
+        Card h1 = new Card(Card.Suit.HEART, 1);
+        Card d7 = new Card(Card.Suit.DIAMOND, 7);
+        Card h7 = new Card(Card.Suit.HEART, 7);
+        NavigableSet<Card> deck = new TreeSet<>();
+        deck.add(c11);
+        deck.add(h1);
+        deck.add(s13);
+        deck.add(d7);
+        deck.add(h7);
+        deck.forEach(System.out::println);
+    }
+
+    @Test
+    public void test_Comparator() {
+        Comparator<Card> byRankFirst = Comparator.comparingInt(c -> c.getRank());
+        byRankFirst = byRankFirst.thenComparingInt(c -> c.getSuit().ordinal());
+
+        PriorityQueue<Card> deck = new PriorityQueue<>(byRankFirst);
+        Card c11 = new Card(Card.Suit.CLUB, 11);
+        Card s13 = new Card(Card.Suit.SPADE, 13);
+        Card h1 = new Card(Card.Suit.HEART, 1);
+        Card d7 = new Card(Card.Suit.DIAMOND, 7);
+        Card h7 = new Card(Card.Suit.HEART, 7);
+        deck.add(c11);
+        deck.add(h1);
+        deck.add(s13);
+        deck.add(d7);
+        deck.add(h7);
+        while (!deck.isEmpty()) {
+            System.out.println(deck.poll());
+        }
+
+        System.out.println("----- Old way -------");
+        PriorityQueue<Card> deck1 = new PriorityQueue<>(new RankFirstComparator());
+        deck1.add(c11);
+        deck1.add(h1);
+        deck1.add(s13);
+        deck1.add(d7);
+        deck1.add(h7);
+        while (!deck1.isEmpty()) {
+            System.out.println(deck1.poll());
+        }
+
+        System.out.println("----- Rev natural -------");
+        Comparator<Card> byRankFirstRev = Comparator.reverseOrder();
+        PriorityQueue<Card> deck4 = new PriorityQueue<>(byRankFirstRev);
+        deck4.add(c11);
+        deck4.add(h1);
+        deck4.add(s13);
+        deck4.add(d7);
+        deck4.add(h7);
+        while (!deck4.isEmpty()) {
+            System.out.println(deck4.poll());
+        }
+
+        System.out.println("----- Natual copy -------");
+        PriorityQueue<Card> deck2 = new PriorityQueue<>(new SuitFirstComparator());
+        deck2.add(c11);
+        deck2.add(h1);
+        deck2.add(s13);
+        deck2.add(d7);
+        deck2.add(h7);
+        while (!deck2.isEmpty()) {
+            System.out.println(deck2.poll());
+        }
+
+
+        PriorityQueue<Card> deck3 = new PriorityQueue<>();
+        deck3.add(c11);
+        deck3.add(h1);
+        deck3.add(s13);
+        deck3.add(d7);
+        deck3.add(h7);
+
+        System.out.println("----- forEach -------");
+        deck3.forEach(System.out::println);
+        //The Iterator provided in method iterator() is not guaranteed to traverse the elements of the priority queue in any particular order.
+        System.out.println("----- Natual way -------");
+        while (!deck3.isEmpty()) {
+            System.out.println(deck3.poll());
+        }
+    }
+
+    /**
+     * sort() method need the class implements Comparable, otherwise ce! or add Comparator to argument.
+     * comparator as the precondition for binarySearching!! meet or negative value
+     */
+    @Test
+    public void test_BinarySearchNoMeetComparator() {
+        Card c11 = new Card(Card.Suit.CLUB, 11);
+        Card s13 = new Card(Card.Suit.SPADE, 13);
+        Card h1 = new Card(Card.Suit.HEART, 1);
+        Card d7 = new Card(Card.Suit.DIAMOND, 7);
+        Card h7 = new Card(Card.Suit.HEART, 7);
+        Comparator<Card> rev = Comparator.reverseOrder();
+        List<Card> deck = new ArrayList<>();
+        deck.add(c11);
+        deck.add(h1);
+        deck.add(s13);
+        deck.add(d7);
+        deck.add(h7);
+        Collections.sort(deck, rev);
+        deck.forEach(System.out::println);
+        System.out.println(Collections.binarySearch(deck, h1, rev));
+    }
+
+    /**
+     * Method reference - :: operator tells Java to pass the parameters automatically
+     * :: is like lambdas, and it is typically used for deferred execution.
+     *
+     * There are four formats for method references:
+     * 1. Static methods
+     * 2. Instance methods on a particular instance
+     * 3. Instance methods on an instance to be determined at runtime
+     * 4. Constructors - constructor reference
+     */
+
+    @Test
+    public void test_MethodRef() {
+        //1. static
+        List<Double> list = Arrays.asList(-23.2, -0.4, 5.0, -2.2);
+        Function<Double, Double> abs = Math::abs;
+        list.stream().map(abs).forEach(System.out::println);
+
+        //2. particular instance
+        String name = "wilson";
+        Predicate<String> endStr = name::endsWith;
+        List<String> postfix = Arrays.asList("ton","son", "iam");
+        postfix.stream().filter(endStr).forEach(System.out::println);
+
+        //3. instance runtime
+        Function<String, Integer> endStr1 = String::length;
+        Predicate<String> methodRef3 = String::isEmpty;
+        postfix.stream().map(endStr1).forEach(System.out::println);
+
+        //4. constructor - constructor reference
+        Supplier<String> newStr = String::new;
+    }
+
+    @Test
+    public void test_RemoveIf() {
+        Set<String> names = new HashSet<>(Arrays.asList("Will","Bill", "Billy", "Wilson"));
+        names.removeIf(s -> s.startsWith("Bill"));
+        assertFalse(names.contains("Billy"));
+    }
+
 
 
 
