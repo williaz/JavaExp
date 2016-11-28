@@ -36,6 +36,10 @@ import static org.junit.Assert.*;
 
 /**
  * Created by williaz on 11/26/16.
+ * watch out:
+ * 1. collection without Generic, for looping use Object, else ce!
+ * 2. Set<Number> set = new HashSet<Integer>(); -> ce!!!
+ * 3. lambda no redefine.
  */
 public class CollectionTest {
     @Test
@@ -165,6 +169,20 @@ public class CollectionTest {
 
     }
 
+    @Test
+    public void test_LoopCollection() {
+        Set<Integer> set = new HashSet<>();
+        set.add(12);
+        set.add(null);
+        set.forEach(System.out::println);
+        Iterator i = set.iterator();
+        while (i.hasNext()) System.out.println(i.next());
+
+        Iterator<Integer> it = set.iterator(); // OK for null
+        while (it.hasNext()) System.out.println(it.next());
+
+    }
+
     /**
      * List: ArrayList, LinkedList, (Vector, Stack)
      * List common methods(6+5):
@@ -258,6 +276,7 @@ public class CollectionTest {
 
     /**
      * Map: HashMap, LinkedHashMap, TreeMap, (Hashtable)
+     * # no contains(), add() !!!
      *
      * void clear()
      * int size()
@@ -291,13 +310,17 @@ public class CollectionTest {
 
         Collection<Double> values = prices.values();
         values.forEach(System.out::println);
+
+        Map map = new HashMap();
+        map.put(123, "www"); // int -> Integer
+        assertTrue(map.containsKey(123));
     }
 
     @Test
     public void test_TreeMap() {
         Map<String, Double> prices = new TreeMap<>();
         prices.put("GOOG", 1100.7);
-        prices.put("APPL", 90.7);
+        prices.put("APPL", 90.7); // cannot be 90, int -> double -> Double X
         assertTrue(90.7 == prices.put("APPL", 110.5));
         prices.put("FB", 120.4);
         prices.put("NFLX", 140.2);
