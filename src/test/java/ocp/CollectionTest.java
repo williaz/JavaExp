@@ -22,6 +22,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -58,7 +59,7 @@ public class CollectionTest {
      *    5. Create a static generic variable
      * Unless a method is obtaining the generic formal type parameter from the class/interface,
      *    it is specified immediately before the return type of the method.
-     * # Wildcards: (1. unbound: ?; 2. upper bound: ? extends (any class that extends); )-> make logical immutable!
+     * # Wildcards: (1. unbound: ?; 2. upper bound: ? extends (any class that extends); )-> make logical immutable!!
      *               3. lower bound: ? super (a superclass of)
      */
     @Test
@@ -174,6 +175,8 @@ public class CollectionTest {
      *     int lastIndexOf(E)
      * boolean remove(int)
      *       E set(int, E): return previous element !!
+     *
+     *    void repalceAll(UnaryOperator<E>): default
      */
     @Test
     public void test_ListMethod() {
@@ -446,21 +449,28 @@ public class CollectionTest {
         //1. static
         List<Double> list = Arrays.asList(-23.2, -0.4, 5.0, -2.2);
         Function<Double, Double> abs = Math::abs;
+        Function<Double, Double> absL = x -> Math.abs(x); // lambda form
         list.stream().map(abs).forEach(System.out::println);
+        list.stream().map(absL).forEach(System.out::println);
 
         //2. particular instance
         String name = "wilson";
         Predicate<String> endStr = name::endsWith;
+        Predicate<String> endStrL = str -> name.endsWith(str);
         List<String> postfix = Arrays.asList("ton","son", "iam");
         postfix.stream().filter(endStr).forEach(System.out::println);
+        postfix.stream().filter(endStrL).forEach(System.out::println);
 
         //3. instance runtime
         Function<String, Integer> endStr1 = String::length;
+        Function<String, Integer> endStr1L = x -> x.length();
         Predicate<String> methodRef3 = String::isEmpty;
         postfix.stream().map(endStr1).forEach(System.out::println);
+        postfix.stream().map(endStr1L).forEach(System.out::println);
 
         //4. constructor - constructor reference
         Supplier<String> newStr = String::new;
+        Supplier<String> newStrL = () -> new String();
     }
 
     @Test
@@ -470,7 +480,59 @@ public class CollectionTest {
         assertFalse(names.contains("Billy"));
     }
 
+    @Test
+    public void test_ReplaceAll() {
+        //a UnaryOperator, which takes one parameter and returns a value of the same type.
+        List<Double> list = Arrays.asList(-23.2, -0.4, 5.0, -2.2);
+        list.replaceAll(x -> x + 10);
+        list.forEach(System.out::println);
 
+    }
+
+    /**
+     * V merge(K, V) : If the specified key is not already associated with a value
+     * or is associated with null,
+     *  associates it with the given non-null value.
+     *
+     *  If the mapping function is called and returns null, the key is removed from the map for computeIfPresent().
+     *  For computeIfAbsent(), the key is never added to the map in the first place,
+     */
+    @Test
+    public void test_MapNewApi() {
+        Map<String, Double> prices = new HashMap<>();
+        prices.put("GOOG", 1100.7);
+        prices.put("APPL", 90.7);
+        prices.put("FB", 120.4);
+        prices.put("NFLX", 140.2);
+
+        prices.putIfAbsent("FB", 122.5);
+        prices.putIfAbsent("TWWT", 18.7);
+
+
+        BiFunction<Double, Double, Double> remapper = (vFormer, vLatter) -> Math.max(vFormer, vLatter);
+        prices.put("GPRO", null);
+        prices.merge("GS", 200.4, remapper); // add new price
+        prices.merge("GPRO", 8.9, remapper); // for price with null
+        prices.merge("APPL", 130.45, remapper); // exist with smaller price
+        prices.merge("FB", 110.85, remapper); //exist with larger price
+
+        BiFunction<Double, Double, Double> renull = (vFormer, vLatter) -> null;
+        prices.merge("MS", 40.32, renull);  //added
+        prices.merge("GPRO", 12.32, renull); //deleted
+
+        BiFunction<String, Double, Double> uptrend = (k, v) -> v += 10;
+        prices.computeIfPresent("FB", uptrend); //120.4+10
+        prices.computeIfPresent("C", uptrend);
+        prices.put("QQQ", null);
+        prices.computeIfPresent("QQQ", uptrend); // do noting
+
+        Function<String, Double> ipo = k -> k.length() * 5.0;
+        prices.computeIfAbsent("AMAZ", ipo);
+        prices.computeIfAbsent("FB", ipo);
+
+        System.out.println(prices);
+
+    }
 
 
 }
