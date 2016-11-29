@@ -251,6 +251,28 @@ public class GeneralTest {
 
     }
 
+    public static double square(double value, double precision) {
+        double left = 0;
+        double right = value;
+        double mid;
+        while (left + precision < right) {
+            mid = left + (right - left) / 2;
+            if (mid * mid <= value) {
+                left = mid;
+            } else right = mid;
+
+        }
+        if (right * right <= value) return right;
+        return left;
+    }
+
+    @Test
+    public void test_Sqrt() {
+        assertEquals(Math.sqrt(100), square(100, 1), 1);
+        assertEquals(Math.sqrt(200), square(200, 0.1), 0.1);
+        assertEquals(Math.sqrt(3591224), square(3591224, 0.01), 0.01);
+    }
+
 
 
 }

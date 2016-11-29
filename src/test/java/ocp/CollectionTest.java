@@ -84,8 +84,8 @@ public class CollectionTest {
         //upper bound wildcard
         List<? extends Number> numbers = arrInt;
         //numbers = new ArrayList<String>(); //Incompatible
-        //numbers.add(new Double(12.2)); // cannot apply for object type
-        //numbers.add(new Integer(23)); // cannot for reference type
+        //numbers.add(new Double(12.2)); // cannot apply because of its object type
+        //numbers.add(new Integer(23)); // cannot as its reference type
         numbers.remove(0); // but can remove
         assertEquals(43, numbers.get(0));
 
@@ -93,7 +93,7 @@ public class CollectionTest {
         List<? super IOException> nums = new ArrayList<IOException>();
         //nums.add(new Exception());  // cannot for object type
         nums.add(new IOException());
-        nums.add(new FileNotFoundException()); // only need to check object type actully
+        nums.add(new FileNotFoundException()); // only need to check object type actually
 
     }
 
