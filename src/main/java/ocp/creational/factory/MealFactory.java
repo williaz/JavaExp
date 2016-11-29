@@ -4,6 +4,7 @@ package ocp.creational.factory;
  * Created by williaz on 11/24/16.
  * Bad design
  * enum VS factory
+ * @see java.time.LocalDate
  */
 public class MealFactory {
     public static Meal getMeal(int num) {

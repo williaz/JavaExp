@@ -35,7 +35,7 @@ import ocp.compare.SuitFirstComparator;
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 11/26/16.
+ * Created by williaz on 11/26/16 - 11/28 3d.
  * watch out:
  * 1. collection without Generic, for looping use Object, else ce!
  * 2. Set<Number> set = new HashSet<Integer>(); -> ce!!!
@@ -493,7 +493,7 @@ public class CollectionTest {
 
         //4. constructor - constructor reference
         Supplier<String> newStr = String::new;
-        Supplier<String> newStrL = () -> new String();
+        Supplier<String> newStrL = () -> new String("will");
     }
 
     @Test
