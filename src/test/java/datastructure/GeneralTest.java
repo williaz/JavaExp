@@ -9,6 +9,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 
 import static org.junit.Assert.*;
 
@@ -17,16 +18,16 @@ import static org.junit.Assert.*;
  */
 public class GeneralTest {
 
-    public int[] swapWithoutCache(int a, int b){
+    public int[] swapWithoutCache(int a, int b) {
         a = a - b;
         b = b + a; //a
         a = b - a;
 
-        return new int[] {a, b};
+        return new int[]{a, b};
     }
 
     @Test
-    public void Test_SwapWithoutCache(){
+    public void Test_SwapWithoutCache() {
         int a = 10;
         int b = 13;
 
@@ -43,7 +44,7 @@ public class GeneralTest {
      * <p>String, primitive uses literal in local scope, should be guarantee be initialized
      */
     @Test
-    public void Test_LocalArrayDefaultValue(){
+    public void Test_LocalArrayDefaultValue() {
         int[] arr = new int[5];
         assertEquals(0, arr[4]);
 
@@ -53,18 +54,18 @@ public class GeneralTest {
     }
 
     //TODO Window Sum
-    public int[] getWindowSum(int[] arr, int range){
+    public int[] getWindowSum(int[] arr, int range) {
         final int SIZE = arr.length - range + 1;
-        if(SIZE <= 0){
+        if (SIZE <= 0) {
             return null;
         }
         int[] sum = new int[SIZE];
 
-        for(int j = 0; j < range; j++){
+        for (int j = 0; j < range; j++) {
             sum[0] += arr[j];
         }
 
-        for(int i = 1; i < SIZE; i++){
+        for (int i = 1; i < SIZE; i++) {
             sum[i] = sum[i - 1] - arr[i - 1] + arr[i + range - 1];
 
         }//end i
@@ -73,7 +74,7 @@ public class GeneralTest {
     }
 
     @Test
-    public void Test_GetWindowSum(){
+    public void Test_GetWindowSum() {
         int[] arr = {4, 2, 73, 11, -5};
         int[] sum2 = {6, 75, 84, 6};
 
@@ -82,8 +83,10 @@ public class GeneralTest {
 
     public int reverseInteger(int n) {
         int sign = 1;
-        if (n < 0) { sign = -1; }
-        String s = ""+sign*n;
+        if (n < 0) {
+            sign = -1;
+        }
+        String s = "" + sign * n;
         StringBuilder sb = new StringBuilder(s);// constructor accept String
         sb.reverse();
         int i = Integer.parseInt(sb.toString());
@@ -103,8 +106,11 @@ public class GeneralTest {
         else if (s1 == '{' && s2 == '}') return true;
         else return false;
     }
+
     public boolean isValidParentheses(String s) {
-        if (s == null || s.isEmpty()) { return true; }
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
         Deque<Character> stack = new ArrayDeque<>();
         char[] arr = s.toCharArray();
         for (char c : arr) {
@@ -121,6 +127,7 @@ public class GeneralTest {
         if (stack.isEmpty()) return true;
         else return false;
     }
+
     @Test
     public void test_ValidParentheses() {
         String s = "()";
@@ -131,7 +138,9 @@ public class GeneralTest {
 
 
     public int[] plusOne(int[] digits) {
-        if (digits == null || digits.length == 0 ) { return digits; }
+        if (digits == null || digits.length == 0) {
+            return digits;
+        }
         int one = 1;
         List<Integer> list = new ArrayList();
         for (int i = 0; i < digits.length; i++) {
@@ -147,27 +156,28 @@ public class GeneralTest {
                 one = 0;
                 break;
             } else {
-                list.set(i, sum -10);
+                list.set(i, sum - 10);
             }
         }
         if (one == 1) {
             list.add(0, 1);
         }
         int[] re = new int[list.size()];
-        for (int i =0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             re[i] = list.get(i);
         }
         return re;
     }
+
     @Test
     public void test_PlusOne() {
-        assertTrue(Arrays.equals(new int[] {1}, plusOne(new int[] {0})));
-        assertTrue(Arrays.equals(new int[] {1,0,0,0}, plusOne(new int[] {9,9,9})));
+        assertTrue(Arrays.equals(new int[]{1}, plusOne(new int[]{0})));
+        assertTrue(Arrays.equals(new int[]{1, 0, 0, 0}, plusOne(new int[]{9, 9, 9})));
     }
 
     @Test
     public void test_Length() {
-        int [] n0 = new int[0];
+        int[] n0 = new int[0];
         List l = new ArrayList();
         String s = "";
         assertEquals(0, n0.length);
@@ -197,7 +207,7 @@ public class GeneralTest {
                 if (source.charAt(i) != target.charAt(j)) {
                     i = index;// 1112 112
                     index = -1;
-                   // j = 0
+                    // j = 0
 
                 } else if (j == target.length() - 1) {
                     break;
@@ -210,6 +220,7 @@ public class GeneralTest {
         }
         return index;
     }
+
     @Test
     public void test_strStr() {
         assertEquals(4, strStr("abcde", "e"));
@@ -220,11 +231,13 @@ public class GeneralTest {
     }
 
     public static enum Chocalate {
-        MILK (2),  DARK(3),  WHITE(4);
+        MILK(2), DARK(3), WHITE(4);
         private final int i;
+
         private Chocalate(int i) {
             this.i = i;
         }
+
         public int getNum() {
             return i;
         }
@@ -232,8 +245,9 @@ public class GeneralTest {
 
     public static int getChocalate(int m, int d, int w) {
         int chocalateEaten = m + d + w;
-        int[] papers = new int[]{ m, d, w};;
-        int[] min = new int[] { Chocalate.MILK.getNum(), Chocalate.DARK.getNum(), Chocalate.WHITE.getNum()};
+        int[] papers = new int[]{m, d, w};
+        ;
+        int[] min = new int[]{Chocalate.MILK.getNum(), Chocalate.DARK.getNum(), Chocalate.WHITE.getNum()};
         for (int i = 0; i < 3; i++) {
             while (papers[i] >= min[i]) {
                 chocalateEaten += papers[i] / min[i];
@@ -273,6 +287,101 @@ public class GeneralTest {
         assertEquals(Math.sqrt(3591224), square(3591224, 0.01), 0.01);
     }
 
+    private static class Checker {
+        private Set<Character> set = new HashSet<>();
+
+        private boolean add(char c) {
+            int v = Character.getNumericValue(c);
+            if (v < 1 || v > 9) return false;
+            if (set.add(c)) return true;
+            else return false;
+        }
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+        // same row, board[i][*]
+        // same colum, board[*][j]
+        // same block, i = 0 - 2, j = 0 - 2; i = 3 - 5; j = 0 - 2; (i/3)*3 + (j/3)
+        List<Checker> checkerRow = new ArrayList<>(9);
+        List<Checker> checkerCol = new ArrayList<>(9);
+        List<Checker> checkerBlc = new ArrayList<>(9);
+        for (int n = 0; n < 9; n++) {
+            checkerRow.add(new Checker());
+            checkerCol.add(new Checker());
+            checkerBlc.add(new Checker());
+        }
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[i].length; j++) {
+                char c = board[i][j];
+                if (c == '.') continue;
+                if (!checkerRow.get(i).add(c)) return false;
+                if (!checkerCol.get(j).add(c)) return false;
+                if (!checkerBlc.get((i / 3) * 3 + (j / 3)).add(c)) return false;
+            }
+        return true;
+    }
+
+    @Test
+    public void test_ValidSudoku() {
+        List<String> nums = Arrays.asList(".87654321", "2........", "3........", "4........", "5........", "6........", "7........", "8........", "9........");
+        char[][] board = new char[9][9];
+        int i = 0;
+        for (String str : nums) {
+            board[i] = str.toCharArray();
+            i++;
+        }
+        for (char[] cc : board) {
+            for (char c : cc) {
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }
+
+        assertTrue(isValidSudoku(board));
+
+    }
+
+    public static  class ListNode {
+       int val;
+       ListNode next;
+       ListNode(int x) { val = x; }
+    }
+
+    //TODO revise
+    public ListNode swapPairs(ListNode head) {
+        if (head == null) return null;
+
+        ListNode list = new ListNode(0);
+        list.next = head;
+
+        ListNode slow = list;
+        ListNode fast = head.next;
+        while (fast != null) {
+            ListNode node= slow.next; //cut first
+            slow.next = fast; //append sec
+            node.next = fast.next; // first be appended rest
+            fast.next = node; // swapped
+
+            slow = node;
+            fast = slow.next.next;
+        }
+        return list.next;
+    }
+    @Test
+    public void test_SwapNodesinPairs() {
+        ListNode n4 = new ListNode(4);
+        ListNode n3 = new ListNode(3);
+        ListNode n2 = new ListNode(2);
+        ListNode n1 = new ListNode(1);
+        n1.next = n2;
+        n2.next = n3;
+        n3.next = n4;
+        ListNode list = swapPairs(n1);
+        while (list != null) {
+            System.out.println(list.val);
+            list = list.next;
+        }
+    }
 
 
 }
