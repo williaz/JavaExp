@@ -347,23 +347,20 @@ public class GeneralTest {
        ListNode(int x) { val = x; }
     }
 
-    //TODO revise
     public ListNode swapPairs(ListNode head) {
         if (head == null) return null;
 
         ListNode list = new ListNode(0);
         list.next = head;
 
-        ListNode slow = list;
-        ListNode fast = head.next;
-        while (fast != null) {
-            ListNode node= slow.next; //cut first
-            slow.next = fast; //append sec
-            node.next = fast.next; // first be appended rest
-            fast.next = node; // swapped
-
-            slow = node;
-            fast = slow.next.next;
+        ListNode temp = list;
+        while (temp.next != null && temp.next.next != null) {
+            ListNode n1 = temp.next;
+            ListNode n2 = temp.next.next;
+            n1.next = n2.next;
+            temp.next = n2;
+            n2.next = n1;
+            temp = n1;
         }
         return list.next;
     }
@@ -378,7 +375,7 @@ public class GeneralTest {
         n3.next = n4;
         ListNode list = swapPairs(n1);
         while (list != null) {
-            System.out.println(list.val);
+            System.out.print(list.val);
             list = list.next;
         }
     }

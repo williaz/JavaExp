@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -19,6 +22,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -332,6 +338,42 @@ public class FunctionalTest {
         list.stream().filter(s -> s.length() == 4).sorted().limit(2).forEach(System.out::println); //shorter, briefer, and clearer code
         Stream<Integer> ints = Stream.iterate(1, i -> i + 2);
         ints.forEach(System.out::println);
+    }
+
+    /**
+     * Primitive stream: IntStream, LongStream, DoubleStream
+     * mapToObj(), mapToInt(), mapToLong(), mapToDouble()
+     * OptionalInt, OptionalDouble, OptionalLong
+     * BooleanSupplier - only one for boolean
+     *
+     */
+    @Test
+    public void test_PrimitiveStream() {
+        DoubleStream doubles = DoubleStream.generate(Math::random);
+        IntStream rInts = new Random().ints();
+        IntStream ints = IntStream.of(23, 121, 58, 99);
+        LongStream longs = LongStream.iterate(1200L, i -> i * 2);
+        LongStream range = LongStream.range(342, 1234);
+        LongStream range1 = LongStream.rangeClosed(342, 1234);
+
+        doubles.peek(System.out::print).mapToObj(a -> a / 2).limit(5).forEach(System.out::println);
+        OptionalInt oi = ints.max();
+        assertEquals(121, oi.getAsInt());
+        Long sumLong = range.sum();
+        System.out.println(sumLong);
+        System.out.println(range1.average().orElseGet(() -> Double.NaN));
+
+        IntStream range2 = IntStream.rangeClosed(1, 100).filter( i -> (i % 2 != 0) && (i % 3 != 0)).peek(System.out::println);
+        System.out.println(percent(range2));
+
+        rInts.limit(10).mapToDouble(i -> i * 0.5).forEach(System.out::println);
+
+    }
+
+    public static double percent(IntStream intStream) {
+        IntSummaryStatistics summary = intStream.summaryStatistics();
+        if (summary.getCount() == 0) return -1;
+        return summary.getAverage() / (summary.getMax() - summary.getMin());
     }
 
 
