@@ -5,13 +5,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -21,6 +24,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -31,6 +35,7 @@ import static org.junit.Assert.*;
 /**
  * Created by williaz on 11/29/16.
  * functional interface without type -> Object, may cause ce for lambda expression.
+ * Use generic wildcards for the return type of the final statement to debug whether ce is because of return type
  */
 public class FunctionalTest {
     /**
@@ -304,8 +309,10 @@ public class FunctionalTest {
      * Stream<T> distinct() : remove duplicate
      * Stream<T> limit(int size)
      * Stream<T> skip(int num) : skip first num
-     * Stream<R> map(Function<? super T, ? super R> f) : for transforming data
-     * Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> f)
+     * Stream<R> map(Function<? super T, ? super R> f) : for transforming data, add Optional wrapper
+     * Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> f), no add Optional wrapper;
+     *                                                 Chaining calls to flatMap() is useful when you want to transform one
+     Optional type to another
      * Stream<T> sorted()
      * Stream<T> sorted(Comparator<? super T> c)
      * Stream<T> peek(Consumer<? super T> c) : no terminate stream, do not use it change data structure.
@@ -356,7 +363,7 @@ public class FunctionalTest {
         LongStream range = LongStream.range(342, 1234);
         LongStream range1 = LongStream.rangeClosed(342, 1234);
 
-        doubles.peek(System.out::print).mapToObj(a -> a / 2).limit(5).forEach(System.out::println);
+        doubles.mapToObj(a -> a / 2).map(i -> i + " ").peek(System.out::print).limit(5).forEach(System.out::println);
         OptionalInt oi = ints.max();
         assertEquals(121, oi.getAsInt());
         Long sumLong = range.sum();
@@ -375,6 +382,92 @@ public class FunctionalTest {
         if (summary.getCount() == 0) return -1;
         return summary.getAverage() / (summary.getMax() - summary.getMin());
     }
+
+    /**
+     * Remember that streams are lazily evaluated.
+     */
+    @Test
+    public void test_AdvPipeline() {
+        List<String> names = new ArrayList<>();
+        names.add("Will");
+        names.add("Bill");
+        Stream<String> nameStream = names.stream(); //connected but no collect data yet
+        names.add("Metuchen");
+        assertEquals(3, nameStream.count()); // start looking for data
+
+        IntStream ints = IntStream.iterate(-1, i -> i * 2);
+        IntStream absInts = ints.map(Math::abs).limit(10);
+
+        Stream<Integer> integerStream = Stream.iterate(10, i -> i + 10).limit(10);
+        OptionalDouble value = integerStream.mapToDouble(Math::sin).max();
+    }
+
+    /**
+     * Collecters: Int, Double, Long
+     *               double averageInt(ToIntFunction f), averageDouble(ToDoubleFunction f), averageLong(ToLongFunction f)
+     *                 long counting()
+     *               String joining, joining(CharSequence s)
+     * XxxSummaryStatistics summarizingXxx(ToXxxFunction f)
+     *                Xxxxx summingXxx(ToXxxFunction f)
+     *                 List toList()
+     *                  Set toSet()
+     *           Collection toCollection(Supplier s)
+     *
+     */
+    @Test
+    public void test_BasicCollector() {
+        Stream<String> name = Stream.of("Will", "Edward", "Learner", "Wang");
+        String fullname = name.collect(Collectors.joining(" "));
+        System.out.println(fullname);
+
+        Stream<Double> scores = Stream.of(86.2, 90.5, 46.0, 56.4, 89.11, 77.2);
+        List<Double> report = scores.filter(i -> i > 60).sorted().collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(report);
+
+        Stream<Double> scores1 = Stream.of(86.2, 90.5, 46.0, 56.4, 89.11, 77.2);
+        DoubleSummaryStatistics report1 = scores1.collect(Collectors.summarizingDouble(i -> i));
+        System.out.println(report1.getAverage());
+    }
+
+    /**
+     *                  Map toMap(Function k, Function v), toMap(Function k, Function v, BinaryOperator b), toMap(Function k, Function v, BinaryOperator b, Supplier s)
+     *      Map<K, List<T>> groupBy(Function f), groupBy(Function f, Collector c), groupBy(Function f, Supplier s, Collector c)
+     * Map<Boolean, List<T> partitionBy(Predicate p), partitionBy(Predicate p, Collector c)
+     *            Collector mapping(Function f, Collector c)
+     *          Optional<T> maxBy(Comparator c), minBy(Comparator c)
+     *
+     * With partitioning, there are only two possible groups—true and false.
+     * Downstream collector to specify the type
+     * mapping() collector that lets us go down a level and add another collector.
+     */
+    @Test
+    public void test_MapCollector() {
+        Stream<String> name = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang");
+        //Map<String, Integer> counter = name.collect(Collectors.toMap(Function.identity(), s -> 1,(s1, s2) -> s1 + s2));
+        Map<String, Long> counter = name.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        System.out.println(counter);
+
+        Stream<String> animals = Stream.of("lions", "tigers", "bears");
+        Map<Integer, Set<String>> size = animals.collect(Collectors.groupingBy(String::length, HashMap::new, Collectors.toSet()));
+        System.out.println(size);
+
+        Stream<String> zoo = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
+        Map<Boolean, List<String>> exhibit = zoo.collect(Collectors.partitioningBy(s -> s.length() < 4));
+        System.out.println(exhibit);
+
+        Stream<String> zoo1 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
+        //Collector c = Collectors.mapping((String s) -> s.charAt(0), Collectors.maxBy(Comparator.naturalOrder()));
+        //TODO revise ce
+        Map<Integer, Optional<Character>> sample = zoo1.collect(
+                Collectors.groupingBy(String::length,
+                        Collectors.mapping(s -> s.charAt(0),
+                                Collectors.minBy(Comparator.naturalOrder())
+                        )
+                )
+        );
+        System.out.println(sample);
+    }
+
 
 
 
