@@ -33,9 +33,13 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 /**
- * Created by williaz on 11/29/16.
+ * Created by williaz on 11/29/16 - 12/2 4d.
  * functional interface without type -> Object, may cause ce for lambda expression.
  * Use generic wildcards for the return type of the final statement to debug whether ce is because of return type
+ * Watch out:
+ * 1. a stream can only call terminal once!
+ * 2. terminal only be used in primitive stream: sum(), ..
+ *
  */
 public class FunctionalTest {
     /**
@@ -431,7 +435,7 @@ public class FunctionalTest {
 
     /**
      *                  Map toMap(Function k, Function v), toMap(Function k, Function v, BinaryOperator b), toMap(Function k, Function v, BinaryOperator b, Supplier s)
-     *      Map<K, List<T>> groupBy(Function f), groupBy(Function f, Collector c), groupBy(Function f, Supplier s, Collector c)
+     *      Map<K, List<T>> groupBy(Function k), groupBy(Function k, Collector c), groupBy(Function k, Supplier s, Collector c)
      * Map<Boolean, List<T> partitionBy(Predicate p), partitionBy(Predicate p, Collector c)
      *            Collector mapping(Function f, Collector c)
      *          Optional<T> maxBy(Comparator c), minBy(Comparator c)
@@ -444,8 +448,10 @@ public class FunctionalTest {
     public void test_MapCollector() {
         Stream<String> name = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang");
         //Map<String, Integer> counter = name.collect(Collectors.toMap(Function.identity(), s -> 1,(s1, s2) -> s1 + s2));
-        Map<String, Long> counter = name.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
-        System.out.println(counter);
+        Map<Integer, List<String>> length = name.collect(Collectors.groupingBy(s -> s.length()));
+        System.out.println(length);
+        //Map<String, Long> counter = name.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        //System.out.println(counter);
 
         Stream<String> animals = Stream.of("lions", "tigers", "bears");
         Map<Integer, Set<String>> size = animals.collect(Collectors.groupingBy(String::length, HashMap::new, Collectors.toSet()));
@@ -458,14 +464,14 @@ public class FunctionalTest {
         Stream<String> zoo1 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
         //Collector c = Collectors.mapping((String s) -> s.charAt(0), Collectors.maxBy(Comparator.naturalOrder()));
         //TODO revise ce
-        Map<Integer, Optional<Character>> sample = zoo1.collect(
-                Collectors.groupingBy(String::length,
-                        Collectors.mapping(s -> s.charAt(0),
-                                Collectors.minBy(Comparator.naturalOrder())
-                        )
-                )
-        );
-        System.out.println(sample);
+//        Map<Integer, Optional<Character>> sample = zoo1.collect(
+//                Collectors.groupingBy(String::length,
+//                        Collectors.mapping(s -> s.charAt(0),
+//                                Collectors.minBy(Comparator.naturalOrder())
+//                        )
+//                )
+//        );
+//        System.out.println(sample);
     }
 
 
