@@ -2,6 +2,10 @@ package ocp;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
@@ -13,7 +17,13 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import static org.junit.Assert.*;
 
@@ -145,6 +155,121 @@ public class TimeTest {
         System.out.println(east2);
     }
 
+    /**
+     * Internationalization(i18n) is the process of designing your program so it can be adapted.
+     *    This involves placing strings in a property file and using classes like DateFormat
+     *    so that the right format is used based on user preferences.
+     * Localization(l10n) means actually supporting multiple locales.
+     *
+     * The locale[ae] builder converts to uppercase or lowercase for you as needed
+     */
+    @Test
+    public void test_Locale() {
+        Locale locale = Locale.getDefault();
+        System.out.println(locale); //Language(lowercase)(_Country)
+        Locale here = new Locale("en", "US");
+        Locale us = new Locale.Builder().setLanguage("en").setRegion("us").build();
+        assertEquals(here, us);
+        assertEquals(Locale.US, us);
+        //the Locale changes only for that one Java program.
+        Locale.setDefault(Locale.CHINA);
+        System.out.println(Locale.getDefault());
+    }
 
+    /**
+     * A resource bundle contains the local specifi c objects to be used by a program.
+     *    It is like a map with keys and values. The resource bundle can be in a property fi le or in a Java class.
+     * A property fi le is a fi le in a specifi c format with key/value pairs.
+     *
+     * use "=", (":", " ")
+     *
+     * 1. Always look for the property file after the matching Java class.
+     * 2. Drop one thing at a time if there are no matches. First drop the country and then the language.
+     * 3. Look at the default locale and the default resource bundle last.
+     *
+     * it is common to substitute variables in the middle of a resource bundle string.
+     *    The convention is to use a number inside brackets such as {0}, {1}.
+     *    we can run it through the MessageFormat class to substitute the parameters. varargs
+     */
+    @Test
+    public void test_ResourceBundle() {
+        ResourceBundle rbd = ResourceBundle.getBundle("ocp.Menu"); // default locale
+        ResourceBundle rb1 = ResourceBundle.getBundle("ocp.Menu", Locale.CANADA);
+        Properties p = new Properties();
+        rb1.keySet().stream().peek(System.out::println).forEach(k -> p.put(k, rb1.getString(k)));
+        System.out.println("\n" + p.getProperty("Options", "Rice"));
+        System.out.println(p.getProperty("Hello") + "\n");
+
+        ResourceBundle rb = ResourceBundle.getBundle("ocp.Menu", Locale.CHINA);
+        Enumeration<String> keys = rb.getKeys();
+        while (keys.hasMoreElements()) {
+            System.out.println(rb.getObject(keys.nextElement()));
+        }
+
+        ResourceBundle rb2 = ResourceBundle.getBundle("ocp.Menu_en_UK", Locale.UK); //no ocp.Menu ??
+        assertTrue(rb2.containsKey("Options"));
+        System.out.println("\n" + rb2.getObject("Options"));
+        Menu_en_UK.Bus bus = (Menu_en_UK.Bus) rb2.getObject("Bus");
+        System.out.println(bus.getName());
+
+        String format = rbd.getString("VIP");
+        String formatted = MessageFormat.format(format, "Tammy", "Birthday", "Year");
+        System.out.print(formatted);
+    }
+
+    /**
+     * Format and Parse Numbers and Currency
+     *
+     * The parse method parses only the beginning of a string.
+     *    After it reaches a character that cannot be parsed, the parsing stops and the value is returned.
+     */
+    @Test
+    public void test_NumberFormat() {
+        NumberFormat generalFmt= NumberFormat.getInstance(Locale.CHINA);
+        NumberFormat numFmt= NumberFormat.getNumberInstance(Locale.GERMAN);
+        NumberFormat percFmt = NumberFormat.getPercentInstance();
+        NumberFormat dollarFmt= NumberFormat.getCurrencyInstance();
+        NumberFormat yuanFmt= NumberFormat.getCurrencyInstance(Locale.CHINA);
+        System.out.println(generalFmt.format(43451.435));
+        System.out.println(numFmt.format(43451.435));
+        System.out.println(percFmt.format(43451.435));
+        System.out.println(dollarFmt.format(43451.435));
+        BigDecimal money = new BigDecimal(53242.234);
+        System.out.println(yuanFmt.format(money));
+
+        try {
+            double num = (Double)numFmt.parse("45,23");
+            System.out.println(num);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            double mny = (Double) dollarFmt.parse("$899.99");
+            System.out.println(mny);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * DateTimeFormatter can be used to format any type of date and/or time object.
+     * Remember M (uppercase) is month and m (lowercase) is minute
+     * yyyy MM dd hh MM , :
+     */
+    @Test
+    public void test_DateTimeFormatter() {
+        DateTimeFormatter shortFmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+        System.out.println(shortFmt.format(LocalDate.of(2016, 12, 4))); //partial
+        DateTimeFormatter mediumFmt = DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM);
+        System.out.println(mediumFmt.format(LocalDateTime.now()));
+
+        DateTimeFormatter customF = DateTimeFormatter.ofPattern("yy-MM-dd, hh:mm");
+        String today = customF.format(LocalDateTime.now());
+        System.out.println(today);
+        LocalDate rnow = LocalDate.parse("12/4/16", shortFmt);
+        LocalDate rnow1 = LocalDate.parse("16-12-04, 06:48", customF);
+    }
 
 }
