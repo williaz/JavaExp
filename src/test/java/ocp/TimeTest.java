@@ -29,6 +29,14 @@ import static org.junit.Assert.*;
 
 /**
  * Created by williaz on 12/3/16.
+ * Watch out:
+ * 1. Mismatch of methods in LocalDateTime, LocalDate, LocalTime
+ * 2. DataTimeFormatter's ofLocalizedXxx
+ * 3. Period: P_Y_M_D; Duration: PT_H_M_S
+ * 4. When deal with time zones, it is best to convert to GMT first by substracting the time zone.
+ * 5. For daylight saving time, when calculating the time between, the time zone offset change matters!
+ * 6. Java is smart enough to adjust the daylight savings time
+ * 7. Properties get() no allow default value, getPreoperty() do!
  */
 public class TimeTest {
     @Test
@@ -47,6 +55,8 @@ public class TimeTest {
         //Java is smart enough to hide the seconds and nanoseconds when we aren’t using them.
         LocalDate nowaday = birth.plusYears(26).plusMonths(2).minusDays(20);
         assertEquals(today, nowaday);
+
+        System.out.println(today.getMonth() + " - "+ today.getMonthValue());
     }
 
     @Test(expected = DateTimeException.class)
@@ -54,6 +64,11 @@ public class TimeTest {
         LocalDate birth = LocalDate.of(1990, 2, 29); //February 29 exists only in a leap year. Leap
         //runtime exception, similar to IllegalArgumentException
     }
+
+    /**
+     * Be able to perform calculations between times using UTC. Whether the format is -05:00, GMT-5, or UTC-5,
+     *   you calculate by subtracting the offset from the time and then seeing how far the resulting times are.
+     */
 
     @Test
     public void test_ZonedDateTime() {
@@ -68,6 +83,9 @@ public class TimeTest {
         assertEquals(LocalTime.now().getHour(), ZonedDateTime.now(beijing).now().getHour());
     }
 
+    /**
+     * P1Y2W3D
+     */
     @Test
     public void test_Period() {
         Period moore = Period.ofMonths(18);
@@ -79,7 +97,7 @@ public class TimeTest {
         }
         //It’s OK to have more days than are in a month.
         // Also it is OK to have more months than are in a year.
-        //P1Y2W3D
+        //P1Y2M3D
         Period certain = Period.of(2, 14, 45);
         System.out.println("\n"+certain);
         Period weeks = Period.ofWeeks(3);
@@ -99,8 +117,9 @@ public class TimeTest {
      */
     @Test
     public void test_Duration() {
+        System.out.println(Duration.ofMinutes(4));
         Duration duration = Duration.ofDays(2);
-        duration = duration.plusSeconds(34).plusMillis(12).plusNanos(5);
+        duration = duration.plusSeconds(64).plusMillis(12).plusNanos(5);
         System.out.println(duration);
         Duration d2 = Duration.of(5, ChronoUnit.HALF_DAYS); // DAYS, HALF_DAYS, HOURS, ...
         System.out.println(d2);
@@ -141,14 +160,19 @@ public class TimeTest {
         LocalDateTime springForward = LocalDateTime.of(2016, Month.MARCH, 13, 1, 0);
         ZonedDateTime east = ZonedDateTime.of(springForward, ZoneId.of("US/Eastern"));
         System.out.println(east);
-        east = east.plusHours(1); //immutable
-        System.out.println(east);
+        ZonedDateTime eastS = east.plusHours(1); //immutable
+        System.out.println(eastS);
+        long springHour = ChronoUnit.HOURS.between(east, eastS); //1!!
+        System.out.println(springHour);
+
 
         LocalDateTime fallBack = LocalDateTime.of(2016, Month.NOVEMBER, 6, 1, 0);
         ZonedDateTime east1 = ZonedDateTime.of(fallBack, ZoneId.of("US/Eastern"));
         System.out.println(east1);
-        east1 = east1.plusHours(1); //immutable
-        System.out.println(east1);
+        ZonedDateTime east1F = east1.plusHours(1); //immutable
+        System.out.println(east1F);
+        long fallHour = ChronoUnit.HOURS.between(east, eastS); //1!!
+        System.out.println(fallHour);
 
         LocalDateTime empty = LocalDateTime.of(2016, Month.MARCH, 13, 2, 0); // no existing
         ZonedDateTime east2 = ZonedDateTime.of(empty, ZoneId.of("US/Eastern"));
@@ -182,6 +206,7 @@ public class TimeTest {
      * A property fi le is a fi le in a specifi c format with key/value pairs.
      *
      * use "=", (":", " ")
+     * #.java -> .properties, most specific -> default one -> most general
      *
      * 1. Always look for the property file after the matching Java class.
      * 2. Drop one thing at a time if there are no matches. First drop the country and then the language.
@@ -198,7 +223,9 @@ public class TimeTest {
         Properties p = new Properties();
         rb1.keySet().stream().peek(System.out::println).forEach(k -> p.put(k, rb1.getString(k)));
         System.out.println("\n" + p.getProperty("Options", "Rice"));
-        System.out.println(p.getProperty("Hello") + "\n");
+        System.out.println(p.getProperty("Hello"));
+        System.out.println(p.get("Cook"));
+        System.out.println();
 
         ResourceBundle rb = ResourceBundle.getBundle("ocp.Menu", Locale.CHINA);
         Enumeration<String> keys = rb.getKeys();
