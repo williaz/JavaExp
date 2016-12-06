@@ -2,10 +2,14 @@ package ocp;
 
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Created by williaz on 12/5/16.
+ * Idempotent means that the method can called be multiple times
+ *    without any side effects or undesirable behavior on subsequent runs.
  */
 public class ExceptionTest {
     /**
@@ -58,6 +62,31 @@ public class ExceptionTest {
             }
         } catch (LostException | RuntimeException e) { // only one "e"
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * automatic resource management
+     * a try-with-resources statement is still allowed to have catch and/or finally blocks.
+     *   They are run in addition to the implicit one.
+     *   The implicit finally block runs before any programmer-coded ones.
+     *   -> # the resource is no longer available.
+     * In order for a class to be created in the try clause,
+     *   Java requires it to implement an interface called AutoCloseable.
+     *   Java strongly recommends that close() not actually throw Exception, but a more specific exception.
+     *   Java also recommends to make the close() method idempotent.
+     */
+    @Test
+    public void test_TryWithResource() {
+        try (Scanner sc = new Scanner("will is best")) {
+            String mimic = sc.nextLine();
+            System.out.println(mimic);
+        }
+
+        try (AutoCloseableResource shop = new AutoCloseableResource()) {
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 }
