@@ -6,11 +6,17 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+import oca.ood.Animal;
+
 /**
  * Created by williaz on 12/5/16.
  * Idempotent means that the method can called be multiple times
  *    without any side effects or undesirable behavior on subsequent runs.
  * If both catch and finally throw an exception, the one from finally gets thrown
+ * watch out:
+ * 1. a multi-catch cannot catch both superclass and subclass.
+ * 2. AutoCloseable call close() after try clause, before catch and finally clauses
+ * 3. unreachable for checked exception
  */
 public class ExceptionTest {
     /**
@@ -18,6 +24,8 @@ public class ExceptionTest {
      * While it is legal to catch an error, it is not a good practice.
      *
      * Cheched: 1. ParseException; 2. IOException, FileNotFoundException, NotSerializableException; 3. SQLException
+     * Unchecked: 1. ArrayStoreException; 2. DateTimeException; 3. MissingResourceException;
+     *            4. IllegalStateException; 5. UnsupportedOperationException.
      * ce: 1. order, unreachable; 2. cannot potentially be thrown, unreachable
      * it is most common to extend Exception (for checked) or RuntimeException (for unchecked.)
      */
@@ -80,6 +88,10 @@ public class ExceptionTest {
      *   Java requires it to implement an interface called AutoCloseable.
      *   Java strongly recommends that close() not actually throw Exception, but a more specific exception.
      *   Java also recommends to make the close() method idempotent.
+     * # Closeable extends AutoCloseable
+     * @see java.io.Closeable
+     * @see AutoCloseable
+     *
      */
     @Test
     public void test_TryWithResource() {
@@ -88,7 +100,8 @@ public class ExceptionTest {
             System.out.println(mimic);
         }
 
-        try (AutoCloseableResource shop = new AutoCloseableResource()) {
+        try (AutoCloseableResource shop = new AutoCloseableResource();
+             CloseableResource ioShop = new CloseableResource()) {
 
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
