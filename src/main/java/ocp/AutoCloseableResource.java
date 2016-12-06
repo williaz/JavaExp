@@ -8,6 +8,7 @@ import java.io.IOException;
 public class AutoCloseableResource implements AutoCloseable {
     @Override
     public void close() throws IOException { // more specific one than Exception
-        System.out.println("AutoCloseableResource Closed"); // no side effect, idempotent
+        System.out.println("AutoCloseableResource Closing"); // no side effect, idempotent
+        throw new IOException("Cannot close");
     }
 }
