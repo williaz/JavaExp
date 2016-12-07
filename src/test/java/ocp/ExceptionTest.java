@@ -9,7 +9,7 @@ import java.util.Scanner;
 import oca.ood.Animal;
 
 /**
- * Created by williaz on 12/5/16.
+ * Created by williaz on 12/5/16 - 12/6 2d.
  * Idempotent means that the method can called be multiple times
  *    without any side effects or undesirable behavior on subsequent runs.
  * If both catch and finally throw an exception, the one from finally gets thrown
