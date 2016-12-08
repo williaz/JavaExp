@@ -13,6 +13,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by williaz on 12/6/16.
@@ -341,7 +342,7 @@ public class ConcurrencyTest {
             return mup;
         } );
         try {
-            pool = Executors.newFixedThreadPool(5);
+            pool = Executors.newCachedThreadPool();
             List<Future<Long>> result = pool.invokeAll(tasks);
             //pool.awaitTermination(1, TimeUnit.SECONDS);
             for (Future<Long> r : result) {
@@ -352,6 +353,142 @@ public class ConcurrencyTest {
         } finally {
             if (pool != null) pool.shutdown();
         }
+    }
+
+    /**
+     * thread safety is the property of an object that guarantees safe execution by multiple threads at the same time.
+     * Atomic is the property of an operation to be carried out as a single unit of execution
+     *        without any interference by another thread.
+     *
+     * AtomicBoolean, AtomicInteger, AtomicLong, AtomicReference;
+     * AtomicIntegerArray, AtomicLongArray, AtomicReferenceArray;
+     *
+     * get(), set()
+     * getAndSet(newValue): set the new, get the old
+     * incrementAndGet(): ++i
+     * getAndIncrement(): i++
+     * decrementAndGet(): --i
+     * getAndDecrement(): i--
+     *
+     * @see AtomicInteger
+     */
+    @Test
+    public void test_AtomicClass() throws InterruptedException {
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(10);
+            Counter counter = new Counter();
+            for (int i = 0; i < 10; i++) {
+                service.submit(() -> counter.countAndReport()); //may duplicate
+            }
+            service.awaitTermination(100, TimeUnit.MILLISECONDS);
+        } finally {
+            if (service != null) service.shutdown();
+        }
+
+        System.out.println("\n----------");
+        ExecutorService service1 = null;
+        try {
+            service1 = Executors.newFixedThreadPool(10);
+            AtomicCounter counter = new AtomicCounter();
+            for (int i = 0; i < 10; i++) {
+                service1.submit(() -> counter.countAndReport()); //no dup, but random order
+            }
+            service1.awaitTermination(100, TimeUnit.MILLISECONDS);
+        } finally {
+            if (service1 != null) service1.shutdown();
+        }
+
+
+    }
+
+    public static class Counter {
+        private int count = 0;
+        private void countAndReport() {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print((++count) + " ");
+        }
+    }
+
+    public static class AtomicCounter {
+        private AtomicInteger count = new AtomicInteger(0);
+        private void countAndReport() {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print(count.incrementAndGet() + " ");
+        }
+    }
+
+    public static class SynBlcCounter {
+        private int count = 0;
+        private void countAndReport() {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            synchronized (this) {
+                System.out.print((++count) + " ");
+            }
+        }
+    }
+
+    public static class SynMhdCounter {
+        private int count = 0;
+        private synchronized void countAndReport() {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print((++count) + " ");
+        }
+    }
+
+    /**
+     * A monitor is a structure that supports mutual exclusion or the property
+     *   that at most one thread is executing a particular segment of code at a given time.
+     * any Object can be used as a monitor;
+     * synchronized block, synchronized method;
+     * You can use static synchronization if you need to order thread access across all instances,
+     *   rather than a single instance.
+     * synchronization is about making multiple threads perform in a more single-threaded manner.
+     * Synchronization is about protecting data integrity at the cost of performance.
+     */
+    @Test
+    public void test_Synchronized() throws InterruptedException {
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(10);
+            SynBlcCounter counter = new SynBlcCounter();
+            for (int i = 0; i < 10; i++) {
+                service.submit(() -> counter.countAndReport()); //in order
+            }
+            service.awaitTermination(100, TimeUnit.MILLISECONDS);
+        } finally {
+            if (service != null) service.shutdown();
+        }
+
+        System.out.println("\n----------");
+        ExecutorService service1 = null;
+        try {
+            service1 = Executors.newFixedThreadPool(10);
+            SynMhdCounter counter = new SynMhdCounter();
+            for (int i = 0; i < 10; i++) {
+                service1.submit(() -> counter.countAndReport()); //in order
+            }
+            service1.awaitTermination(1500, TimeUnit.MILLISECONDS); //slow one
+        } finally {
+            if (service1 != null) service1.shutdown();
+        }
+
     }
 
 }
