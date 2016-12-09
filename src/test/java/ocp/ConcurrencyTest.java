@@ -4,11 +4,13 @@ import org.junit.Test;
 import org.springframework.context.annotation.Primary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +26,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by williaz on 12/6/16.
@@ -785,5 +789,113 @@ public class ConcurrencyTest {
         }
 
     }
+
+    /**
+     * A serial stream is a stream in which the results are ordered,
+     *   with only one entry being processed at a time.
+     * A parallel stream is a stream that is capable of processing results concurrently,
+     *   using multiple threads.
+     * By default, the number of threads available in a parallel stream is related to
+     *   the number of available CPUs in your environment.
+     * parallel() : intermediate operation
+     * parallelStream()
+     * isParallel()
+     * Stream.concat(Stream s1, Stream s2) is parallel if either s1 or s2 is parallel.
+     * flatMap() creates a new stream that is not parallel by default
+     *
+     * stream operations that occur before/after the forEachOrdered() can still gain performance improvements
+     *   for using a parallel stream.
+     * Scaling is the property that, as we add more resources such as CPUs, the results gradually improve.
+     * AVOID STATEFUL LAMBDA EXPRESSIONS
+     * A stateful lambda expression is one whose result depends on any state that might change
+     *   during the execution of a pipeline.
+     * Anytime you are working with a collection with a parallel stream,
+     *   it is recommended that you use a concurrent collection.
+     */
+    @Test
+    public void test_Parallel() {
+        Stream<Integer> parallelStream = Arrays.asList(1, 2, 3, 4, 5, 6).parallelStream();
+        parallelStream.forEach((i) -> System.out.print(i + " ")); //is equivalent to submitting multiple Runnable lambda expressions to a pooled thread executor.
+        System.out.println();
+        Arrays.asList(1, 2, 3, 4, 5, 6).parallelStream().unordered().forEachOrdered((i) -> System.out.print(i + " "));
+
+        System.out.println();
+        //two threads both trigger the array to be resized at the same time, a result can be lost,
+        //List<Integer> list = new ArrayList<>(); //NullPointerException
+        List<Integer> list = Collections.synchronizedList(new ArrayList<>());
+        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9 , 10, 11, 12, 13)
+                .parallelStream()
+                .forEach(i -> {
+                    for (int j = 0 ; j <= i ; j++ )
+                        list.add(j);
+                });
+        System.out.println();
+        for (int i : list) {
+            System.out.print(i + " ");
+        }
+
+    }
+
+    /**
+     * Reduction operations on parallel streams are referred to as parallel reductions.
+     * findFirst(), limit(), or skip() : slower in parallel <- synchronized-like
+     * unordered() to improve parallel stream
+     * it is recommended that you use the three-argument version of reduce() when working with parallel streams.
+     * reduce() to be in order:
+     * 1. identity: defined logic no content
+     * 2. accumulator: associative and stateless
+     * 3. combiner: associative, stateless, compatible with identity
+     */
+    @Test
+    public void test_ParallelReduce() {
+        System.out.println(Arrays.asList("w","o","l","f", " ", "i", "s", " ", "d", "a", "n", "g", "o", "u", "s")
+                .parallelStream().unordered()
+                .reduce("", (c, s1) -> {
+                    try {
+                        if ("o".equals(s1))
+                              Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread().getName()+ " " + c+s1);
+                    return c + s1;
+                }, (s2, s3) -> {
+                    try {
+                        if (s2.contains("s"))
+                            Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread().getName()+ " " + s2 + s3);
+                    return s2 + s3;
+                })); // TODO still in order
+                //.reduce("",String::concat, String::concat));
+    }
+
+    /**
+     * use a concurrent collection to combine the results,
+     *   ensuring that the results of concurrent threads do not cause a ConcurrentModificationException.
+     *
+     * Requirements for Parallel Reduction with collect():
+     * 1. The stream is parallel.
+     * 2. The parameter of the collect operation has the Collector.Characteristics.CONCURRENT characteristic.
+     * 3. Either the stream is unordered, or the collector has the characteristic Collector.Characteristics.UNORDERED.
+     *
+     * The Collectors class includes two sets of methods for retrieving collectors
+     *     that are both UNORDERED and CONCURRENT,
+     *     Collectors.toConcurrentMap() and Collectors.groupingByConcurrent(),
+     */
+    @Test
+    public void test_ParallelCollect() {
+        Stream<String> nameStream = Stream.of("Will", "Bill", "Yelp", "Monica", "Finance").parallel();
+        Set<String> names = nameStream.collect(Collectors.toSet()); //will not be performed as a concurrent reduction.
+        System.out.println(Collectors.toSet().characteristics());
+        System.out.println(names);
+
+        ConcurrentMap<Character, List<String>> alpha = Stream.of("Will", "William", "Bill", "Edison", "Harrison", "Eason")
+                .parallel().collect(Collectors.groupingByConcurrent(i -> i.charAt(0)));
+        System.out.println(alpha);
+    }
+
 
 }
