@@ -1,14 +1,24 @@
 package ocp;
 
 import org.junit.Test;
+import org.springframework.context.annotation.Primary;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -487,6 +497,291 @@ public class ConcurrencyTest {
             service1.awaitTermination(1500, TimeUnit.MILLISECONDS); //slow one
         } finally {
             if (service1 != null) service1.shutdown();
+        }
+
+    }
+
+    /**
+     * ConcurrentHashMap
+     */
+    @Test
+    public void test_ConcurrentCollection() throws InterruptedException {
+        //PriceTipe tipe = new PriceTipe(); //???
+        ConcurrentPriceTipe tipe = new ConcurrentPriceTipe();
+        Callable<Double> task = () -> {
+            tipe.add("APPL", 120.1);
+            return tipe.getPrice("APPL");
+        };
+        Callable<Double> task1 = () -> {
+            tipe.add("FB", 130.4);
+            return tipe.getPrice("FB");
+        };
+        Callable<Double> task4 = () -> {
+            tipe.add("FB", 150.4);
+            return tipe.removePrice("APPL");
+        };
+
+        Callable<Double> task2 = () -> {
+            tipe.add("GS", 220.8);
+            return tipe.getPrice("GS");
+        };
+        Callable<Double> task5 = () -> {
+            tipe.add("APPL", 130.1);
+            return tipe.removePrice("GS");
+        };
+
+        List<Callable<Double>> tasks = new ArrayList<>();
+        tasks.add(task);  // APPL add -> get
+        tasks.add(task1); //FB add -> get
+        tasks.add(task4); //add FB -> remove APPL
+        tasks.add(task2); //GS add -> get
+        tasks.add(task5); //add APPL -> remove GS
+
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(5);
+            List<Future<Double>> values = service.invokeAll(tasks); //invokaAll and invokeAny for Callable only
+            System.out.println("APPL - FB - APPL - GS - GS");
+            for (Future<Double> v : values) {
+                System.out.print(v.get() + " ");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            if (service != null) service.shutdown();
+        }
+
+
+    }
+
+    public static class PriceTipe {
+        private Map<String, Double> prices = new HashMap<>();
+
+        public Double getPrice(String key) {
+            return prices.get(key);
+        }
+
+        public Double removePrice(String key) {
+            return prices.remove(key); // removed V
+        }
+
+        public void add(String key, Double price) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            prices.put(key, price);
+        }
+    }
+
+    public static class ConcurrentPriceTipe {
+        private Map<String, Double> prices = new ConcurrentHashMap<>();
+
+        public Double getPrice(String key) {
+            return prices.get(key);
+        }
+
+        public Double removePrice(String key) {
+            return prices.remove(key); // removed V
+        }
+
+        public void add(String key, Double price) {
+            prices.put(key, price);
+        }
+    }
+
+    /**
+     * A memory consistency error occurs when two threads have inconsistent views of what should be the same data.
+     *   <- concurrent collection solve
+     * When two threads try to modify the same non-concurrent collection,
+     *    the JVM may throw a ConcurrentModificationException at runtime.
+     * ConcurrentHashMap is ordering read/write access such that all access to the class is consistent.
+     * At any given instance, all threads should have the same consistent view of the structure of the collection.
+     *
+     * You should use a concurrent collection class anytime that you are going to have
+     *     multiple threads modify a collections object outside a synchronized block or method
+     * a good practice to instantiate a concurrent collection but
+     *     pass it around using a non-concurrent interface whenever possible
+     *
+     * @see ConcurrentHashMap
+     * @see java.util.concurrent.ConcurrentLinkedDeque
+     * @see java.util.concurrent.ConcurrentLinkedQueue
+     *
+     * @see java.util.concurrent.ConcurrentMap
+     */
+    @Test
+    public void test_ConcurrentMap() {
+        ConcurrentMap<String, Character> scores = new ConcurrentHashMap<>();
+        scores.put("CS", 'A');
+        scores.put("IT", 'A');
+        scores.put("MATH", 'A');
+        scores.put("EN", 'B');
+        for (String s : scores.keySet()) { //keySet() is updated as soon as an object is removed
+            if (s.equals("IT"))
+                scores.remove(s);
+        }
+
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void test_Map_FastFail() {
+        Map<String, Character> scores = new HashMap<>();
+        scores.put("CS", 'A');
+        scores.put("IT", 'A');
+        scores.put("MATH", 'A');
+        scores.put("EN", 'B');
+        for (String s : scores.keySet()) {
+            if (s.equals("IT"))
+                scores.remove(s);
+        }
+
+    }
+
+    /**
+     * The BlockingQueue is just like a regular Queue, except that
+     *     it includes methods that will wait a specific amount of time to complete an operation.
+     * LinkedBlockingQueue implements BlockingQueue:
+     * offer(E e, long timeout, TimeUnit unit);
+     * poll(long timeout, TimeUnit unit);
+     * LinkedBlockingDeque: implements BlockDeque:
+     * offerFirst, offerLast;
+     * pollFirst, pollLast;
+     *
+     * @see java.util.concurrent.BlockingDeque
+     * @see java.util.concurrent.BlockingQueue
+     * @see java.util.concurrent.LinkedBlockingDeque
+     * @see java.util.concurrent.LinkedBlockingQueue
+     */
+    @Test
+    public void test_BlockingDeque() throws InterruptedException {
+        BlockingDeque<Integer> nums = new LinkedBlockingDeque<>(2);
+        Runnable sleeping = () -> {
+            synchronized (nums) {
+                try {
+                    Thread.sleep(1000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(4);
+
+            service.execute(() -> {
+                try {
+                    for (int i = 0; i < 5; i++)
+                        nums.offerFirst(45, 10, TimeUnit.MILLISECONDS); //NANO then 3 null
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            service.execute(() -> {
+                try {
+                    for (int i = 0; i < 5; i++)
+                        System.out.println(nums.pollFirst(10, TimeUnit.MILLISECONDS));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            service.awaitTermination(2000, TimeUnit.MILLISECONDS);
+
+        } finally {
+            if (service != null) service.shutdown();
+        }
+    }
+
+    /**
+     * The SkipList classes, ConcurrentSkipListSet and ConcurrentSkipListMap,
+     *     are concurrent versions of their sorted counterparts, TreeSet and TreeMap, respectively.
+     * SortedMap or NavigableSet.
+     * @see java.util.concurrent.ConcurrentSkipListMap
+     * @see java.util.concurrent.ConcurrentSkipListSet
+     */
+
+    /**
+     * These classes copy all of their elements to a new underlying structure
+     *     anytime an element is added, modified, or removed from the collection.
+     *  By a modified element, we mean that the reference in the collection is changed.
+     *  Modifying the actual contents of the collection will not cause a new structure to be allocated.
+     *
+     *  Any iterator established prior to a modifi cation will not see the changes,
+     *     but instead it will iterate over the original elements prior to the modification
+     *  They are commonly used in multi-threaded environment situations where reads are far more common than writes.
+     *
+     *  @see java.util.concurrent.CopyOnWriteArrayList
+     *  @see java.util.concurrent.CopyOnWriteArraySet
+     */
+    @Test
+    public void test_CopyOnWrite() {
+        List<Integer> list = new CopyOnWriteArrayList<>();
+        list.add(43);
+        list.add(14);
+        list.add(13);
+
+        for (Integer i : list) {
+            System.out.print(i +  " ");
+            list.add(1, 7);
+        }
+        System.out.println("\n ---------");
+        for (Integer i : list) {
+            System.out.print(i +  " ");
+        }
+
+    }
+
+    /**
+     * methods defined in the Collections class, contain synchronized methods that operate on the inputted collection
+     *    and return a reference that is the same type as the underlying collection.
+     * if you are given an existing collection that is not a concurrent class
+     *    and need to access it among multiple threads, you can wrap it using the methods
+     *
+     * they do not synchronize access on any iterators that you may create from the synchronized collection.
+     *    <- synchronization block
+     *
+     * synchronizedCollection(Collection<T> c);
+     * synchronizedList(List<T> l);
+     * synchronizedSet(Set<T> s);
+     * synchronizedMap(Map<K, V> m);
+     * synchronizedSortedSet(SortedSet<T> s);
+     * synchronizedSortedMap(SortedMap<K, V> m);
+     * synchronizedNavigableSet(NavigableSet<T> s);
+     * synchronizedNavigableMap(NavigableMap<K, V> m)
+     * @see java.util.Collections
+     */
+    @Test
+    public void test_SynchronizedMethod() throws InterruptedException {
+        List<Integer> list = new ArrayList<>();
+        list.add(34);
+        list.add(25);
+        list.add(16);
+        List<Integer> synList = Collections.synchronizedList(list);
+        ExecutorService service = null;
+        try{
+            service = Executors.newFixedThreadPool(2);
+            service.execute( () -> {
+                synchronized (synList) { //without then ConcurrentModificationException
+                    for (int i : synList) {
+                        System.out.print(i + " ");
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            service.execute(() -> {
+               for (int i = 0; i < 2; i++) {
+                   synList.add(55);
+               }
+            });
+            service.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        } finally {
+            if (service != null) service.shutdown();
         }
 
     }
