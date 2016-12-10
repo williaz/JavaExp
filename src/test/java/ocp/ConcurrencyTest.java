@@ -2,6 +2,7 @@ package ocp;
 
 import org.junit.Test;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,15 +11,20 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
@@ -895,6 +901,115 @@ public class ConcurrencyTest {
         ConcurrentMap<Character, List<String>> alpha = Stream.of("Will", "William", "Bill", "Edison", "Harrison", "Eason")
                 .parallel().collect(Collectors.groupingByConcurrent(i -> i.charAt(0)));
         System.out.println(alpha);
+    }
+
+    /**
+     * The CyclicBarrier takes in its constructors a limit value, indicating the number of threads to wait for.
+     * As each thread finishes, it calls the await() method on the cyclic barrier.
+     * Once the specified number of threads have each called await(), the barrier is released and all threads can continue.
+     * If you are using a thread pool, make sure that you set the number of available threads to be
+     *   at least as large as your CyclicBarrier limit value.
+     * # all threads stop and wait at logical barriers.
+     * @see CyclicBarrier
+     */
+    @Test
+    public void test_CyclicBarrier() {
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(4);
+            CyclicBarrier barrier = new CyclicBarrier(3,
+                    () -> System.out.println(Thread.currentThread().getName()+ " Finished"));
+            for (int i = 0; i < 6; i++) {
+                service.execute( () -> collaborateTasks(barrier));
+            }
+
+        } finally {
+            if (service != null) service.shutdown();
+        }
+
+
+    }
+
+    public void collaborateTasks(CyclicBarrier b) {
+
+        try {
+            System.out.println("first task");
+            b.await();
+            System.out.println("second task");
+            b.await();
+            System.out.println("third task");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * The fork/join framework relies on the concept of recursion to solve complex tasks.
+     * Recursion is the process by which a task calls itself to solve a problem.
+     *
+     * A recursive solution is constructed with a base case and a recursive case:
+     * 1. Base case: A non-recursive method that is used to terminate the recursive path
+     * 2. Recursive case: A recursive method that may call itself one or multiple times to solve a problem
+     *
+     * Applying the fork/join framework requires us to perform three steps:
+     * 1. Create a ForkJoinTask.
+     * 2. Create the ForkJoinPool.
+     * 3. Start the ForkJoinTask.
+     *
+     * The goal of the fork/join framework is to break up large tasks into smaller ones
+     *
+     * @see java.util.concurrent.ForkJoinTask
+     * @see java.util.concurrent.RecursiveAction
+     * @see java.util.concurrent.RecursiveTask
+     *
+     * @see BinaryRecursiveSearch
+     */
+    @Test
+    public void test_RecursiveAction() {
+        int size = 2000;
+        int target = 573;
+        Random random = new Random();
+        int[] nums = new int[size];
+        for (int i = 0; i < size; i++)
+            nums[i] = random.nextInt(4000); //[0, 4000)
+
+        long timer1 = System.currentTimeMillis();
+        ForkJoinTask<?> task = new BinaryRecursiveSearch(0, size, nums, target);
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(task);
+        timer1 = System.currentTimeMillis() - timer1;
+
+        long timer2 = System.currentTimeMillis();
+        for (int i = 0; i < size; i++)
+            if (nums[i] == target) System.out.println("Found out also at " + i);
+        timer2 = System.currentTimeMillis() - timer2;
+
+        System.out.println(timer1 + " VS " + timer2); //shame on u ~
+    }
+
+    /**
+     * The fork() method instructs the fork/join framework to complete the task in a separate thread,
+     * while the join() method causes the current thread to wait for the results.
+     *
+     * make sure that fork() is called before the current thread begins a sub-task
+     *   and that join() is called after it finishes retrieving the results,
+     *   in order for them to be done in parallel.
+     *
+     * The fork() method should be called before the current thread performs a compute() operation,
+     *    with join() called to read the results afterward.
+     * Since compute() takes no arguments, the constructor of the class is often used to pass instructions to the task.
+     *
+     * @see RecursiveFactorialTask
+     */
+    @Test
+    public void test_RecursiveTask() {
+        ForkJoinTask<Long> factorial = new RecursiveFactorialTask(0, 15);
+        ForkJoinPool pool = new ForkJoinPool();
+        long result = pool.invoke(factorial);
+        System.out.print(result);
     }
 
 
