@@ -1012,5 +1012,21 @@ public class ConcurrencyTest {
         System.out.print(result);
     }
 
+    /**
+     * Liveness is the ability of an application to be able to execute in a timely manner.
+     * deadlock, starvation, and livelock.
+     * 1. Deadlock occurs when two or more threads are blocked forever, each waiting on the other.
+     *    -> avoid: to order their resource requests.
+     * 2. Starvation occurs when a single thread is perpetually denied access to a shared resource or lock.
+     * 3. Livelock occurs when two or more threads are conceptually blocked forever,
+     *         although they are each still active and trying to complete their task.
+     *    Livelock is often a result of two threads trying to resolve a deadlock.
+     *    stuck in an endless cycle.
+     *
+     * A race condition is an undesirable result that occurs when two tasks,
+     *   which should be completed sequentially, are completed at the same time.
+     *   -> 1. use a monitor to synchronize on the relevant overlapping task.
+     *      2. use singletons to coordinate access to shared resources.
+     */
 
 }
