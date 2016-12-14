@@ -32,6 +32,22 @@ import static org.junit.Assert.*;
  * Created by williaz on 12/12/16.
  * Wrapping is the process by which an instance is passed to the constructor of another class
  *       and operations on the resulting instance are filtered and applied to the original instance.
+ *
+ * watch out:
+ * 1. low level stream only interact with resource, no other stream
+ *    high-level stream only take stream
+ *    PrintStream and PrintWriter can take both
+ * 2. to move File, use renameTo()
+ * 3. Java would convert slash to the right one when working with path
+ * 4. benefit for writer/reader: built-in methods on String, encoding
+ * 5. static variable will not be serialized
+ * 6. not all stream support mark(), so be careful with undetermined.
+ * 7. PrintStream and PrintWriter provide convenient method println()
+ *
+ *
+ * @see java.io.PrintStream
+ * @see FileOutputStream
+ * @see BufferedOutputStream
  */
 public class IoTest {
     private File local;
@@ -65,17 +81,18 @@ public class IoTest {
      * @see File
      */
     @Test
-    public void test_File() {
+    public void test_File() throws IOException {
 
         //retrieve the local separator character
         assertEquals("/", System.getProperty("file.separator"));
         assertEquals("/", File.separator);
 
-        File file = new File("/Users/williaz/IdeaProjects/JavaExp");
+        File file = new File("/Users/williaz/IdeaProjects/JavaExp/io");
         File test = new File(file, "/test.txt");
-        File test1 = new File(file, "/io.txt");
 
-        assertTrue(file.exists());
+        assertFalse(test.exists());
+        test.createNewFile();
+        assertTrue(test.exists());
         assertTrue(file.isDirectory());
         //
         System.out.println(test.getAbsolutePath() + " : " + test.getParent() + " : " + test.getName());
@@ -83,12 +100,13 @@ public class IoTest {
         for (File f : file.listFiles()) {
             System.out.print(f.getName() + " ");
         }
-        //test.renameTo(new File("io.txt"));
-//        assertTrue(test1.isFile());
-        //File newPath = new File("/Users/williaz/IdeaProjects/JavaExp/io");
-        //newPath.mkdir(); //create dir
-        //System.out.print(newPath.exists());
-        //assertTrue(test1.delete());
+        assertTrue(test.exists());
+        File test1 = new File(file, "/io.txt");
+        test.renameTo(test1);
+        assertFalse(test.exists());
+        assertTrue(test1.exists());
+        //assertTrue(test.isFile());
+        //test.delete();
 
     }
 
@@ -139,6 +157,22 @@ public class IoTest {
      *
      *
      */
+    //call mark(int) with a read-ahead limit value.
+    @Test
+    public void test_MarkStream() throws IOException {
+        File file = new File(local, "zoo.txt");
+        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+            if (in.markSupported()) {
+                System.out.println(in.readLine());
+                in.mark(40);
+                System.out.println(in.readLine());
+                System.out.println(in.readLine());
+                in.reset();
+                System.out.println(in.readLine());
+
+            } else System.out.print("Not support mark");
+        }
+    }
 
     /**
      * The data in a FileInputStream object is commonly accessed by successive calls
@@ -312,6 +346,7 @@ public class IoTest {
      * printf()
      * format()
      * @see java.io.PrintStream
+     * @see PrintWriter
      */
     @Test
     public void test_PrintStream() {
@@ -341,6 +376,7 @@ public class IoTest {
      * Singleton, available in the JVM. It is created automatically for you by the JVM
      *     and accessed by calling the System.console() method(return null if not available).
      * reader(), writer() - similar to System.in, System.out
+     * reader() return Reader; writer() return PrintWriter()
      * format(), printf() - String.format() but uses the default system locale
      * flush() - It is recommended that you call the flush() method prior to calling any
      *           readLine() or readPassword() methods in order to ensure that no data is pending during the read.
@@ -348,6 +384,7 @@ public class IoTest {
      *      (user does not see the text they are typing)
      *      -> returns an array of characters
      * @see ConsoleSample
+     * @see Console
      */
 
 
