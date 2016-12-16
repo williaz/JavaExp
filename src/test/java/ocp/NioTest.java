@@ -13,16 +13,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.nio.file.attribute.UserPrincipal;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -102,11 +111,13 @@ public class NioTest {
      *      <- Path.toRealPath(), do require the file to exist
      * an atomic move is one in which any process monitoring the fi le system never sees an incomplete
      *      or partially written file. -> AtomicMoveNotSupportedException
-     * NOFOLLOW_LINKS
-     * FOLLOW_LINKS
-     * COPY_ATTRIBUTES
-     * REPLACE_EXISTING
-     * ATOMIC_MOVE
+     *
+     * NOFOLLOW_LINKS: (not traverse symbolic link) Test file existing, Read file data, Copy file, Move file
+     * FOLLOW_LINKS: (traverse symbolic link) Traverse a directory tree
+     * COPY_ATTRIBUTES: (copy with meta) Copy file
+     * REPLACE_EXISTING: (replace if exist) Copy file, Move file
+     * ATOMIC_MOVE: (all complete file) Move file
+     *
      * Only toString() return String, other methods return Path
      *
      * Path Symbols: double period value .. can be used to reference the parent directory.
@@ -241,5 +252,183 @@ public class NioTest {
             System.out.println(li.previous());
         } catch (IOException e) {}
     }
+
+    /**
+     * File attributes: metadata, which is data that describes other data.
+     * three methods for determining if a path refers to a directory, a regular file, or a symbolic link.
+     * a regular file as one that contains content
+     *   -> it is possible for isRegularFile() to return true for a symbolic link,
+     *      as long as the link resolves to a regular file.
+     * if no exist, return false: isRegularFile(), isDirectory(), isSymbolicLink();
+     *                            isHidden(), isReadable(), isExecutable();
+     */
+    @Test
+    public void test_FileAttributes() {
+        //directories can have extensions in many file systems
+        assertTrue(Files.isRegularFile(Paths.get("./nio/zoo.txt")));
+        assertTrue(Files.isDirectory(Paths.get("./nio/dir")));
+        try {
+            Files.deleteIfExists(Paths.get("./nio/zoo1.txt"));
+            Files.createSymbolicLink(Paths.get("./nio/zoo1.txt"), Paths.get("./nio/zoo.txt"));
+            assertTrue(Files.isSymbolicLink(Paths.get("./nio/zoo1.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertFalse(Files.isRegularFile(Paths.get("./nio/zoo23.txt"))); // no exception if no exist, no need exists()
+        try {
+            assertTrue(Files.isHidden(Paths.get("./nio/.ss.txt")));
+            /*
+            In Linux- or Mac-based systems, this is often denoted by file or directory entries that begin with a period character (.)
+             while in Windows-based systems this requires the hidden attribute to be set.
+             */
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertFalse(Files.isExecutable(Paths.get("./nio/.ss.txt"))); //isHidden
+        assertFalse(Files.isReadable(Paths.get("./nio/zoo1.txt")));//SymbolicLink
+        assertTrue(Files.isReadable(Paths.get("./nio/.ss.txt")));
+
+        /**
+         * The size returned by this method represents the conceptual size of the data,
+         *  and this may differ from the actual size on the persistence storage device
+         *  due to file system compression and organization.
+         */
+        //number of bytes in the file
+        try {
+            System.out.println(Files.size(Paths.get("./nio/zoo.txt")));
+            System.out.println(Files.size(Paths.get("./nio"))); //os dependent, no files inside size
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            System.out.println(Files.getLastModifiedTime(Paths.get("./nio/zoo.txt")));
+            System.out.println(Files.getLastModifiedTime(Paths.get("./nio/zoo.txt")).toMillis()); //epoh time
+            Files.setLastModifiedTime(Paths.get("./nio/zoo.txt"), FileTime.fromMillis(System.currentTimeMillis()));
+            System.out.println(Files.getLastModifiedTime(Paths.get("./nio/zoo.txt")).toMillis()); //epoh time
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(Files.getOwner(Paths.get("./nio/zoo.txt")).getName());
+            UserPrincipal user = Paths.get("./nio/zoo.txt").getFileSystem()
+                    .getUserPrincipalLookupService().lookupPrincipalByName("jenkins");
+            Files.setOwner(Paths.get("./nio/zoo.txt"), user);
+            System.out.println(Files.getOwner(Paths.get("./nio/zoo.txt")).getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * A view is a group of related attributes for a particular file system type. -> fewer round-trips
+     *
+     * Files.readAttributes(), returns a read-only view of the file attributes.
+     * Files.getFileAttributeView(), returns the underlying attribute view, and it provides a direct resource for modifying file information.
+     *     setTimes()
+     *
+     * BasicFileAttributeView is used to modify a file’s set of date/time values.
+     *
+     */
+    @Test
+    public void test_View() {
+        //The fileKey() method returns a file system value that represents a unique
+        //identifier for the file within the file system or null if it is not supported by the file system.
+        try {
+            BasicFileAttributes meta = Files.readAttributes(Paths.get("./nio/zoo.txt"), BasicFileAttributes.class);
+            System.out.println(meta.creationTime() + " " + meta.lastAccessTime() + " " + meta.lastModifiedTime() + " " + meta.size());
+            System.out.println(meta.isDirectory() + " " + meta.isRegularFile() + " " + meta.isSymbolicLink() + " " + meta.isOther());
+            System.out.println(meta.fileKey());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //The NIO.2 API allows us to pass null for any date/time value that we do not wish to modify.
+        BasicFileAttributeView view = Files.getFileAttributeView(Paths.get("./nio/zoo.txt"), BasicFileAttributeView.class);
+        try {
+            BasicFileAttributes meta = view.readAttributes();
+            System.out.println(meta.creationTime() + " " + meta.lastAccessTime() + " " + meta.lastModifiedTime());
+            view.setTimes(FileTime.fromMillis(System.currentTimeMillis() - 10000), null, null); // only one set method
+            meta = view.readAttributes(); //read again
+            System.out.println(meta.creationTime() + " " + meta.lastAccessTime() + " " + meta.lastModifiedTime());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Walking or traversing a directory is the process by which you start with a parent directory
+     *    and iterate over all of its descendants until some condition is met
+     *    or there are no more elements over which to iterate.
+     *
+     * A depth-first search traverses the structure from the root to an arbitrary leaf
+     *   and then navigates back up toward the root, traversing fully down any paths it skipped along the way.
+     *   -> less memory
+     * A breadth-first search starts at the root and processes all elements of each particular depth,
+     *   or distance from the root, before proceeding to the next depth level.
+     *
+     * The search depth is the distance from the root to current node.
+     *   -> Streams API uses depth-first searching with a default maximum depth of Integer.MAX_VALUE.
+     *
+     * The Files.walk(path) method returns a Stream<Path> object that traverses the directory in a depth-first, lazy manner.
+     * By lazy, we mean the set of elements is built and read while the directory is being traversed.
+     *
+     * the walk() method will not traverse symbolic links by default.
+     *
+     * Files.lines(Path) method that returns a Stream<String>
+     *
+     * Stream<Path> Files.walk(Path)
+     * Stream<Path> Files.find(Path, int, BiPredicate)
+     * Stream<String> Files.lines(Path)
+     *
+     */
+    @Test
+    public void test_FileStream() {
+        try {
+            Files.deleteIfExists(Paths.get("./nio/zoo2.txt"));
+            Files.createSymbolicLink(Paths.get("./nio/zoo2.txt"), Paths.get("./nio/zoo.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // maximum directory depth: depth 1 for direct children
+        try {
+            Files.walk(Paths.get("./nio"), 2, FileVisitOption.FOLLOW_LINKS).filter(p -> p.toString().endsWith(".txt"))
+                    .forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("------------");
+        try {
+            Stream<Path> fstream = Files.find(Paths.get("./nio"), 3, (p, a) -> p.toString().endsWith(".txt") && a.isSymbolicLink());
+            fstream.forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("------------");
+        //direct children
+        try {
+            Files.list(Paths.get("./nio"))
+                    .filter(f -> f.toString().endsWith(".txt"))
+                    .forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            //The contents of the file are read and processed lazily,
+            Files.lines(Paths.get("./nio/zoo.txt")).filter(s -> s.startsWith("75")).forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
 
 }
