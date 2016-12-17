@@ -37,8 +37,14 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.Assert.*;
 /**
- * Created by williaz on 12/14/16.
+ * Created by williaz on 12/14/16 - 12/17 3d.
  * Nonblocking Input/Output API
+ * wathout:
+ * 1. Path vs Paths
+ * 2. methods param allow Path vs String
+ * 3. only toRealPath() implicitly call normalize()
+ * 4. moving file always preserve meta, even if without COPY_ATTRIBUTES
+ * 5. isSameFile() returns true only if the files point to in the file system are the same, no counting content
  */
 public class NioTest {
     /**
@@ -61,7 +67,7 @@ public class NioTest {
      * @see java.net.URI
      */
     @Test
-    public void test_Path() {
+    public void test_Path() throws IOException {
         //File niof = new File("/Users/williaz/IdeaProjects/JavaExp/nio");
         //niof.mkdir();
 
@@ -81,6 +87,14 @@ public class NioTest {
 
         File nio4 = new File("/Users/williaz/IdeaProjects/JavaExp/nio");
         assertEquals(nio, nio4.toPath());//legacy File
+        Path nio5 = Paths.get("nio");
+        assertEquals(nio, nio5.toAbsolutePath());
+        assertTrue(Files.isSameFile(nio, nio5));
+        System.out.println(Paths.get("/JavaExp/../nio/zoo.txt").normalize());
+
+        Path nio6 = FileSystems.getDefault().getPath("./nio");
+        assertTrue(Files.isSameFile(nio, nio6));
+
     }
 
     /**
@@ -131,12 +145,14 @@ public class NioTest {
      * subpath(int inc, int exc),
      * relativize(Path)
      * resolve(Path): join
-     * normalize(), toRealPath()
+     * normalize(), toRealPath()(impilict normalize())
      *
      */
     @Test
     public void test_PathMethods() {
+        assertEquals(1, Paths.get(".").normalize().getNameCount());
         Path local = Paths.get("/Users/williaz/IdeaProjects/JavaExp/io/io.txt");
+        assertEquals(6, local.getNameCount());
         for (int i = 0; i < local.getNameCount(); i++) {
             System.out.print(local.getName(i) + " ");
         }
@@ -197,7 +213,10 @@ public class NioTest {
      *  createDirectories() = mkdirs()
      *  move() = renameTo()
      *  isSameFile()
-     *  delete(), deleteIfExists()
+     *  delete(),
+     *  deleteIfExists(): throws DirectoryNotEmptyException,
+     *                    if the file is a directory and could not otherwise be deleted,
+     *                    because the directory is not empty
      *  copy()
      *  newBufferedReader(), newBufferedWriter()
      *  readAllLines()
@@ -326,6 +345,7 @@ public class NioTest {
      * A view is a group of related attributes for a particular file system type. -> fewer round-trips
      *
      * Files.readAttributes(), returns a read-only view of the file attributes.
+     *     can be access file system dependent attributes, Files cannot
      * Files.getFileAttributeView(), returns the underlying attribute view, and it provides a direct resource for modifying file information.
      *     setTimes()
      *
@@ -380,8 +400,9 @@ public class NioTest {
      *
      * Files.lines(Path) method that returns a Stream<String>
      *
-     * Stream<Path> Files.walk(Path)
+     * Stream<Path> Files.walk(Path): may throw exception when encounter no access
      * Stream<Path> Files.find(Path, int, BiPredicate)
+     * Stream<Path> Files.list(Path)
      * Stream<String> Files.lines(Path)
      *
      */
@@ -393,7 +414,7 @@ public class NioTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // maximum directory depth: depth 1 for direct children
+        // maximum directory depth: depth 1 for direct children, 0 for the top-level dir
         try {
             Files.walk(Paths.get("./nio"), 2, FileVisitOption.FOLLOW_LINKS).filter(p -> p.toString().endsWith(".txt"))
                     .forEach(System.out::println);
