@@ -112,9 +112,10 @@ public class JdbcTest {
             num = statement.executeUpdate("UPDATE EMPLOYEES SET LAST_NAME = 'Kevin' WHERE EMPLOYEE_ID = 401");
             assertEquals(1, num);
             rs = statement.executeQuery("SELECT * FROM EMPLOYEES WHERE EMPLOYEE_ID = 401");
-            rs.next();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                System.out.print(rs.getString(i) + " ");
+            if (rs.next()) {
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    System.out.print(rs.getString(i) + " ");
+                }
             }
             boolean isResultSet = statement.execute("DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID = 401");
             if (!isResultSet) {
@@ -149,6 +150,83 @@ public class JdbcTest {
      * 2. Security: SQL-injection
      * 3. Readability
      */
+
+    /**
+     * A ResultSet has a cursor, which points to the current location in the data.
+     * # Always use an if statement or while loop when calling rs.next().
+     * # Column indexes begin with 1.
+     *
+     * sql.Date - toLocalDate() - LocalDate
+     * sql.Time - toLocalTime() - LocalTime
+     * sql.TimeStamp - toLocalDateTime() - LocalDateTime
+     *
+     * A scrollable ResultSet allows you to position the cursor at any row.
+     * cursor->
+     * void beforeFirst(), afterLast()
+     * boolean first(), last(), previous(), next()
+     * boolean absolute() : A positive number moves the cursor to that numbered row.
+     *                      Zero moves the cursor to a location immediately before the first row.
+     *                      A negative number means to start counting from the end of the ResultSet rather than from the beginning.
+     * boolean relative() : moves forward or backward the requested number of rows.
+     *                      can not use after afterLast() and beforeFirst()
+     */
+    @Test
+    public void test_ResultSet() {
+        try (Connection conn = DriverManager.getConnection(db.getString("url"), db.getString("user"), db.getString("password"));
+             Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = statement.executeQuery("SELECT * FROM EMPLOYEES WHERE EMPLOYEE_ID BETWEEN 100 AND 200")) {
+            rs.afterLast();
+            if (rs.previous()) {
+                assertEquals(200, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME")); //200
+            }
+            if (rs.relative(-5)) {
+                assertEquals(195, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+            if (rs.absolute(10)) {
+                assertEquals(109, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+            rs.beforeFirst();
+            if (rs.next()) {
+                assertEquals(100, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+            if (rs.relative(5)) {
+                assertEquals(105, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+            if (rs.first()) {
+                assertEquals(100, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+            if (rs.last()) {
+                assertEquals(200, rs.getInt(1));
+                //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println(e.getSQLState());
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    /**
+     * Not closing them creates a resource leak that will eventually slow down your program.
+     * Remember that a try-with-resources statement closes the resources in the reverse order from which they were opened.
+     * JDBC automatically closes a ResultSet when you run another SQL statement from the same Statement
+     */
+
+    /**
+     * getMessage() method returns a human-readable message as to what went wrong.
+     * getSQLState() method returns a code as to what went wrong.
+     *     You can Google the name of your database and the SQL state to get more information about the error.
+     * getErrorCode() is a database-specifi c code.
+     */
+
 
 
 
