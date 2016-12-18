@@ -13,8 +13,15 @@ import java.util.ResourceBundle;
 import static org.junit.Assert.*;
 
 /**
- * Created by williaz on 12/17/16.
+ * Created by williaz on 12/17/16 - 12/18 2d.
  *  JDBC stands for Java Database Connectivity
+ *  watchout:
+ *  1. DriverManager class is in JDK
+ *  2. for Url, location is optional
+ *  3. SQLException is checked exception, handle or declare in code
+ *  4. Statement auto close ResultSet
+ *  5. cursor methods return true if on the row, false if not
+ *  6. println(void) -> ce
  */
 public class JdbcTest {
     private ResourceBundle db;
@@ -65,6 +72,7 @@ public class JdbcTest {
     public void test_Connection() {
         Connection conn = null;
         try {
+            //Older JARs require Class.forName() to load the driver.
             Class.forName(db.getString("DriverClassName")); //ensure that the specified class is loaded by the current classloader.
             conn = DriverManager.getConnection(db.getString("url"), db.getString("user"), db.getString("password"));
 
@@ -169,6 +177,8 @@ public class JdbcTest {
      *                      A negative number means to start counting from the end of the ResultSet rather than from the beginning.
      * boolean relative() : moves forward or backward the requested number of rows.
      *                      can not use after afterLast() and beforeFirst()
+     *
+     * @see ResultSet
      */
     @Test
     public void test_ResultSet() {
@@ -188,7 +198,7 @@ public class JdbcTest {
                 assertEquals(109, rs.getInt(1));
                 //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
             }
-            rs.beforeFirst();
+            rs.beforeFirst(); // = absolute(0)
             if (rs.next()) {
                 assertEquals(100, rs.getInt(1));
                 //System.out.println(rs.getInt(1) + " " + rs.getString("LAST_NAME"));
