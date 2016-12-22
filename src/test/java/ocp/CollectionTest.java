@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -209,6 +211,8 @@ public class CollectionTest {
         assertEquals(1, states.indexOf("NY"));
         assertEquals(4, states.lastIndexOf("NY"));
         assertEquals("MI", states.remove(3));
+        states.replaceAll(s -> s + "0");
+        states.forEach(System.out::println);
     }
 
     /**
@@ -224,10 +228,10 @@ public class CollectionTest {
         NavigableSet<Integer> ngSet = new TreeSet<>();
         for(int i = 0; i < 20 ; i++) ngSet.add(i);
 
-        assertEquals(new Integer(10), ngSet.floor(10));
-        assertEquals(new Integer(10), ngSet.lower(11));
-        assertEquals(new Integer(10), ngSet.higher(9));
-        assertEquals(new Integer(10), ngSet.ceiling(10));
+        assertEquals(new Integer(10), ngSet.floor(10)); //<=10
+        assertEquals(new Integer(10), ngSet.lower(11)); //<11
+        assertEquals(new Integer(10), ngSet.higher(9)); //>9
+        assertEquals(new Integer(10), ngSet.ceiling(10)); //>=10
     }
 
     /**
@@ -340,7 +344,7 @@ public class CollectionTest {
 
     /**
      * The point of Comparable is to implement it inside the object being compared.
-     * numbers sort before letters and uppercase letters sort before lowercase letters.
+     * numbers sort before letters and uppercase letters sort before lowercase letters. 1Wb
      * Make compareTo() consistent with equals()
      * It is common to decide that nulls sort before any other values.
      * Comparator  let you separate sort order from the object to be sorted.
@@ -472,6 +476,7 @@ public class CollectionTest {
         //1. static
         List<Double> list = Arrays.asList(-23.2, -0.4, 5.0, -2.2);
         Function<Double, Double> abs = Math::abs;
+        BinaryOperator<Double> max = Math::max;
         Function<Double, Double> absL = x -> Math.abs(x); // lambda form
         list.stream().map(abs).forEach(System.out::println);
         list.stream().map(absL).forEach(System.out::println);
@@ -490,6 +495,9 @@ public class CollectionTest {
         Predicate<String> methodRef3 = String::isEmpty;
         postfix.stream().map(endStr1).forEach(System.out::println);
         postfix.stream().map(endStr1L).forEach(System.out::println);
+
+        BiPredicate<String, String> endStr3 = String::endsWith;
+
 
         //4. constructor - constructor reference
         Supplier<String> newStr = String::new;

@@ -23,7 +23,7 @@ public class ExceptionTest {
      * Checked exceptions must follow the handle or declare rule where they are either caught or thrown to the caller.
      * While it is legal to catch an error, it is not a good practice.
      *
-     * Cheched: 1. ParseException; 2. IOException, FileNotFoundException, NotSerializableException; 3. SQLException
+     * Checked: 1. ParseException; 2. IOException, FileNotFoundException, NotSerializableException; 3. SQLException
      * Unchecked: 1. ArrayStoreException; 2. DateTimeException; 3. MissingResourceException;
      *            4. IllegalStateException; 5. UnsupportedOperationException.
      * ce: 1. order, unreachable; 2. cannot potentially be thrown, unreachable
