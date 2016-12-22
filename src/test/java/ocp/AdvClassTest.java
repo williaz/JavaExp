@@ -76,6 +76,8 @@ public class AdvClassTest {
     public void test_InterfaceConstants() {
         Bird bird = new CanadaGoose();
         System.out.println(bird.MAXIMUM_Height);
+        System.out.println(CanFly.call(bird));
+        //System.out.println(CanadaGoose.call()); cannot find call()
     }
 
     /**
@@ -98,7 +100,7 @@ public class AdvClassTest {
     public enum Season {
         WINTER("Low"), SPRING("High"), SUMMER("High"), FALL("Medium");
         private String people;
-        private Season(String s) {
+        Season(String s) {
             people = s;
             System.out.println("enum constructor only got called once for each type!");
         }

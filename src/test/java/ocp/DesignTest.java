@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
  * and how they relate to items in the real world.
  * <p>OOP:</p>
  * 1. <br>Polymorphism</br> is the ability of a single interface to support multiple underlying forms.
- * 2. <br>Encapsulation</br> is the idea of combining fi elds and methods in a class such that the methods operate on the data,
- *    as opposed to the users of the class accessing the fi elds directly.
+ * 2. <br>Encapsulation</br> is the idea of combining fields and methods in a class such that the methods operate on the data,
+ *    as opposed to the users of the class accessing the fields directly.
  *    -> establish data rules to keep invariant
  * 3. <br>Inheritance<br> is the process by which the new child subclass automatically includes
  *    any public or protected primitives, objects, or methods defined in the parent class.

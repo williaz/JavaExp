@@ -113,4 +113,17 @@ public class generalTest {
             System.out.println(c + " is " + c.getVal()); // in order
         }
     }
+    /**
+     * #6. Access level: public, protected, package level, private
+     * #7. Collection hierarchy
+     */
+
+    /**
+     * #8. Map
+     */
+    @Test
+    public void test_Map() {
+
+    }
+
 }
