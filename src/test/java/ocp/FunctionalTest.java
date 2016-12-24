@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
@@ -15,12 +16,16 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -30,6 +35,8 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+
+import javax.print.attribute.HashAttributeSet;
 
 import static org.junit.Assert.*;
 /**
@@ -43,7 +50,7 @@ import static org.junit.Assert.*;
  */
 public class FunctionalTest {
     /**
-     * Lambdas use the same access rules as inner classes.
+     * Lambdas use the same access rules as local inner classes.
      * Lambda expressions can access static variables, instance variables,
      *        effectively final method parameters, and effectively final local variables.
      */
@@ -101,7 +108,7 @@ public class FunctionalTest {
         addOne.accept("AAPL",122.4);
         addOne.accept("FB",134.5);
         Consumer<Map<String, Double>> printPrices = System.out::println; //generic of generic
-        printPrices.accept(prices);
+        printPrices.andThen(m -> System.out.println(m.get("FB"))).accept(prices);
     }
 
     /**
@@ -116,6 +123,11 @@ public class FunctionalTest {
         //first parameter in the lambda is used as the instance on which to call the method
         assertEquals(true, startStr.test("Williaz", "Will"));
         assertNotEquals(true, startStr.test("Will", "Williaz"));
+
+        assertTrue(startStr.and(endStr).test("WilliW", "W"));
+
+        Predicate<Integer> is5 = Predicate.isEqual(new Integer(5));
+        assertTrue(is5.test(5));
 
         BiPredicate<String, String> checkEnds = startStr.and(endStr.negate());
         assertFalse(checkEnds.test("willwill", "will"));
@@ -134,8 +146,12 @@ public class FunctionalTest {
     public void test_Function() {
         Function<String, Integer> getSize = String::length;
         assertTrue(7 == getSize.apply("williaz"));
+        assertTrue(5 == getSize.andThen(s -> s + 1).apply("will"));
+        assertTrue(7 == getSize.compose(s -> s + "iam").apply("will"));
+        Function<String, String> getParam = Function.identity();
+        assertEquals("will", getParam.apply("will"));
 
-        BiFunction<String, Integer, String> appendNum = (s, i) -> s+i;
+        BiFunction<String, Integer, String> appendNum = (s, i) -> s + i;
         assertTrue(5 == appendNum.andThen(getSize).apply("will",8));
 
     }
@@ -154,6 +170,25 @@ public class FunctionalTest {
         assertEquals("williaz", concating.apply("will", "iaz"));
     }
 
+    @Test
+    public void test_BinaryOperator() {
+        BinaryOperator<String> maxByLen = BinaryOperator.maxBy((s1, s2) -> s1.length() - s2.length());
+        BinaryOperator<String> minByLen = BinaryOperator.minBy((s1, s2) -> s1.length() - s2.length());
+        List<String> strs = Arrays.asList("Bb", "Will", "Bill", "William", "Eason");
+        System.out.println(strs.stream().reduce("", maxByLen));
+        System.out.println(strs.stream().reduce(minByLen));
+    }
+
+    /**
+     * @see java.util.function.BooleanSupplier
+     */
+    @Test
+    public void test_PrimitiveFunctionalInterface() {
+        BooleanSupplier randomCheck = () -> Math.random() > .5;
+        System.out.println(randomCheck.getAsBoolean());
+
+    }
+
     /**
      * Optional vs null?
      * 1. null is not clear to express as a special value or not in certain situation
@@ -164,9 +199,10 @@ public class FunctionalTest {
      *  static Optional<T> ofNullable(T)
      *  static Optional<T> empty()
      *    void ifPresent(Consumer c)
-     * boolean isPresent
+     * boolean isPresent()
+     * boolean equals(Object)
      *       T get()
-     *       T orElse()
+     *       T orElse(T)
      *       T orElseGet(Supplier s)
      *       T orElseThrow(Supplier s)
      */
@@ -183,6 +219,8 @@ public class FunctionalTest {
         Consumer<Integer> print = System.out::print;
         value.ifPresent(print); // IF!!!
 
+        assertTrue(Optional.of(new Integer(5)).equals(Optional.of(new Integer(5))));
+
 
     }
 
@@ -194,6 +232,15 @@ public class FunctionalTest {
         }
         return Optional.of(max);
     }
+
+    public OptionalInt max1(int ... nums) {
+        return IntStream.of(nums).reduce(Math::max);
+    }
+
+    public OptionalInt max2(int ... nums) {
+        return Arrays.stream(nums).max();
+    }
+
 
     /**
      * A stream in Java is a sequence of data. <- assembly line
@@ -210,8 +257,9 @@ public class FunctionalTest {
     /**
      * Source Operation:
      * Stream<T> Stream.empty()
-     *           Stream.of(T ... t);
+     *           Stream.of(T... t);
      *           Collection.stream();
+     *           Arrays.stream(arr)
      *           Stream.generate(Supplier<T> s);
      *           Stream.iterate(T seed, UnaryOperator<T> f)
      *
@@ -290,6 +338,20 @@ public class FunctionalTest {
     }
 
     /**
+     * Optional<T>	reduce(BinaryOperator<T> accumulator)
+     * T reduce(T identity, BinaryOperator<T> accumulator)
+     * <U> U reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
+     */
+    @Test
+    public void test_Reduce() {
+        Stream<String> names = Stream.of("William", "Will", "Bill", "Edison", "Harry");
+        //System.out.println(names.reduce("", String::concat));
+        //System.out.println(names.reduce(String::concat).get());
+        System.out.println(names.reduce(0, (i, s) -> i + s.length(), (a, b) -> a+b));
+
+    }
+
+    /**
      * The collect() method is a special type of reduction called a mutable reduction.
      * it lets us get data out of streams and into another form.
      * R collect(Supplier<R> s, BiConsumer<R, ? super T> c, BiConsumer<R, R> combiner)
@@ -298,8 +360,10 @@ public class FunctionalTest {
     @Test
     public void test_Collect() {
         Stream<String> words = Stream.of("will", "is", "the", "best", "!");
-        StringBuilder sb = words.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
-        System.out.println(sb);
+        //StringBuilder sb = words.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
+        //System.out.println(sb);
+        words.collect(HashMap::new, (Map m, String s) -> m.put(s.length(), s), Map::putAll)
+                .forEach((k, v) -> System.out.println(k + " " + v));
 
         Stream<Integer> ints = Stream.of(23, 14, 45, 66, 19, 67);
         //List<Integer>list = ints.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
@@ -316,10 +380,12 @@ public class FunctionalTest {
      * Stream<R> map(Function<? super T, ? super R> f) : for transforming data, add Optional wrapper
      * Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> f), no add Optional wrapper;
      *                                                 Chaining calls to flatMap() is useful when you want to transform one
-     Optional type to another
+     * Optional type to another
      * Stream<T> sorted()
      * Stream<T> sorted(Comparator<? super T> c)
      * Stream<T> peek(Consumer<? super T> c) : no terminate stream, do not use it change data structure.
+     *
+     * @see Stream
      */
     @Test
     public void test_Intermediate() {
@@ -338,6 +404,13 @@ public class FunctionalTest {
         listStream.flatMap(l -> l.stream()).peek(System.out::print).sorted(Comparator.reverseOrder()).forEach(System.out::println);
         //listStream.flatMap(l -> l.stream()).sorted(Comparator::reverseOrder).forEach(System.out::println); // argument
 
+    }
+
+    @Test
+    public void test_MapVsFlatMap() {
+        Stream<List<Integer>> sList = Stream.of(Arrays.asList(13, 21, 34), Arrays.asList(11, 22, 33, 44));
+        //sList.map(a -> a.size()).forEach(System.out::println);
+        sList.flatMap(List::stream).sorted().forEach(System.out::println);
     }
 
     /**
@@ -407,16 +480,17 @@ public class FunctionalTest {
     }
 
     /**
-     * Collecters: Int, Double, Long
+     * Collectors: Int, Double, Long
      *               double averageInt(ToIntFunction f), averageDouble(ToDoubleFunction f), averageLong(ToLongFunction f)
      *                 long counting()
-     *               String joining, joining(CharSequence s)
+     *               String joining(), joining(CharSequence dilimiter)
      * XxxSummaryStatistics summarizingXxx(ToXxxFunction f)
      *                Xxxxx summingXxx(ToXxxFunction f)
      *                 List toList()
      *                  Set toSet()
      *           Collection toCollection(Supplier s)
      *
+     * @see Collectors
      */
     @Test
     public void test_BasicCollector() {
@@ -432,6 +506,47 @@ public class FunctionalTest {
         DoubleSummaryStatistics report1 = scores1.collect(Collectors.summarizingDouble(i -> i));
         System.out.println(report1.getAverage());
     }
+
+    @Test
+    public void test_BasicCollector1() {
+        assertEquals( Double.valueOf(74.235), Stream.of(86.2, 90.5, 46.0, 56.4, 89.11, 77.2)
+                .collect(Collectors.averagingDouble(Double::doubleValue)) );
+
+        assertEquals(Long.valueOf(6), Stream.of(86.2, 90.5, 46.0, 56.4, 89.11, 77.2)
+                .collect(Collectors.counting()) );
+
+        System.out.println(Stream.of("Will", "Edward", "Learner", "Wang").collect(Collectors.joining(", ")) );
+        System.out.println(Stream.of("Will", "Edward", "Learner", "Wang").collect(Collectors.joining()) );
+
+        IntSummaryStatistics s = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.summarizingInt(String::length));
+        assertEquals(7, s.getMax());
+        assertEquals(4, s.getMin());
+        assertEquals(4, s.getCount());
+        assertEquals(21, s.getSum());
+        assertEquals(5.25, s.getAverage(), 0.001);
+        System.out.println(s);
+
+        assertEquals(Integer.valueOf(21), Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.summingInt(String::length)) );
+
+        List<String> name = Stream.of("Will", "Edward", "Learner", "Wang").collect(Collectors.toList());
+        System.out.println(name);
+
+        Set<String> name1 = Stream.of("Will", "Edward", "Learner", "Wang").collect(Collectors.toSet());
+        System.out.println(name1);
+
+        TreeSet<String> name2 = Stream.of("Will", "Edward", "Learner", "Wang").collect(Collectors.toCollection(TreeSet::new));
+        System.out.println(name2);
+
+        assertEquals("Learner", Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.maxBy((a, b) -> a.length() - b.length())).get() );
+
+        assertEquals("Will", Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.minBy((a, b) -> a.length() - b.length())).get() );
+
+    }
+
 
     /**
      *                  Map toMap(Function k, Function v), toMap(Function k, Function v, BinaryOperator b), toMap(Function k, Function v, BinaryOperator b, Supplier s)
