@@ -16,6 +16,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
@@ -545,8 +546,10 @@ public class FunctionalTest {
         assertEquals("Will", Stream.of("Will", "Edward", "Learner", "Wang")
                 .collect(Collectors.minBy((a, b) -> a.length() - b.length())).get() );
 
-    }
+        assertEquals("Edward", Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.minBy(Comparator.naturalOrder())).get());
 
+    }
 
     /**
      *                  Map toMap(Function k, Function v), toMap(Function k, Function v, BinaryOperator b), toMap(Function k, Function v, BinaryOperator b, Supplier s)
@@ -577,18 +580,87 @@ public class FunctionalTest {
         System.out.println(exhibit);
 
         Stream<String> zoo1 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
-        //Collector c = Collectors.mapping((String s) -> s.charAt(0), Collectors.maxBy(Comparator.naturalOrder()));
-        //TODO revise ce
-//        Map<Integer, Optional<Character>> sample = zoo1.collect(
-//                Collectors.groupingBy(String::length,
-//                        Collectors.mapping(s -> s.charAt(0),
-//                                Collectors.minBy(Comparator.naturalOrder())
-//                        )
-//                )
-//        );
-//        System.out.println(sample);
+        Map<Integer, Optional<Character>> map = zoo1.collect(Collectors.groupingBy(String::length,
+                Collectors.mapping(s -> s.charAt(0), Collectors.minBy((c1, c2) -> c1 - c2))));
+        System.out.println("map: "+ map);
+
+        Stream<String> zoo2 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
+        Map<Integer, Optional<Character>> map1 = zoo2.collect(Collectors.groupingBy(String::length,
+                Collectors.mapping((String s) -> s.charAt(0), Collectors.minBy(Comparator.naturalOrder()))));
+        //:: operator tells Java to pass the parameters automatically
+        System.out.println("map1: "+ map1);
     }
 
+    @Test
+    public void test_MapCollector1() {
+        Map<Boolean, List<String> > map = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang")
+                .collect(Collectors.partitioningBy(a -> a.length() > 4));
+        System.out.println(map);
+
+        Map<Boolean, Set<String> > map1 = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang")
+                .collect(Collectors.partitioningBy(a -> a.length() > 4, Collectors.toSet()));
+        System.out.println(map1);
+
+        Map<Boolean, Long > map2 = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang")
+                .collect(Collectors.partitioningBy(a -> a.length() > 4, Collectors.counting()));
+        System.out.println(map2);
+
+        Map<String, Integer> name3 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.toMap(Function.identity(), String::length));
+        System.out.println(name3);
+
+        Map<Integer, String> name4 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.toMap(String::length, Function.identity(), (s1, s2) -> s1 + " " + s2));
+        //merge function to solve duplicate values
+        System.out.println(name4);
+
+        TreeMap<Integer, String> name5 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.toMap(String::length, Function.identity(), (s1, s2) -> s1 + "," + s2, TreeMap::new));
+        //merge function to solve duplicate values
+        System.out.println(name5);
+
+        Map<Integer, List<String>> name6 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.groupingBy(String::length)); //list
+        System.out.println("6: " + name6);
+
+        Map<Integer, Set<String>> name9 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.groupingBy(String::length, Collectors.toSet())); //set
+        System.out.println("9: " + name9);
+
+        TreeMap<Integer, Set<String>> name10 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.groupingBy(String::length, TreeMap::new, Collectors.toSet())); //TreeMap
+        System.out.println("10: " + name10);
+
+        Map<Boolean, List<String>> name7 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.partitioningBy( s -> s.length() >4)); //list
+        System.out.println("7: "+ name7);
+
+        Map<Boolean, Set<String>> name8 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.partitioningBy( s -> s.length() >4, Collectors.toSet())); //set
+        System.out.println("8: " + name8);
+
+        Map<Boolean, Long> name11 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.partitioningBy( s -> s.length() >4, Collectors.counting()));
+        System.out.println("11: " + name11);
+
+        Map<Boolean, Set<Character> > name12 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.partitioningBy( s -> s.length() >4,
+                        Collectors.mapping(s -> s.charAt(0), Collectors.toSet())));
+        System.out.println("12: " + name12);
+
+        Set<Character> init = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.mapping(s -> s.charAt(0), Collectors.toSet()));
+        System.out.println(init);
+
+        Optional<Character> init1 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.mapping(s -> s.charAt(0), Collectors.minBy((c1, c2) -> c1 - c2)));
+        System.out.println(init1);
+
+        Optional<Character> init2 = Stream.of("Will", "Edward", "Learner", "Wang")
+                .collect(Collectors.mapping((String s) -> s.charAt(0), Collectors.minBy(Comparator.naturalOrder())));
+        System.out.println(init2);
+
+    }
 
 
 
