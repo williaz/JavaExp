@@ -172,10 +172,10 @@ public class JdbcTest {
      * cursor->
      * void beforeFirst(), afterLast()
      * boolean first(), last(), previous(), next()
-     * boolean absolute() : A positive number moves the cursor to that numbered row.
+     * boolean absolute(int) : A positive number moves the cursor to that numbered row.
      *                      Zero moves the cursor to a location immediately before the first row.
      *                      A negative number means to start counting from the end of the ResultSet rather than from the beginning.
-     * boolean relative() : moves forward or backward the requested number of rows.
+     * boolean relative(int) : moves forward or backward the requested number of rows.
      *                      can not use after afterLast() and beforeFirst()
      *
      * @see ResultSet
@@ -234,7 +234,7 @@ public class JdbcTest {
      * getMessage() method returns a human-readable message as to what went wrong.
      * getSQLState() method returns a code as to what went wrong.
      *     You can Google the name of your database and the SQL state to get more information about the error.
-     * getErrorCode() is a database-specifi c code.
+     * getErrorCode() is a database-specific code.
      */
 
 

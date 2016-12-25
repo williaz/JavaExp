@@ -335,6 +335,9 @@ public class FunctionalTest {
         BiFunction<Integer, Integer, Integer> f1 = (a, b) -> a + b;
         BinaryOperator<Integer> f2 = (a, b) -> a * b;
         System.out.println(intnums.parallel().reduce(Integer.valueOf(0), f1, f2));
+        //0+1, 0+2, ..
+        //1*2, 3*4, 5*6
+        //2*12*30
 
     }
 
@@ -587,7 +590,7 @@ public class FunctionalTest {
         Stream<String> zoo2 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
         Map<Integer, Optional<Character>> map1 = zoo2.collect(Collectors.groupingBy(String::length,
                 Collectors.mapping((String s) -> s.charAt(0), Collectors.minBy(Comparator.naturalOrder()))));
-        //:: operator tells Java to pass the parameters automatically
+        //:: operator tells Java to pass the parameters automatically`
         System.out.println("map1: "+ map1);
     }
 

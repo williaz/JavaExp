@@ -84,7 +84,7 @@ public class TimeTest {
     }
 
     /**
-     * P1Y2W3D
+     * P1Y2M3D
      */
     @Test
     public void test_Period() {
@@ -190,7 +190,7 @@ public class TimeTest {
     @Test
     public void test_Locale() {
         Locale locale = Locale.getDefault();
-        System.out.println(locale); //Language(lowercase)(_Country)
+        System.out.println(locale); //Language(lowercase)_(Country)
         Locale here = new Locale("en", "US");
         Locale us = new Locale.Builder().setLanguage("en").setRegion("us").build();
         assertEquals(here, us);
@@ -201,9 +201,9 @@ public class TimeTest {
     }
 
     /**
-     * A resource bundle contains the local specifi c objects to be used by a program.
-     *    It is like a map with keys and values. The resource bundle can be in a property fi le or in a Java class.
-     * A property fi le is a fi le in a specifi c format with key/value pairs.
+     * A resource bundle contains the local specific objects to be used by a program.
+     *    It is like a map with keys and values. The resource bundle can be in a property file or in a Java class.
+     * A property file is a file in a specific format with key/value pairs.
      *
      * use "=", (":", " ")
      * #.java -> .properties, most specific -> default one -> most general
@@ -283,7 +283,7 @@ public class TimeTest {
     /**
      * DateTimeFormatter can be used to format any type of date and/or time object.
      * Remember M (uppercase) is month and m (lowercase) is minute
-     * yyyy MM dd hh MM , :
+     * yyyy MM dd hh mm , :
      */
     @Test
     public void test_DateTimeFormatter() {

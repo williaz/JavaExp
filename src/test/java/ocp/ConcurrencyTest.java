@@ -47,12 +47,12 @@ import java.util.stream.Stream;
  * 6. Collectors for Concurrent faces non-parallel stream -- no exception
  * 7. catch InterruptException, related to timeout
  * 8. shut down Executor, otherwise the code will run, no terminate
- * 9. resource-heavy tasks benefits more than CPU-intensice tasks from parallel
- * 10. ExecutorService: void execute(), Future<? / T> submit(Runable / Callable);
+ * 9. resource-heavy tasks benefits more than CPU-intensive tasks from parallel
+ * 10. ExecutorService: void execute(), Future<? / T> submit(Runnable / Callable);
  *     invokeAll(), invokeAny() only take Callable
  */
 public class ConcurrencyTest {
-    /**
+    /**e
      * A thread is the smallest unit of execution that can be scheduled by the operating system.
      * A process is a group of associated threads that execute in the same, shared environment.
      *   -> single / multiple -threaded process <- user defined thread
@@ -96,14 +96,14 @@ public class ConcurrencyTest {
     @Test
     public void test_ThreadCreation() {
         System.out.println(Thread.currentThread().getName()+ " is running");
-        new Thread(() -> {System.out.println(Thread.currentThread().getName()+ " is running");}
+        new Thread(() -> System.out.println(Thread.currentThread().getName()+ " is running")
                 , "Lambda Runable").start();
 
     }
 
     /**
      * Polling is the process of intermittently checking data at some fixed interval.
-     * use sleep() to not ties up CPU resource
+     * use sleep() to not ties up CPU resource, but no lose lock
      */
     @Test
     public void test_Sleep() {
@@ -128,7 +128,8 @@ public class ConcurrencyTest {
      * With a single-thread executor, results are guaranteed to be executed in the order
      *     in which they are added to the executor service.
      *
-     * The shutdown process for a thread executor involves first rejecting any new tasks submitted to the thread executor while continuing to execute any previously submitted tasks.
+     * The shutdown process for a thread executor involves first rejecting any new tasks submitted to the thread executor
+     *    while continuing to execute any previously submitted tasks.
      * Active -> Shutting down -> Shutdown
      * 1. During Shutting down time, calling isShutdown() will return true, while isTerminated() will return false.
      *    If a new task is submitted to the thread executor while it is shutting down, a RejectedExecutionException will be thrown.
@@ -187,6 +188,27 @@ public class ConcurrencyTest {
      *     cancelling any unfinished tasks
      * @see ExecutorService
      */
+    @Test
+    public void test_Invoke() {
+        ExecutorService service = null;
+        List<Callable<Integer>> tasks = new ArrayList<>();
+        tasks.add(() -> 1 + 5);
+        tasks.add(() -> 2 + 6);
+        tasks.add(() -> 3 + 7);
+
+        try{
+            service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            Integer result = service.invokeAny(tasks);
+            System.out.println(result);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            if (service != null) service.shutdown();
+        }
+    }
 
     /**
      * Future<T>
