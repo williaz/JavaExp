@@ -61,7 +61,7 @@ public class IoTest {
      * A directory is a record within a file system that contains files as well as other directories.
      *   root directory is the topmost directory in the file system,
      * The file system is in charge of reading and writing data within a computer.
-     * A path is a String representation of a fi le or directory within a fi le system.
+     * A path is a String representation of a file or directory within a file system.
      */
 
     /**
@@ -70,10 +70,11 @@ public class IoTest {
      * File class can be used to represent directories as well as files.
      * A File object often is initialized with String containing
      *   either an absolute or relative path to the file or directory within the file system.
-     * The absolute path of a file or directory is the full path from the root directory to the file or directory, including all subdirectories that contain the file or directory.
+     * The absolute path of a file or directory is the full path from the root directory to the file or directory,
+     *       including all subdirectories that contain the file or directory.
      * The relative path of a file or directory is the path from the current working directory to file or directory.
      *
-     * exists(), isFile(), isDirectory()
+     * boolean exists(), isFile(), isDirectory()
      * getName(), getAbsolutePath(), getParent()
      * lastModified(), delete(), length() - bytes, renameTo(File)
      * mkdir(), mkdirs(), listFiles()
@@ -132,7 +133,7 @@ public class IoTest {
      *
      * The java.io library defines four <b>abstract</b> classes that are the parents of all stream classes
      *    defined within the API: InputStream, OutputStream, Reader, and Writer.
-     * By using the abstract parent class as <b>input</b>, the highlevel stream classes can be used much more often
+     * By using the abstract parent class as <b>input</b>, the high level stream classes can be used much more often
      *    without concern for the particular underlying stream subclass.
      *
      * @see java.io.ObjectInputStream
@@ -149,7 +150,8 @@ public class IoTest {
      *              -> be used intermittently. close() method will automatically call flush()
      * 3. Mark stream: The InputStream and Reader classes include mark(int) and reset() methods
      *                 to move the stream back to an earlier position.
-     *                 -> call the markSupported() method, which returns true only if mark() is supported. Not all java.io input stream classes support
+     *                 -> call the markSupported() method, which returns true only if mark() is supported.
+     *                        Not all java.io input stream classes support
      *                 -> if you call reset() after you have passed your mark() read limit, an exception may be thrown at runtime
      * 4. Skip: The InputStream and Reader classes also include a skip(long) method,
      *          which as you might expect skips over a certain number of bytes.
@@ -163,6 +165,7 @@ public class IoTest {
         File file = new File(local, "zoo.txt");
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             if (in.markSupported()) {
+                in.skip(1000);
                 System.out.println(in.readLine());
                 in.mark(40);
                 System.out.println(in.readLine());

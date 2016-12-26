@@ -590,7 +590,7 @@ public class FunctionalTest {
         Stream<String> zoo2 = Stream.of("lions", "tigers", "bears", "dog", "cat", "elephant");
         Map<Integer, Optional<Character>> map1 = zoo2.collect(Collectors.groupingBy(String::length,
                 Collectors.mapping((String s) -> s.charAt(0), Collectors.minBy(Comparator.naturalOrder()))));
-        //:: operator tells Java to pass the parameters automatically`
+        //:: operator tells Java to pass the parameters automatically
         System.out.println("map1: "+ map1);
     }
 

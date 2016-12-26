@@ -177,7 +177,7 @@ public class NioTest {
         //if both path values are absolute, then the method computes the relative
         //path from one absolute location to another, regardless of the current working directory.
         Path current = Paths.get("/Users/williaz/IdeaProjects/JavaExp");
-        System.out.println(local.relativize(current)); //requires that both paths be absolute or both relative
+        System.out.println("local.relativize(current) : " + local.relativize(current)); //requires that both paths be absolute or both relative
                                                       //for windows, also require same driver
         //relativize() and resolve() method does not clean up path symbols,
         //resolve(Path) method for creating a new Path by joining an existing path to the current path.
