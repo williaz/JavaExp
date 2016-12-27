@@ -151,7 +151,7 @@ public class AdvClassTest {
     @Test
     public void test_Enum1() {
         for (Weekday day : Weekday.values()) {
-            System.out.println(day); //Weekday.type
+            System.out.println(day); //Weekday.type // unqualified name
             day.printWorkHours();
             System.out.println("This day will has " + day.NumOfEmployees() + "employees");
             System.out.println();

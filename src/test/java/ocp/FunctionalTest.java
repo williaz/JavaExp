@@ -425,7 +425,8 @@ public class FunctionalTest {
         List<String> list = Arrays.asList("Toby", "Anna", "Leroy", "Alex");
         list.stream().filter(s -> s.length() == 4).sorted().limit(2).forEach(System.out::println); //shorter, briefer, and clearer code
         Stream<Integer> ints = Stream.iterate(1, i -> i + 2);
-        ints.forEach(System.out::println);
+        //ints.forEach(System.out::println);
+        Stream.concat(Arrays.asList(33, 25, 19, 11).stream(), ints).limit(10).forEach(i -> System.out.print(i + " "));
     }
 
     /**
