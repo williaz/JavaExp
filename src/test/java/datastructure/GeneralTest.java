@@ -5,9 +5,11 @@ import org.junit.Test;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collector;
 
@@ -374,6 +376,126 @@ public class GeneralTest {
         n2.next = n3;
         n3.next = n4;
         ListNode list = swapPairs(n1);
+        while (list != null) {
+            System.out.print(list.val);
+            list = list.next;
+        }
+    }
+
+    public ListNode mergeKLists(List<ListNode> lists) {
+        Comparator<ListNode> cpt = (a, b) -> a.val - b.val;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(cpt);
+        for (ListNode node : lists) {
+            while (node != null) {
+                queue.offer(node);
+                node = node.next;
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode walker = dummy;
+        while (!queue.isEmpty()) {
+            walker.next = queue.poll();
+            walker = walker.next;
+        }
+
+        return dummy.next;
+    }
+
+
+    private ListNode reverse(ListNode head) {
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode temp = head.next;
+            head.next = newHead;
+            newHead = head;
+            head = temp;
+        }
+        return newHead;
+    }
+
+    @Test
+    public void test_ReverseListNode() {
+        ListNode n4 = new ListNode(4);
+        ListNode n3 = new ListNode(3);
+        ListNode n2 = new ListNode(2);
+        ListNode n1 = new ListNode(1);
+        n1.next = n2;
+        n2.next = n3;
+        n3.next = n4;
+        ListNode list = reverse(n1);
+        while (list != null) {
+            System.out.print(list.val);
+            list = list.next;
+        }
+    }
+
+
+    public ListNode getMid(ListNode node) {
+        ListNode slow = node;
+        ListNode fast = node; // mid right for even
+        //ListNode fast = node.next; //mid left for even
+        while(fast!= null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    @Test
+    public void test_getMidListNode() {
+        //ListNode n4 = new ListNode(4);
+        ListNode n3 = new ListNode(3);
+        ListNode n2 = new ListNode(2);
+        ListNode n1 = new ListNode(1);
+        n1.next = n2;
+        n2.next = n3;
+        //n3.next = n4;
+        ListNode list = getMid(n1);
+        while (list != null) {
+            System.out.print(list.val);
+            list = list.next;
+        }
+    }
+
+    public ListNode merge(ListNode n1, ListNode n2) {
+        ListNode list = new ListNode(0);
+        ListNode dum = list;
+        while (n1 != null && n2 != null) {
+            ListNode first = n1;
+            n1 = n1.next;
+            first.next = null;
+
+            ListNode sec = n2;
+            n2 = n2.next;
+            sec.next = null;
+
+            list.next = first;
+            list = list.next;
+            list.next = sec;
+            list = list.next;
+        }
+        if (n1 != null) list.next = n1;
+        if (n2 != null) list.next = n2;
+        return dum.next;
+    }
+
+    @Test
+    public void test_MergeListNode() {
+        ListNode n4 = new ListNode(4);
+        ListNode n3 = new ListNode(3);
+        ListNode n2 = new ListNode(2);
+        ListNode n1 = new ListNode(1);
+        n1.next = n2;
+        n2.next = n3;
+        n3.next = n4;
+
+        ListNode n7 = new ListNode(7);
+        ListNode n6 = new ListNode(6);
+        ListNode n5 = new ListNode(5);
+        n5.next = n6;
+        n6.next = n7;
+
+        ListNode list = merge(n1, n5);
         while (list != null) {
             System.out.print(list.val);
             list = list.next;
