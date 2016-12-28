@@ -39,9 +39,10 @@ import static org.junit.Assert.*;
  * An anti‐pattern is a common solution to a reoccurring problem
  *    that tends to lead to unmanageable or difficult‐to‐use code.
  * #watch out:
- * 1. default, static method in interface must have body!
+ * 1. default, static method in interface must have body!!
  * 2. lambda must have right hand side expression, X ()->
  * 3. interface cannot final!
+ * 4. singleton class, no final on instance for lazy instantiate.
  */
 
 public class DesignTest {

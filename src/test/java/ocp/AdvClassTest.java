@@ -98,7 +98,7 @@ public class AdvClassTest {
      */
 
     public enum Season {
-        WINTER("Low"), SPRING("High"), SUMMER("High"), FALL("Medium");
+        WINTER("Low"), SPRING("High"), SUMMER("High"), FALL("Medium");//;
         private String people;
         Season(String s) {
             people = s;
@@ -161,7 +161,7 @@ public class AdvClassTest {
     /**
      *   4 type Nested Classes:
      * 1. Member inner class, like instance variable
-     *      can be any access, no static!!, can abstract / final,
+     *      can be any access, #no static!!, can abstract / final,
      *      can access outer class members including private;
      *      compile as Outer$Inner.class
      *      2 level is the deepest for using inner class name directly
