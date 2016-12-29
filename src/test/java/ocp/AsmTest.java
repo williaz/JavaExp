@@ -2,6 +2,7 @@ package ocp;
 
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -15,6 +16,7 @@ import java.time.format.FormatStyle;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -137,6 +139,49 @@ public class AsmTest {
         //System.out.println(absolute.relativize(relative1));
     }
 
+    @Test
+    public void test_GenericType() {
+        //List<Number> nums = new ArrayList<Integer>(); //must same type
+        List<? extends Number> nums = new ArrayList<Integer>(); //or use wildcard
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void test_Arrays_asList() {
+        List<Integer> ints = Arrays.asList(23, 46, 19, 20);
+        ints.add(44); // cannot change size
+    }
+
+    @Test
+    public void test_Arrays_asList1() {
+        List<Integer> ints = Arrays.asList(23, 46, 19, 20);
+        Collections.sort(ints); //but can be sorted
+
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void test_PrintWithOutOfException() {
+        int[] arr = new int[2];
+        arr[0] = 4;
+        arr[1] = 5;
+        System.out.println(arr[0] + arr[1] + arr[2]); // throw exception without any print out
+
+    }
+
+    //Suppressed exception is only caused by try-with-resource's close().
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void test_NoSuppressedException() {
+        try {
+            throw new IOException();
+        } catch (IOException ie) {
+            try {
+                throw new RuntimeException();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
 
 
 

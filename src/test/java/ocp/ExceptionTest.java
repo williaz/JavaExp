@@ -16,7 +16,7 @@ import oca.ood.Animal;
  * watch out:
  * 1. a multi-catch cannot catch both superclass and subclass.
  * 2. AutoCloseable call close() after try clause, before catch and finally clauses
- * 3. unreachable for checked exception
+ * 3. unreachable for checked exception##
  */
 public class ExceptionTest {
     /**
@@ -103,7 +103,7 @@ public class ExceptionTest {
         try (AutoCloseableResource shop = new AutoCloseableResource();
              CloseableResource ioShop = new CloseableResource()) {
 
-        } catch (IOException ioe) {
+        } catch (IOException ioe) { // have to catch or declare exception that may throw by the close()!
             System.out.println(ioe.getMessage());
         }
     }

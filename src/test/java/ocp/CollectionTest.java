@@ -41,7 +41,8 @@ import static org.junit.Assert.*;
  * watch out:
  * 1. collection without Generic, for looping use Object, else ce!
  * 2. Set<Number> set = new HashSet<Integer>(); -> ce!!!
- * 3. lambda no redefine.
+ * 3. variables in lambda no redefine!!.
+ * 4. Map methods, don't mislead by Collection methods
  */
 public class CollectionTest {
     @Test
