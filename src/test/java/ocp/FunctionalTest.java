@@ -570,10 +570,10 @@ public class FunctionalTest {
     public void test_MapCollector() {
         Stream<String> name = Stream.of("Will", "Edward", "Learner", "Wang", "Will", "Will", "Will", "Wang");
         //Map<String, Integer> counter = name.collect(Collectors.toMap(Function.identity(), s -> 1,(s1, s2) -> s1 + s2));
-        Map<Integer, List<String>> length = name.collect(Collectors.groupingBy(s -> s.length()));
-        System.out.println(length);
-        //Map<String, Long> counter = name.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
-        //System.out.println(counter);
+        //Map<Integer, List<String>> length = name.collect(Collectors.groupingBy(s -> s.length()));
+        //System.out.println(length);
+        Map<String, Long> counter = name.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        System.out.println(counter);
 
         Stream<String> animals = Stream.of("lions", "tigers", "bears");
         Map<Integer, Set<String>> size = animals.collect(Collectors.groupingBy(String::length, HashMap::new, Collectors.toSet()));
