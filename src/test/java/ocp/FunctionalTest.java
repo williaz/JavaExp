@@ -47,6 +47,7 @@ import static org.junit.Assert.*;
  * Watch out:
  * 1. a stream can only call terminal once!
  * 2. terminal only be used in primitive stream: sum(), ..
+ * 3. check terminal exist or not
  *
  */
 public class FunctionalTest {

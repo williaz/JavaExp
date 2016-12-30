@@ -32,11 +32,18 @@ import static org.junit.Assert.*;
  * Watch out:
  * 1. Mismatch of methods in LocalDateTime, LocalDate, LocalTime
  * 2. DataTimeFormatter's ofLocalizedXxx
- * 3. Period: P_Y_M_D; Duration: PT_H_M_S
+ * 3. Period: P_Y_M_D; Duration: PT_H_M_S; both have ofDays()
  * 4. When deal with time zones, it is best to convert to GMT first by substracting the time zone.
  * 5. For daylight saving time, when calculating the time between, the time zone offset change matters!
  * 6. Java is smart enough to adjust the daylight savings time
  * 7. Properties get() no allow default value, getPreoperty() do!
+ * @see Properties
+ * 8. DateTimeFormatter formate must take the TemperalType same or broader than its taken type:
+ *    #ofLocalizedDateTime can only take LocalDateTime
+ *    #ofLocalizedDate can take LocalDateTime and LocalDate
+ *    #ofLocalizedTime can take LocalDateTime and LocalTime
+ * 9. ResourceBundle order: for fr_CA, name_fr_CA -> name_fr -> name;
+ *    #without consider the default locale of program
  */
 public class TimeTest {
     @Test

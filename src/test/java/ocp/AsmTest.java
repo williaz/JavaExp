@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,8 +22,11 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -117,6 +121,15 @@ public class AsmTest {
     }
 
     @Test
+    public void test_DateTimeFormatter1() {
+        LocalDateTime d = LocalDateTime.of(2015, 5, 10, 11, 22, 33);
+        DateTimeFormatter f = DateTimeFormatter.
+                ofLocalizedTime(FormatStyle.SHORT);
+        System.out.println(f.format(LocalDateTime.now()));
+        System.out.println(d.format(f));
+    }
+
+    @Test
     public void test_CalculateGMT() {
         ZonedDateTime time1 = ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("Asia/Shanghai"));
         ZonedDateTime time2 = ZonedDateTime.now();
@@ -183,6 +196,19 @@ public class AsmTest {
         }
     }
 
+    @Test
+    public void test_Stream_Iterate() {
+        Stream.iterate(1, x -> ++x).limit(10).forEach(System.out::println);//1, 2, 3, 4, ...
+        Stream.iterate(1, x -> x++).limit(10).forEach(System.out::println);//1, 1, 1, 1, ...
+    }
+
+    @Test
+    public void test_ResourceBundle_LookUpOrder() {
+        Locale fr = new Locale("fr");
+        ResourceBundle rb = ResourceBundle.getBundle("ocp.orca", fr);
+        assertEquals("Frc", rb.getString("name")); //in orca_fr
+        assertEquals("12f", rb.getString("age")); // in orca.properties
+    }
 
 
 

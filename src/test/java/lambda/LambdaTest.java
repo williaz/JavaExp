@@ -69,7 +69,7 @@ public class LambdaTest {
                 .stream()
                 .filter(e -> e.getValue() == 1)
                 .findFirst()
-                .get() //must contain the char, revise!
+                .get() //TODO must contain the char, revise!
                 .getKey();
     }
 
