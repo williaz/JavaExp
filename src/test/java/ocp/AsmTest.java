@@ -26,6 +26,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -208,6 +210,26 @@ public class AsmTest {
         ResourceBundle rb = ResourceBundle.getBundle("ocp.orca", fr);
         assertEquals("Frc", rb.getString("name")); //in orca_fr
         assertEquals("12f", rb.getString("age")); // in orca.properties
+    }
+
+    //private static int counter = 0;
+    private int counter = 0;
+
+    /**
+     * lambda can only access final or effectively final local variables,
+     *        but can access any static or instance variables.
+     */
+    @Test
+    public void test_Runnable() {
+        ExecutorService executorService = null;
+        //int counter = 0;
+        try {
+            executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            executorService.execute(() -> counter++);
+        } finally {
+            if (executorService != null) executorService.shutdown();
+        }
+        System.out.print(counter);
     }
 
 

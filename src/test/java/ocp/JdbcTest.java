@@ -21,7 +21,9 @@ import static org.junit.Assert.*;
  *  3. SQLException is checked exception, handle or declare in code
  *  4. Statement auto close ResultSet
  *  5. cursor methods return true if on the row, false if not
- *  6. println(void) -> ce
+ *  6. println(void) -> ce!!
+ *  7. JDBC 4.0 requires META-INF/service/java.sql.Driver
+ *  8. FORWARD_ONLY can support next(), otherwise SQLException
  */
 public class JdbcTest {
     private ResourceBundle db;
@@ -48,6 +50,7 @@ public class JdbcTest {
         try (Connection conn = DriverManager.getConnection(db.getString("url"), db.getString("user"), db.getString("password"));
              Statement statement = conn.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM EMPLOYEES WHERE EMPLOYEE_ID BETWEEN 100 AND 200")) {
+            //rs.absolute(0); //Invalid operation for forward only resultset
             while (rs.next()) {
                 System.out.println(rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME"));
             }

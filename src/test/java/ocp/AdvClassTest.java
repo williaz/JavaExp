@@ -170,7 +170,7 @@ public class AdvClassTest {
      * 2. Local inner class, like local variable in method
      *      no access modifier to use
      *      no static!!
-     *      can only access effectively final or final
+     *      can only access effectively final or final local variables
      *<p>
      * 3. Anonymous inner class, no name local inner class
      *      Anonymous inner classes are required to extend an existing class

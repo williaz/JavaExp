@@ -39,17 +39,19 @@ import java.util.stream.Stream;
  * Created by williaz on 12/6/16 - 12/10 4.5d.
  * watch out:
  * 1. Concurrent collections no fail fast
+ * ＃ ExecutorService VS ScheduledExecutorService
  * 2. ScheduleExecutor only schedule() can take Callable<T> as argument,
  *    scheduleAtFixedRate() and scheduleWithFixedDelay() only take Runnable
  * 3. sorted() affect on single thread --
  * 4. reduce(U identity, BiFunction<U, ? extends T, U> accum, BiOperator<U> comb): accum first parameter is identity type
  * 5. be wary of ForkJoin base case - StackOverflow
  * 6. Collectors for Concurrent faces non-parallel stream -- no exception
- * 7. catch InterruptException, related to timeout
- * 8. shut down Executor, otherwise the code will run, no terminate
+ * 7. catch InterruptException, related to timeout, threading waiting, sleeping!
+ * 8. shut down Executor, otherwise the code will wait forever, no terminate
  * 9. resource-heavy tasks benefits more than CPU-intensive tasks from parallel
  * 10. ExecutorService: void execute(), Future<? / T> submit(Runnable / Callable);
  *     invokeAll(), invokeAny() only take Callable
+ * # StackOverFlowError
  */
 public class ConcurrencyTest {
     /**e

@@ -48,7 +48,7 @@ import static org.junit.Assert.*;
  * 1. a stream can only call terminal once!
  * 2. terminal only be used in primitive stream: sum(), ..
  * 3. check terminal exist or not
- *
+ * 4. collect() is always executed in a single-threaded fashion
  */
 public class FunctionalTest {
     /**
