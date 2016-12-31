@@ -142,7 +142,7 @@ public class AsmTest {
     }
 
     @Test
-    public void test_FilesRelativize() {
+    public void test_Path_Relativize() {
         Path windows = Paths.get("\\Users\\williaz\\IdeaProjects");
         Path absolute = Paths.get("/Users/williaz/IdeaProjects/JavaExp");
         Path absolute1 = Paths.get("/Users/williaz/IdeaProjects/JavaExp/nio");
@@ -152,6 +152,20 @@ public class AsmTest {
         System.out.println(relative.relativize(relative1));
         //System.out.println(relative.relativize(absolute1)); // must same type, both absolute or both  relative
         //System.out.println(absolute.relativize(relative1));
+    }
+
+    @Test
+    public void test_Path_Resolve() { //append path: if relative path as the param, just add it;
+                                      // if absolute path as the param, just return it;
+        Path absolute = Paths.get("/Users/williaz/IdeaProjects/JavaExp");
+        Path absolute1 = Paths.get("/Users/williaz/IdeaProjects/JavaExp/nio");
+        Path relative = Paths.get("./io");
+        Path relative1 = Paths.get("./nio");
+        System.out.println(absolute.resolve(relative1));
+        System.out.println(relative.resolve(relative1));
+        assertEquals(absolute, relative.resolve(absolute));
+        assertEquals(absolute1, absolute.resolve(absolute1));
+
     }
 
     @Test
@@ -231,6 +245,8 @@ public class AsmTest {
         }
         System.out.print(counter);
     }
+
+
 
 
 

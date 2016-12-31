@@ -39,12 +39,13 @@ import static org.junit.Assert.*;
 /**
  * Created by williaz on 12/14/16 - 12/17 3d.
  * Nonblocking Input/Output API
- * wathout:
+ * watch out:
  * 1. Path vs Paths
  * 2. methods param allow Path vs String
  * 3. only toRealPath() implicitly call normalize()
  * 4. moving file always preserve meta, even if without COPY_ATTRIBUTES
  * 5. isSameFile() returns true only if the files point to in the file system are the same, no counting content
+ * 6. deleteIfExist() may throw DirectoryNotEmptyException
  */
 public class NioTest {
     /**
