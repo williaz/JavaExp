@@ -301,6 +301,7 @@ public class IoTest {
      */
     @Test
     public void test_ObjectIoStream() throws IOException, ClassNotFoundException {
+        SerialObject.setType("Person");
         List<SerialObject> list = new ArrayList<>();
         list.add(new SerialObject(25, "will", 6.9));
         list.add(new SerialObject(27, "Bill",7.0));

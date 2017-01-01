@@ -1,0 +1,86 @@
+ * 1. The compilation check only applies when instanceof is called on a class.
+ * When checking whether an object is an instanceof an interface, Java waits until runtime to do the check.
+ * The reason is that a subclass could implement that interface and the compiler wouldn’t know it.
+ * -> instanceof unrelated interface = runtime check, true / false
+ * -> instanceof unrelated class = compile exception
+ * 2. Virtual Method Invocation
+ * Use @Override to avoid accidentally overloading
+ * 3.
+ * Override equals(): 1. reflective: x.equals(x); 2. symmetric: x->y, y->x
+ *                    3. transitive: x->y, y->z => x->z
+ *                    4. consistent: keep x->y; 5. false for null: x->null =>false, no NullPointerException
+ * 4. watch out public boolean equal(Object o), overloading / overriding
+ * 5. inner class is not allowed to contain static fields or methods!!
+ * with instance variable, ref type matters,
+ * 6. method in interface is public, watch out for overridden method, can only public for it!!
+ * 7. collection without Generic, for looping use Object, else ce!
+ * 8. Set<Number> set = new HashSet<Integer>(); -> ce!!!
+ * 9. variables in lambda no redefine!!.
+ * 10. Map methods, don't mislead by Collection methods
+ * 11. Concurrent collections no fail fast
+ * ＃ ExecutorService VS ScheduledExecutorService
+ * 12. ScheduleExecutor only schedule() can take Callable<T> as argument,
+ *    scheduleAtFixedRate() and scheduleWithFixedDelay() only take Runnable
+ * 13. sorted() affect on single thread --
+ * 14. reduce(U identity, BiFunction<U, ? extends T, U> accum, BiOperator<U> comb): accum first parameter is identity type
+ * 15. be wary of ForkJoin base case - StackOverflow
+ * 16. Collectors for Concurrent faces non-parallel stream -- no exception
+ * 17. catch InterruptException, related to timeout, threading waiting, sleeping!
+ * 18. shut down Executor, otherwise the code will wait forever, no terminate
+ * 19. resource-heavy tasks benefits more than CPU-intensive tasks from parallel
+ * 20. ExecutorService: void execute(), Future<? / T> submit(Runnable / Callable);
+ *     invokeAll(), invokeAny() only take Callable
+ * 21. default, static method in interface must have body!!
+ * 22. lambda must have right hand side expression, X ()->
+ * 23. interface cannot final!
+ * 24. singleton class, no final on instance for lazy instantiate.
+ * 25. a multi-catch cannot catch both superclass and subclass.
+ * 26. AutoCloseable call close() after try clause, before catch and finally clauses
+ * 27. unreachable for checked exception##
+ * 28. a stream can only call terminal once!
+ * 29. terminal only be used in primitive stream: sum(), ..
+ * 30. check terminal exist or not
+ * 31. collect() is always executed in a single-threaded fashion
+ * 32. low level stream only interact with resource, no other stream
+ *     high-level stream only take stream
+ *     PrintStream and PrintWriter can take both
+ * 33. to move File, use renameTo()
+ * 34. Java would convert slash to the right one when working with path
+ * 35. benefit for writer/reader: built-in methods on String, encoding
+ * 36. static variable will not be serialized
+ * 37. not all stream support mark(), so be careful with undetermined.
+ * 38. PrintStream and PrintWriter provide convenient method println()
+ * 39. Path vs Paths
+ * 40. methods param allow Path vs String
+ * 41. only toRealPath() implicitly call normalize()
+ * 42. moving file always preserve meta, even if without COPY_ATTRIBUTES
+ * 43. isSameFile() returns true only if the files point to in the file system are the same, no counting content
+ * 44. deleteIfExist() may throw DirectoryNotEmptyException
+ * 45. DriverManager class is in JDK
+ * 46. for Url, location is optional, DB name is required
+ * 47. SQLException is checked exception, handle or declare in code
+ * 48. Statement auto close ResultSet
+ * 49. cursor methods return true if on the row, false if not
+ * 50. println(void) -> ce!!
+ * 51. JDBC 4.0 requires META-INF/service/java.sql.Driver
+ * 52. FORWARD_ONLY can support next(), otherwise SQLException
+ * 53. Mismatch of methods in LocalDateTime, LocalDate, LocalTime
+ * 54. DataTimeFormatter's ofLocalizedXxx
+ * 55. Period: P_Y_M_D; Duration: PT_H_M_S; both have ofDays()
+ * 56. When deal with time zones, it is best to convert to GMT first by substracting the time zone.
+ * 57. For daylight saving time, when calculating the time between, the time zone offset change matters!
+ * 58. Java is smart enough to adjust the daylight savings time
+ * 59. Properties get() no allow default value(Hashtable), getProperty() do!
+ * 60. DateTimeFormatter formate must take the TemperalType same or broader than its taken type:
+ *     #ofLocalizedDateTime can only take LocalDateTime
+ *     #ofLocalizedDate can take LocalDateTime and LocalDate
+ *     #ofLocalizedTime can take LocalDateTime and LocalTime
+ * 61. ResourceBundle order: for fr_CA, name_fr_CA -> name_fr -> name;
+ *     #without consider the default locale of program
+ * 62. An interface method cannot be marked final, even if it is a static method.
+ * 63. hashCode() and equals() are consistent, if hashCode() uses a subset of the fields that equals() uses.
+ * 64. BasicFileAttributeView.setTimes(null, null, null) change nothing.
+ * 65. yyyy MM dd hh mm
+ * 66. getRoot().getParent() return null
+ * 67. check Stream pipeline whether has terminal operation or not, whether uses stream source twice or more
+ * 68. ResultSet getInt(), getDate(), getTime()

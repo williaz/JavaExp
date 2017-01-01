@@ -3,7 +3,7 @@ package oca.ood;
 /**
  * Created by williaz on 11/2/16.
  */
-public interface CanFly {
+public abstract interface CanFly { // can add redundant abstract
     int MAXIMUM_Height = 100;
     final static boolean INSKY = true;
     public static final String TYPE = "flyable";

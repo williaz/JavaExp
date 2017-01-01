@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  * 4. When deal with time zones, it is best to convert to GMT first by substracting the time zone.
  * 5. For daylight saving time, when calculating the time between, the time zone offset change matters!
  * 6. Java is smart enough to adjust the daylight savings time
- * 7. Properties get() no allow default value, getPreoperty() do!
+ * 7. Properties get() no allow default value, getProperty() do!
  * @see Properties
  * 8. DateTimeFormatter formate must take the TemperalType same or broader than its taken type:
  *    #ofLocalizedDateTime can only take LocalDateTime

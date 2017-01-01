@@ -231,7 +231,7 @@ public class ConcurrencyTest {
             Future<?> result = service.submit(() -> {
                 for (int i = 0; i < 500; i++) System.out.println(i + "times");
             });
-            System.err.println("GET:"+ result.get(10, TimeUnit.MILLISECONDS));
+            System.err.println("GET:"+ result.get(10, TimeUnit.MILLISECONDS)); //return null
             System.out.println("get here!");
         } catch (InterruptedException e) {
             e.printStackTrace();

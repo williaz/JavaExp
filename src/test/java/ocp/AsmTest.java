@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -97,10 +98,13 @@ public class AsmTest {
         Map<String, Integer> prices = new HashMap<>();
         prices.put("APPL", 125);
         prices.put("FB", null);
+        prices.put("GPRO", 8);
         prices.merge("APPL", 130, (last, latest) -> Math.max(last, latest));
         prices.merge("FB", 100, (last, latest) -> Math.max(last, latest));
+        prices.merge("GRPO", 100, (last, latest) -> null);
         assertTrue(130 == prices.get("APPL"));
         assertTrue(100 == prices.get("FB"));
+        System.out.println(prices);
 
     }
 
@@ -122,12 +126,15 @@ public class AsmTest {
         System.out.println(formatter.format(LocalDate.now()));
     }
 
+    /**
+     * ofLocalizedXxx must narrower than LocalXxx
+     */
     @Test
     public void test_DateTimeFormatter1() {
         LocalDateTime d = LocalDateTime.of(2015, 5, 10, 11, 22, 33);
         DateTimeFormatter f = DateTimeFormatter.
                 ofLocalizedTime(FormatStyle.SHORT);
-        System.out.println(f.format(LocalDateTime.now()));
+        System.out.println(f.format(LocalDateTime.now()));//ofLocalizedXxx must narrower than LocalXxx
         System.out.println(d.format(f));
     }
 
@@ -141,6 +148,9 @@ public class AsmTest {
 
     }
 
+    /**
+     * relativize(): must same type, both absolute or both  relative
+     */
     @Test
     public void test_Path_Relativize() {
         Path windows = Paths.get("\\Users\\williaz\\IdeaProjects");
@@ -196,7 +206,9 @@ public class AsmTest {
 
     }
 
-    //Suppressed exception is only caused by try-with-resource's close().
+    /**
+     * Suppressed exception is only caused by try-with-resource's close().
+     */
     @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void test_NoSuppressedException() {
         try {
@@ -246,6 +258,10 @@ public class AsmTest {
         System.out.print(counter);
     }
 
+    @Test
+    public void test_GenericWithRaw() {
+        List<? extends Statement> list = new ArrayList(); //only warning, no ce
+    }
 
 
 

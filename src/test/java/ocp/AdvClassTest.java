@@ -45,14 +45,14 @@ public class AdvClassTest {
         Bird bird = new CanadaGoose();
         assertTrue(bird instanceof Swan);
         CanWalk walker = bird;
-        assertFalse(walker instanceof CanRun);
+        assertTrue(walker instanceof CanRun);
         assertFalse(walker instanceof Lion);  // no ce!!
 
         CanRun runner = (CanadaGoose)bird;
         //CanRun runner1 = bird; //incompatible type
 
         //bird instanceof lion; // ce
-        assertFalse(bird instanceof CanRun);
+        assertTrue(bird instanceof CanRun);
         Animal lion = new Lion(12);
         assertFalse(lion instanceof CanFly);
 
