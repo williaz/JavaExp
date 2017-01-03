@@ -22,13 +22,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -233,6 +236,7 @@ public class AsmTest {
     @Test
     public void test_ResourceBundle_LookUpOrder() {
         Locale fr = new Locale("fr");
+        Locale.setDefault(Locale.ENGLISH);
         ResourceBundle rb = ResourceBundle.getBundle("ocp.orca", fr);
         assertEquals("Frc", rb.getString("name")); //in orca_fr
         assertEquals("12f", rb.getString("age")); // in orca.properties
@@ -263,7 +267,41 @@ public class AsmTest {
         List<? extends Statement> list = new ArrayList(); //only warning, no ce
     }
 
+    @Test(expected = RuntimeException.class)
+    public void test_FinallyThrowExceptionNoSuppressed() {
+        try {
+            throw new RuntimeException();
+        } finally {
+            try {
+                throw new IOException();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    @Test
+    public void test_CorrectLambda() {
+        Consumer<Integer> consumer = (Integer i) -> System.out.println(i); // must has the parentheses
+
+    }
+
+    @Test
+    public void Path_Subpath() {
+        Path local = Paths.get("io").toAbsolutePath();
+        for (int i = 0; i < local.getNameCount(); i++) {
+            System.out.print(local.getName(i) + " "); //Path.getName() does not include root directory
+        }
+        System.out.println("\n" + local.subpath(0, 1)); //return a relative path
+        System.out.println(local.getParent());
+        assertEquals("/", local.getRoot().toString());
+        assertEquals("/", Paths.get("/").getRoot().toString());
+        assertEquals(null, Paths.get("/").getParent());
+
+
+    }
+
+    //TODO GMT convertion, 24 compare
 
 
 }

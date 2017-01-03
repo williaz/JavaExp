@@ -502,5 +502,17 @@ public class GeneralTest {
         }
     }
 
+    @Test
+    public void test_Regx() {
+        //String s = ">----<";
+        String s = "<<>><";
+        String ns = s.replaceAll("[^<>]", "");
+        System.out.println(ns);
+
+        // Pattern p1 = Pattern.compile("<");
+        // Matcher m = p1.matcher(s);
+        // while (m.find()) count1++;
+    }
+
 
 }

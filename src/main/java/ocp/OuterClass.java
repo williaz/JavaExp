@@ -32,7 +32,7 @@ public class OuterClass {
 
         public String getName() {
             return this.name + " " + OuterClass.this.name;
-        }
+        }// OuterClass.this.name
     }
 
     public String getName() {

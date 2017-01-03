@@ -211,7 +211,7 @@ public class NioTest {
      *
      *  exists(Path)
      *  createDirectory() = mkdir()
-     *  createDirectories() = mkdirs()
+     *  createDirectories() = mkdirs(): create all subdirectories along with the input path that do not exist.
      *  move() = renameTo()
      *  isSameFile()
      *  delete(),

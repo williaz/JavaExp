@@ -134,6 +134,7 @@ public class AdvClassTest {
         MONDAY {
             public int NumOfEmployees(){ return 30;};
             public void printWorkHours(){System.out.println("11 AM - 5 PM");}
+            public void ownFunc() {System.out.println("My own function");} // you can define its own method, but cannot refer/use it.
         }, TUESDAY {
             public int NumOfEmployees(){ return 60;};
         }, WEDNESDAY {

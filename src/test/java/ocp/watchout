@@ -11,16 +11,17 @@
  *                    4. consistent: keep x->y; 5. false for null: x->null =>false, no NullPointerException
  * 4. watch out public boolean equal(Object o), overloading / overriding
  * 5. inner class is not allowed to contain static fields or methods!!
- * with instance variable, ref type matters,
+ *    with instance variable, ref type matters,
  * 6. method in interface is public, watch out for overridden method, can only public for it!!
  * 7. collection without Generic, for looping use Object, else ce!
  * 8. Set<Number> set = new HashSet<Integer>(); -> ce!!!
+ *    List legacy = new ArrayList<Integer>(); -> can compile, but compile warning
  * 9. variables in lambda no redefine!!.
  * 10. Map methods, don't mislead by Collection methods
  * 11. Concurrent collections no fail fast
  * ＃ ExecutorService VS ScheduledExecutorService
  * 12. ScheduleExecutor only schedule() can take Callable<T> as argument,
- *    scheduleAtFixedRate() and scheduleWithFixedDelay() only take Runnable
+ *     scheduleAtFixedRate() and scheduleWithFixedDelay() only take Runnable
  * 13. sorted() affect on single thread --
  * 14. reduce(U identity, BiFunction<U, ? extends T, U> accum, BiOperator<U> comb): accum first parameter is identity type
  * 15. be wary of ForkJoin base case - StackOverflow
@@ -71,7 +72,7 @@
  * 57. For daylight saving time, when calculating the time between, the time zone offset change matters!
  * 58. Java is smart enough to adjust the daylight savings time
  * 59. Properties get() no allow default value(Hashtable), getProperty() do!
- * 60. DateTimeFormatter formate must take the TemperalType same or broader than its taken type:
+ * 60. DateTimeFormatter format must take the TemperalType same or broader than its taken type:
  *     #ofLocalizedDateTime can only take LocalDateTime
  *     #ofLocalizedDate can take LocalDateTime and LocalDate
  *     #ofLocalizedTime can take LocalDateTime and LocalTime
@@ -84,3 +85,8 @@
  * 66. getRoot().getParent() return null
  * 67. check Stream pipeline whether has terminal operation or not, whether uses stream source twice or more
  * 68. ResultSet getInt(), getDate(), getTime()
+ * 69. for Generic, extends and super include the class itself.
+ * 70. close() will automatically call flush()
+ * 71. Anonymous inner class must extends or implement exactly one class/interface
+ * 72. root path has no parent. -> null
+ * 73. NOFOLLOW_LINKS, fo symbolic links, perform on itself, rather than the target of it.

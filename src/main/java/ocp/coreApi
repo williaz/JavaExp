@@ -1,0 +1,5 @@
+  01. Implements Immutable Object Pattern:
+      1. final the class; 2. no setter methods;
+      3. all fields are set once by constructor;
+      4. class method may not be overridden;
+      5. the class must block external access to its mutable object;
