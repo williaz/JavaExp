@@ -41,6 +41,11 @@ import javax.print.attribute.HashAttributeSet;
 
 import static org.junit.Assert.*;
 /**
+ * A mutable reduction operation accumulates input elements into a mutable result container,
+ *   such as a Collection or StringBuilder, as it processes the elements in the stream.
+ */
+
+/**
  * Created by williaz on 11/29/16 - 12/2 4d.
  * functional interface without type -> Object, may cause ce for lambda expression.
  * Use generic wildcards for the return type of the final statement to debug whether ce is because of return type

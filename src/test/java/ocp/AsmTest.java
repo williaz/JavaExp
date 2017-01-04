@@ -320,4 +320,14 @@ public class AsmTest {
 
     }
 
+    @Test
+    public void test_FlatMap() {
+        Stream<Integer> i1 = Stream.iterate(1, i -> i*2).limit(5);
+        Stream<Integer> i2 = Stream.generate(() -> 2).limit(5);
+        Stream<Integer> i3 = Stream.of(91, 12, 34, 56, 11);
+        Stream.of(i1, i2, i3).flatMap(i -> i).forEach(i -> System.out.print(i + " "));
+        System.out.println();
+        Stream.of(i1, i2, i3).map(i -> i).forEach(i -> System.out.print(i + " "));
+    }
+
 }

@@ -93,12 +93,92 @@
       -------------------------------
       ForKJoinTask<T> tasks ->another.fork(), return newOne.compute() # another,join
       T pool.invoke(tasks)
-  15. File
+  15. CyclicBarrier
+      CyclicBarrier(int parties): optional: Runnable action
+      int await(), await(long timeout, TimeUnit unit)
   16. Path
+
   17. Files
+      BufferedReader newBufferedReader(Path p): Opt: Charset cs
+      BufferedWriter newBufferedWriter(Path p)
+      List<String> readAllLines(Path p)
+      Stream<String> lines(Path p)
+      Stream<Path> list(Path dir)
+      Stream<Path> walk(Path start): Optional: int maxDepth
+      Stream<Path> find(Path start, int maxDepth, BiPredicate<Path, BasicFileAttributes> matcher)
   18. ResultSet
-  19. Collectors
-  20. Stream
+      TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE, TYPE_SCROLL_SENSITIVE
+      CONCUR_READ_ONLY, CONCUR_UPDATABLE
+      void beforeFirst(), afterLast()
+      boolean first(), last()
+      boolean absolute(int num), relative(int num)
+      boolean next(), previous() : true, if valid row; false,if no more row
+      void close()
+      int getInt(int/String)
+      float getFloat()
+      double getDouble()
+      Object getObject()
+      String getString()
+      Date getDate(int/String)
+      Time getTime()
+      Timestamp getTimestamp()
+  19. Collectors API:
+      Double averagingInt(ToIntFunction mapper) : Long, Double
+      String joining(), joining(CharSequence delimiter)
+      Int summingInt(ToIntFunction mapper)
+      maxBy(Comparator), minBy(Comparator)
+      Long counting()
+      IntSummaryStatistics summarizingInt(ToIntFunction mapper)
+
+      Map<Boolean, List<T>> partitioningBy(Predicate t)
+      Map<Boolean, D> partitioningBy(Predicate t, Collector ds)
+      Map<K, List<T>> groupingBy(Function<T, K> classifier)
+      Map<K, D> groupingBy(Function<T, K> cf, Collector<T, A, D> downstream)
+      M ext Map<K, D> groupingBy(Function cf, Supplier<M> mapFactory, Collector ds)
+      groupingByConcurrent(..): return a concurrent Collector
+      mapping(Function mapper, Collector ds)
+
+      List toList()
+      Set toSet()
+      C ext Collection<T> toCollection(Supplier<C> g)
+      toMap(Function k, Function v)
+      toMap(Function k, Function v, BinaryOperator mergeV)
+      toMap(Function k, Function v, BinaryOperator mergeV, Supplier<M> g)
+      toConcurrentMap(..): return a ConcurrentMap
+  20. Stream API:
+
+      Stream<T> empty()
+      Stream<T> generate(Supplier)
+      Stream<T> iterator(T seed, UnaryOperator)
+      Stream<T> of(T...), of(T)
+
+      Stream<T> distinct()
+      Stream<T> limit(long)
+      Stream<T> skip(long)
+      Stream<T> sorted(), sorted(Comparator)
+      Stream<T> peek(Consumer)
+      Stream<T> filter(Predicate)
+      Stream<R> map(Function)
+      Stream<R> flatMap(Function)
+      IntStream mapToInt(ToIntFunction)
+      IntStream flatMapToInt(Function)
+
+      boolean allMatch(Predicate)
+      boolean anyMatch(Predicate)
+      boolean noneMatch(Predicate)
+      Optional<T> findAny()
+      Optional<T> findFirst()
+      Optional<T> min(Comparator)
+      Optional<T> max(Comparator)
+      void forEach(Consumer)
+      void forEachOrdered(Consumer)
+      Optional<T> reduce(BinaryOperator)
+      T reduce(T, BinaryOperator)
+      U reduce(U, BiFunction, BinaryOperator)
+      collect(Collector)
+      collect(Supplier idt, BiConsumer accum, BiConsumer comb)
+      long count()
+
 
 
 

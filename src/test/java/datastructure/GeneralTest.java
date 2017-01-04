@@ -520,12 +520,12 @@ public class GeneralTest {
     }
 
     @Test
-    public void test_answer() {
+    public void test_answer1() {
         String n = "17";
-        System.out.println(answer(n));
+        System.out.println(answer1(n));
     }
 
-    public static int answer(String n) {
+    public static int answer1(String n) {
 
         if (n == null || n.isEmpty()) return 0;
 
@@ -564,6 +564,77 @@ public class GeneralTest {
          */
 
     }
+
+    @Test
+    public void test_answer() {
+        //int[] l = {1, 1, 1};
+        int[] l = {1, 2, 3, 4, 5, 6};
+        System.out.println(answer(l));
+    }
+
+    private static int result = 0;
+    public static int answer(int[] l) {
+        //Set<List<Integer>> result = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(l);
+        int index = 0;
+        //dfs(l, list, index, result);
+        dfs(l, list, index);
+        //return result.size();
+        return result;
+    }
+
+    public static void dfs(int[] l, List<Integer> list, int index) {
+        if (list.size() > 3) {
+            return;
+        }
+        if ((list.size() == 3) && (list.get(1)%list.get(0) == 0)
+                && (list.get(2)%list.get(1) == 0)) {
+            //result.add(new ArrayList<Integer>(list));
+            result++;
+
+        }
+        int prev = -1;
+        for (int i = index; i < l.length; i++) {
+            if (prev != -1 && prev == l[i]) continue;
+            list.add(l[i]);
+            //dfs(l, list, i+1, result);
+            dfs(l, list, i+1);
+            list.remove(list.size() - 1);
+            prev = l[i];
+        }
+    }
+
+//    public static int answer(int[] l) {
+//        Set<List<Integer>> result = new HashSet<>();
+//        List<Integer> list = new ArrayList<>();
+//        Arrays.sort(l);
+//        int index = 0;
+//        dfs(l, list, index, result);
+//        System.out.println(result);
+//        return result.size();
+//    }
+//
+//    public static void dfs(int[] l, List<Integer> list, int index, Set<List<Integer>> result) {
+//        if (list.size() > 3) {
+//            //list.clear();
+//            return;
+//        }
+//        if ((list.size() == 3) && (list.get(1)%list.get(0) == 0)
+//                && (list.get(2)%list.get(1) == 0)) {
+//            result.add(new ArrayList<>(list));
+//            //return;
+//            //list.clear();
+//        }
+//        int prev = -1;
+//        for (int i = index; i < l.length; i++) {
+//            if (prev != -1 && prev == l[i]) continue;
+//            list.add(l[i]);
+//            dfs(l, list, i+1, result);
+//            list.remove(list.size() - 1);
+//            prev = l[i];
+//        }
+//    }
 
 
 }
