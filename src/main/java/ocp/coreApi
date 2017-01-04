@@ -178,6 +178,15 @@
       collect(Collector)
       collect(Supplier idt, BiConsumer accum, BiConsumer comb)
       long count()
+  21. Console API:
+      void flush()
+      Reader reader()
+      PrintWriter writer()
+      String readLine()
+      char[] readPassword()
+      Console format(..)
+      Console printf(..)
+
 
 
 

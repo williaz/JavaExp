@@ -2,10 +2,13 @@ package ocp;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Statement;
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -328,6 +331,40 @@ public class AsmTest {
         Stream.of(i1, i2, i3).flatMap(i -> i).forEach(i -> System.out.print(i + " "));
         System.out.println();
         Stream.of(i1, i2, i3).map(i -> i).forEach(i -> System.out.print(i + " "));
+    }
+
+    /**
+     * file.mkdirs()
+     * createDirectory(Path)
+     */
+    @Test
+    public void test_Mkdirs() throws IOException {
+        Path local = Paths.get("io/newDir/ww").toAbsolutePath();
+        File f = new File("io/n2/ww");
+        Files.deleteIfExists(local);
+        f.delete();
+        Files.createDirectories(local);
+        f.mkdirs();
+    }
+
+    /**
+     * LocalDate.of(2016, 4, 32)
+     */
+    @Test(expected = DateTimeException.class)
+    public void test_LocalDate_Of() {
+        LocalDate d1 = LocalDate.of(2016, 4, 30);
+        d1 = d1.plusDays(5);
+        System.out.println(d1); //5-5
+        LocalDate d = LocalDate.of(2016, 4, 32); // re
+        System.out.println(d);
+    }
+
+    @Test
+    public void test_Subpath_ToAbsolutePath() {
+        Path local = Paths.get("").toAbsolutePath();
+        System.out.println(local );
+        System.out.println(local.subpath(1, 3).toAbsolutePath() );
+
     }
 
 }

@@ -90,3 +90,15 @@
  * 71. Anonymous inner class must extends or implement exactly one class/interface
  * 72. root path has no parent. -> null
  * 73. NOFOLLOW_LINKS, fo symbolic links, perform on itself, rather than the target of it.
+ * 74. call getRoot() on relative path, return null;
+ * 75. Files.isSameFile() may return true, even for no exist paths
+ * 76. hashCode()
+ * 77. mark(int) and then read exceed limit, output undetermined
+ *     -> depend on the particular implementation of InputStream/Reader
+ * 78. (Animal) new Object -> re, not ce
+ * 79. code after fully return -> unreachable code -> ce
+ * 80. new Locale(); ResourceBundle.getBundle()
+ * 81. Java will call the constructor for the first non-serializable no argument parent class during deserialization,
+       skipping any constructor and default initializations for serializable classes in between, include itself.
+ * 82. for preventing concurrency issues, synchronize setters and even getters.
+ * 83. CyclicBarrier await() can be reached many times.
