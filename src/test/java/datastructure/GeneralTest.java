@@ -2,6 +2,7 @@ package datastructure;
 
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -343,10 +344,13 @@ public class GeneralTest {
 
     }
 
-    public static  class ListNode {
-       int val;
-       ListNode next;
-       ListNode(int x) { val = x; }
+    public static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
     }
 
     public ListNode swapPairs(ListNode head) {
@@ -366,6 +370,7 @@ public class GeneralTest {
         }
         return list.next;
     }
+
     @Test
     public void test_SwapNodesinPairs() {
         ListNode n4 = new ListNode(4);
@@ -434,7 +439,7 @@ public class GeneralTest {
         ListNode slow = node;
         ListNode fast = node; // mid right for even
         //ListNode fast = node.next; //mid left for even
-        while(fast!= null && fast.next != null) {
+        while (fast != null && fast.next != null) {
             fast = fast.next.next;
             slow = slow.next;
         }
@@ -512,6 +517,52 @@ public class GeneralTest {
         // Pattern p1 = Pattern.compile("<");
         // Matcher m = p1.matcher(s);
         // while (m.find()) count1++;
+    }
+
+    @Test
+    public void test_answer() {
+        String n = "17";
+        System.out.println(answer(n));
+    }
+
+    public static int answer(String n) {
+
+        if (n == null || n.isEmpty()) return 0;
+
+        BigInteger num = new BigInteger(n);
+        BigInteger b1 = new BigInteger("1");
+        BigInteger b2 = new BigInteger("2");
+        BigInteger b4 = new BigInteger("4");
+
+        int count = 0;
+        while (num.compareTo(b1) > 0) {
+            if (num.mod(b2).intValue() == 0) {
+                num = num.divide(b2);
+            } else {
+                if (
+                        ((num.add(b1)).mod(b4).intValue() == 0)
+                                && !(num.subtract(b1)).equals(b2)
+                        ) num = num.add(b1);
+                else num = num.subtract(b1);
+            }
+            count++;
+        }
+        return count;
+
+        /*
+        int count = 0;
+    while(n>1){
+        if(n%2==0) n/=2;
+        else{
+            if((n+1)%4==0&&(n-1!=2)) n+=1;
+            else n-=1;
+        }
+        count++;
+    }
+    return count;
+    }
+         */
+
     }
 
 

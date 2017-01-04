@@ -3,3 +3,105 @@
       3. all fields are set once by constructor;
       4. class method may not be overridden;
       5. the class must block external access to its mutable object;
+  02. Collection API:
+      boolean add(E e)
+      boolean addAll(Collection c)
+      void clear()
+      boolean contains(Object o)
+      boolean isEmpty()
+      boolean remove(Object o)
+      Stream<E> stream()
+      Stream<E> parallelStream()
+      boolean removeIf(Predicate t)
+      Iterator<E> iterator()
+      void forEach(consumer act)
+      int size()
+      T[] toArray(T[] a)
+  03. List API:
+      void add(int index, E element)
+      E set(int index, E new): return old
+      E get(int index)
+      E remove(int index): return old
+      int indexOf(Object o)
+      ListIterator<E> listIterator(int index)
+      void replaceAll(UnaryOperator<E> ap)
+      void sort(Comparator<E> c)
+  04. TreeSet API:
+      E ceiling(E e)
+      E floor(E e)
+      E higher(E e)
+      E lower(E e)
+  05. Map API:
+      void clear()
+      boolean containsKey(Object k)
+      boolean containsValue(Object v)
+      Set<Entry<K, V>> entrySet()
+      void forEach(BiConsumer<xK, xV>)
+      V merge(K key, V value, BiFunction<sV, sV, xV> remapper)
+      V get(Object k)
+      V getOrDefault(Object k, V defaultV)
+      V put(K key, V value)
+      V remove(Object k)
+      Set<K> keySet()
+      Collection<V> values()
+  06. Comparable<T> int compareTo(T t)
+      Comparator<T> int compare(T t1, T t2)
+  07. Object API:
+      int hashCode()
+      boolean equals()
+      String toString()
+
+  08. Runnable void run()
+      Callable<V> V call() throws Exception
+  09. Future<V> API:
+      V get()
+      V get(long timeout, TimeUnit unit)
+      boolean isCancelled()
+      boolean isDone()
+  10. Optional<T> API:
+      T get();
+      T orElse(T other);
+      T orElseGet(Supplier g)
+      T orElseThrow(Supplier exception)
+      void ifPresent(Consumer ap)
+      boolean isPresent()
+      Optional<T> Optional.empty()
+      Optional<T> Optional.of(T value)
+      Optional<T> Optional.ofNullable(T v)
+  11. ExecutorService
+      void execute(Runnable r): from Executor
+      Future<T> submit(Callable<T> task)
+      Future<?> submit(Runnable action)
+      List<Future<T>> invokeAll(Collection<Callable> ts) : Optional agrs: long maxWaitTime, TimeUnit unit
+      List<Future<T>> invokeAny(Collection<Callable> ts) : |_
+      void shutdown()
+      boolean isTerminated()
+      boolean isShutDown()
+  12. ScheduledExecutorService
+      schedule(Callable<T>/Runnable t, long delay, TimeUnit unit)
+      scheduleAtFixedRate(Runnable cmd, long initDelay, long period, TimeUnit unit)
+      scheduleWithFixedDelay(Runnable cmd, long initDelay, long delay, TimeUnit unit)
+  13. Executors
+      ExecutorService newSingleThreadExecutor()
+      ExecutorService newFixedThreadPool(int nThread)
+      ExecutorService newCachedThreadPool()
+      ScheduledExecutorService newSingleThreadScheduledExecutor()
+      ScheduledExecutorService newScheduledThreadPool(int num)
+  14. ForkJoinPool
+      ForkJoinTask<?> actions -> invokeAll
+      RecursiveAction: pool.invoke(actions)
+      -------------------------------
+      ForKJoinTask<T> tasks ->another.fork(), return newOne.compute() # another,join
+      T pool.invoke(tasks)
+  15. File
+  16. Path
+  17. Files
+  18. ResultSet
+  19. Collectors
+  20. Stream
+
+
+
+
+
+

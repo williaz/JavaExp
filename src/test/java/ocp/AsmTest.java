@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -303,5 +304,20 @@ public class AsmTest {
 
     //TODO GMT convertion, 24 compare
 
+    @Test
+    public void test_List_Sort() {
+        List<Integer> ints = Arrays.asList(23, 12, 19, 98, 44, 100, 261, 23942, 9999);
+        Comparator<Integer> sortByFirstDigit = (i1, i2) -> {
+            int a = 0, b = 0;
+            while ((i1/=10) > 10);
+            while ((i2/=10) > 10);
+            a = i1 % 10;
+            b = i2 % 10;
+            return a - b;
+        };
+        ints.sort(sortByFirstDigit);
+        System.out.println(ints);
+
+    }
 
 }
