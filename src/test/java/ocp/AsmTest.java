@@ -40,6 +40,8 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
+//import static ocp.OuterClass.StaticInner;
+import ocp.OuterClass.StaticInner; //both are OK
 /**
  * Created by williaz on 11/20/16.
  * OCP Begins. 1/5/2017
@@ -108,9 +110,10 @@ public class AsmTest {
         prices.put("GPRO", 8);
         prices.merge("APPL", 130, (last, latest) -> Math.max(last, latest));
         prices.merge("FB", 100, (last, latest) -> Math.max(last, latest));
-        prices.merge("GRPO", 100, (last, latest) -> null);
+        prices.merge("GPRO", 100, (last, latest) -> null); //will remove if new value is null!!
         assertTrue(130 == prices.get("APPL"));
         assertTrue(100 == prices.get("FB"));
+        assertFalse(prices.containsKey("GPRO"));
         System.out.println(prices);
 
     }
@@ -161,6 +164,7 @@ public class AsmTest {
     @Test
     public void test_Path_Relativize() {
         Path windows = Paths.get("\\Users\\williaz\\IdeaProjects");
+        System.out.println(windows);
         Path absolute = Paths.get("/Users/williaz/IdeaProjects/JavaExp");
         Path absolute1 = Paths.get("/Users/williaz/IdeaProjects/JavaExp/nio");
         Path relative = Paths.get("./io");
@@ -301,8 +305,6 @@ public class AsmTest {
         assertEquals("/", local.getRoot().toString());
         assertEquals("/", Paths.get("/").getRoot().toString());
         assertEquals(null, Paths.get("/").getParent());
-
-
     }
 
     //TODO GMT convertion, 24 compare
@@ -363,8 +365,48 @@ public class AsmTest {
     public void test_Subpath_ToAbsolutePath() {
         Path local = Paths.get("").toAbsolutePath();
         System.out.println(local );
-        System.out.println(local.subpath(1, 3).toAbsolutePath() );
+        System.out.println(local.subpath(1, 3).toAbsolutePath() );//start from 0, no count root
 
     }
 
+    @Test
+    public void test_Anonymous_Class() {
+        new Thread().start();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Local Runnable");
+            }
+        };
+        new Thread(r).start();
+        new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Anonymous Thread");
+            }
+        }.start();
+
+        new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return 0;
+            }
+        };
+
+    }
+
+    @Test
+    public void test_StreamPipeline_WithSameBlockName() {
+        Stream.of(12, 34, 56, 11).filter(i -> i > 20).mapToDouble(i -> (double) i)
+                .forEach(i -> System.out.print(i + " "));
+    }
+
+    @Test
+    public void test_ImportStaticNestedClass() {
+        StaticInner si = new StaticInner();
+        boolean b = false;
+        if (b = true) { //tricky
+            System.out.print(si.getName());
+        }
+    }
 }

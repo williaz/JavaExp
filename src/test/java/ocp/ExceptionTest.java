@@ -28,6 +28,8 @@ public class ExceptionTest {
      *            4. IllegalStateException; 5. UnsupportedOperationException.
      * ce: 1. order, unreachable; 2. cannot potentially be thrown, unreachable
      * it is most common to extend Exception (for checked) or RuntimeException (for unchecked.)
+     * @see java.io.NotSerializableException
+     * @see java.text.ParseException
      */
     @Test
     public void test_CustomException() {

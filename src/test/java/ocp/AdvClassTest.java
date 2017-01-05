@@ -180,7 +180,7 @@ public class AdvClassTest {
      * 4. Static nested class, like static variable
      *      Java treats it as a namespace
      *      enclosing class can refer its member
-     *      import / import static
+     *      Both import / import static are OK.
      *
      * @see OuterClass
      */

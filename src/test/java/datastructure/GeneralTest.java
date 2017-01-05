@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collector;
+import java.util.zip.Inflater;
 
 import static org.junit.Assert.*;
 
@@ -635,6 +636,78 @@ public class GeneralTest {
 //            prev = l[i];
 //        }
 //    }
+
+    public static int answer3(int start, int length) {
+        int first = start;
+        int result = start;
+        System.out.print(start + " ");
+        for (int i = 0; i < length; i++) {
+            if (i != 0) first += length;
+            for (int j = 0; j < length - i; j++) {
+                if (i == 0 && j == 0) continue;
+                System.out.print(first + j + " ");
+                result ^= (first + j);
+            }
+            System.out.println();
+        }
+        System.out.println("-----------");
+        return result;
+
+    }
+
+    public static int answer4(int start, int length) {
+        int count1 = 0;
+        int result = -1;
+        int l = length;
+        for (int i = 0; i < length; i++) {
+            boolean evenLen = l % 2 == 0;
+            //System.out.println(start);
+            if (start % 2 == 0 && evenLen) count1 += l/2;
+            else if (start % 2 == 0 && !evenLen) {
+                count1 += l/2;
+                if (result == -1) result = start+ l -1;
+                else result ^= (start+ l -1);
+            }
+            else if (start % 2 != 0 && evenLen) {
+                count1 += l/2 - 1;
+                if (result != -1) {
+                    result ^= start;
+                    result ^= (start + l - 1);
+                } else {
+                    result = start;
+                    result ^= (start + l - 1);
+                }
+            } else {
+                count1 += l/2;
+                if (result != -1) result ^= start;
+                else result = start;
+            }
+            start += length;
+            l--;
+        }
+        if (count1 % 2 == 0) result ^= 0;
+        else result ^= 1;
+        //System.out.println(1 +"s "+count1);
+        return result;
+
+    }
+
+
+    @Test
+    public void test_Answer3() {
+        assertEquals(2, answer3(0, 3));
+        assertEquals(2, answer4(0, 3));
+        assertEquals(14, answer3(17, 4));
+        assertEquals(14, answer4(17, 4));
+        answer3(0, 6);
+    }
+
+    @Test
+    public void test_DecimalToBinary() {
+        for (int i = 17; i < 29; i++) {
+            System.out.println(i +" " +Integer.toBinaryString(i));
+        }
+    }
 
 
 }

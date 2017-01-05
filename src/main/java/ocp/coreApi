@@ -162,6 +162,8 @@
       Stream<R> flatMap(Function)
       IntStream mapToInt(ToIntFunction)
       IntStream flatMapToInt(Function)
+      Stream<T> parallel()
+      boolean isParallel()
 
       boolean allMatch(Predicate)
       boolean anyMatch(Predicate)
@@ -170,6 +172,7 @@
       Optional<T> findFirst()
       Optional<T> min(Comparator)
       Optional<T> max(Comparator)
+      long count()
       void forEach(Consumer)
       void forEachOrdered(Consumer)
       Optional<T> reduce(BinaryOperator)
@@ -177,7 +180,12 @@
       U reduce(U, BiFunction, BinaryOperator)
       collect(Collector)
       collect(Supplier idt, BiConsumer accum, BiConsumer comb)
-      long count()
+
+      #Primitive Streams only:
+      int sum();
+      IntSummaryStatistics summaryStatistics()
+      Stream<Integer> boxed()
+
   21. Console API:
       void flush()
       Reader reader()
@@ -186,7 +194,10 @@
       char[] readPassword()
       Console format(..)
       Console printf(..)
-
+  22. Checked Exception:
+      IOException, FileNotFoundException, NotSerializableException
+      ParseException
+      SQLException
 
 
 

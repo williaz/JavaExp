@@ -55,9 +55,10 @@
  * 40. methods param allow Path vs String
  * 41. only toRealPath() implicitly call normalize()
  * 42. moving file always preserve meta, even if without COPY_ATTRIBUTES
- * 43. isSameFile() returns true only if the files point to in the file system are the same, no counting content
+ * 43. isSameFile() returns true only if the files point to in the file system are the same
+       or no exist, no counting content
  * 44. deleteIfExist() may throw DirectoryNotEmptyException
- * 45. DriverManager class is in JDK
+ * 45. DriverManager class is in JDK, others 4 interfaces in JAR file
  * 46. for Url, location is optional, DB name is required
  * 47. SQLException is checked exception, handle or declare in code
  * 48. Statement auto close ResultSet
@@ -66,9 +67,9 @@
  * 51. JDBC 4.0 requires META-INF/service/java.sql.Driver
  * 52. FORWARD_ONLY can support next(), otherwise SQLException
  * 53. Mismatch of methods in LocalDateTime, LocalDate, LocalTime
- * 54. DataTimeFormatter's ofLocalizedXxx
+ * 54. DataTimeFormatter's ofLocalizedXxx, ofLocalizedTime can take LocalDateTime also.
  * 55. Period: P_Y_M_D; Duration: PT_H_M_S; both have ofDays()
- * 56. When deal with time zones, it is best to convert to GMT first by substracting the time zone.
+ * 56. When deal with time zones, it is best to convert to GMT first by subtracting the time zone.
  * 57. For daylight saving time, when calculating the time between, the time zone offset change matters!
  * 58. Java is smart enough to adjust the daylight savings time
  * 59. Properties get() no allow default value(Hashtable), getProperty() do!
@@ -84,9 +85,9 @@
  * 65. yyyy MM dd hh mm
  * 66. getRoot().getParent() return null
  * 67. check Stream pipeline whether has terminal operation or not, whether uses stream source twice or more
- * 68. ResultSet getInt(), getDate(), getTime()
+ * 68. ResultSet getInt(), getDate(), getTime(), getTimestamp
  * 69. for Generic, extends and super include the class itself.
- * 70. close() will automatically call flush()
+ * 70. Writer/OutputStream close() will automatically call flush()
  * 71. Anonymous inner class must extends or implement exactly one class/interface
  * 72. root path has no parent. -> null
  * 73. NOFOLLOW_LINKS, fo symbolic links, perform on itself, rather than the target of it.
@@ -96,9 +97,10 @@
  * 77. mark(int) and then read exceed limit, output undetermined
  *     -> depend on the particular implementation of InputStream/Reader
  * 78. (Animal) new Object -> re, not ce
- * 79. code after fully return -> unreachable code -> ce
- * 80. new Locale(); ResourceBundle.getBundle()
+ * 79. codes after fully return -> unreachable code -> ce
+ * 80. new Locale("en", "US"); ResourceBundle.getBundle()
  * 81. Java will call the constructor for the first non-serializable no argument parent class during deserialization,
        skipping any constructor and default initializations for serializable classes in between, include itself.
  * 82. for preventing concurrency issues, synchronize setters and even getters.
  * 83. CyclicBarrier await() can be reached many times.
+ * 84. Map merge() will remove the Entry if the new value if null.

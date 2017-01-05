@@ -1014,9 +1014,11 @@ public class ConcurrencyTest {
             nums[i] = random.nextInt(4000); //[0, 4000)
 
         long timer1 = System.currentTimeMillis();
+
         ForkJoinTask<?> task = new BinaryRecursiveSearch(0, size, nums, target);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(task);
+
         timer1 = System.currentTimeMillis() - timer1;
 
         long timer2 = System.currentTimeMillis();
