@@ -36,6 +36,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -408,5 +409,28 @@ public class AsmTest {
         if (b = true) { //tricky
             System.out.print(si.getName());
         }
+    }
+
+    static class OneClass {
+        private String name;
+        public OneClass(String str) {
+            name = str;
+        }
+
+        public OneClass() {
+            name = "None";
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    @Test
+    public void test_MethodRef() {
+        //Supplier<OneClass> one = OneClass("A")::new; // cannot pass param
+        Supplier<OneClass> one = OneClass::new;
+        Supplier<String> name = one.get()::getName;
+        assertEquals("None", name.get());
     }
 }
