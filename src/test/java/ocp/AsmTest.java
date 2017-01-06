@@ -433,4 +433,5 @@ public class AsmTest {
         Supplier<String> name = one.get()::getName;
         assertEquals("None", name.get());
     }
+
 }

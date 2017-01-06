@@ -709,5 +709,108 @@ public class GeneralTest {
         }
     }
 
+    public static void splitMatrix(int[][] m) {
+        if (m == null) return ;
+        int row = m.length;
+        int col = m[0].length;
+        int[] zero = new int[col];
+        Arrays.fill(zero, 0);
+        List<int[]> I = new ArrayList<>();
+        List<int[]> RQ = new ArrayList<>();
+
+        for (int i = 0; i < row; i++) {
+            //I
+            if(Arrays.equals(m[i], zero)) {
+                int s = I.size();
+                m[i][s] = 1;
+                I.add(m[i]);
+            }
+            //R
+            else {
+                RQ.add(m[i]);
+            }
+        }
+        int iLen = col - RQ.size();
+        int[][] iMx = new int[I.size()][];
+        for (int i = 0; i < I.size(); i++) {
+            iMx[i] = Arrays.copyOf(I.get(i), iLen);
+        }
+        int[][] rMx = new int[RQ.size()][iLen];
+        int[][] qMx = new int[RQ.size()][RQ.size()];
+        for (int i = 0; i < RQ.size(); i++) {
+            rMx[i] = Arrays.copyOfRange(RQ.get(i), RQ.size(), col);
+            qMx[i] = Arrays.copyOfRange(RQ.get(i), 0, RQ.size());
+        }
+//        print2mArray(iMx);
+//        print2mArray(rMx);
+//        print2mArray(qMx);
+
+    }
+
+    public static void print2mArray(int[][] i) {
+        for (int[] a : i)
+            System.out.println(Arrays.toString(a));
+        System.out.println();
+    }
+
+    @Test
+    public void test_SplitMatrix() {
+        int[][] matrix = {{0,1,0,0, 0,1}, {4,0,0,3,2,0},{0,0,0,0,0,0}, {0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0}};
+        splitMatrix(matrix);
+
+    }
+
+
+    public static List<int[]> restruct(int[][] m) {
+        if (m == null) return null;
+        int row = m.length;
+        int col = m[0].length;
+        int[] zero = new int[col];
+        Arrays.fill(zero, 0);
+        List<int[]> I = new ArrayList<>();
+        List<int[]> RQ = new ArrayList<>();
+
+        for (int i = 0; i < row; i++) {
+            //I
+            if(Arrays.equals(m[i], zero)) {
+                int s = I.size();
+                m[i][s] = 1;
+                I.add(m[i]);
+            }
+            //R
+            else {
+                RQ.add(m[i]);
+            }
+        }
+        //change position
+        int rsize = RQ.size();
+        for (int i = 0; i < rsize; i++) {
+            int[] old = RQ.get(i);
+            int[] chg = new int[col];
+            int index = 0;
+            for(int j = col - rsize; j < col; j++) {
+                chg[j] = old[index++];
+                //System.out.println(index);
+            }
+            for (int k = 0; k < col - rsize; k++) {
+                chg[k] = old[index++];
+            }
+            RQ.set(i, chg);
+        }
+        I.addAll(RQ);
+        return I;
+    }
+
+    @Test
+    public void test_Restruct() {
+        int[][] matrix = {{0,1,0,0, 0,1}, {4,0,0,3,2,0},{0,0,0,0,0,0}, {0,0,0,0,0,0},{0,0,0,0,0,0},{0,0,0,0,0,0}};
+        List<int[]> I = restruct(matrix);
+        for (int[] i : I) {
+            for (int t: i) System.out.print(t + " ");
+            System.out.println();
+        }
+
+    }
+
 
 }
