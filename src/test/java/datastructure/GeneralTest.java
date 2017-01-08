@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collector;
 import java.util.zip.Inflater;
 
@@ -810,6 +813,146 @@ public class GeneralTest {
             System.out.println();
         }
 
+    }
+
+
+    public void sortColors(int[] nums) {
+        //Arrays.sort(nums);
+        if (nums == null || nums.length == 0) return;
+        int len = nums.length;
+        int i0 = 0;
+        int i2 = len - 1;
+        for (int i =  0; i < len; i++) {
+            if (nums[i] != 0) {
+                i0 = i;
+                break;
+            }
+        }
+        for (int i = len - 1; i>= 0;  i-- ) {
+            if (nums[i] != 2) {
+                i2 = i;
+                break;
+            }
+        }
+        for (int i = i0; (i < i2 ) &&(i0 < i2); ) {
+            if (nums[i] == 0) {
+                //System.out.println(i0);
+                int temp = nums[i0];
+                nums[i0] = 0;
+                nums[i] = temp;
+                i0++;
+                i++;
+            } else if (nums[i] == 2) {
+                int temp = nums[i2];
+                nums[i2] = 2;
+                nums[i] = temp;
+                i2--;
+            } else i++;
+            //System.out.println(Arrays.toString(nums)+" , "+i);
+        }
+
+    }
+
+    @Test
+    public void test_SortColors() {
+        int[] old = {2,0,2,2,1,2,2,1,2,0,0,0,1};
+        sortColors(old);
+        int[] old1 = {2,0,0,1,2,0,2};
+        sortColors(old1);
+    }
+
+    public int partitionArray(int[] nums, int k) {
+        if (nums == null || nums.length == 0) return 0;
+        int len = nums.length;
+        int ki = 0;
+        //find the first k, ki store first >=k number
+        for (int i = 0; i < len; i++) {
+            if (nums[i] >= k) {
+                ki = i;
+                break;
+            }
+        }
+        // if <k, swap with ki,
+        for (int i = ki+1; i < len; i++) {
+            if (nums[i] < k) {
+                int temp = nums[ki];
+                nums[ki] = nums[i];
+                nums[i] = temp;
+                ki++;
+                //System.out.println(Arrays.toString(nums) + " : " + ki);
+            }
+        }
+        if (ki == len - 1) return ki+1;
+        else return ki;
+    }
+
+    @Test
+    public void test_partitionArray() {
+        int[] arr = {9,9,9,8,9,8,7,9,8,8,8,9,8,9,8,8,6,9};
+        assertEquals(10, partitionArray(arr, 9));
+    }
+
+    public int[] updateArr(int len, int[][] operation) {
+
+        int[] ans = new int[len];
+        Map<Integer, Integer> map = new HashMap<>();//index, operation
+        //operation must be triplet!
+        for (int i = 0; i < operation.length; i++) {
+            map.merge(operation[i][0] - 1, -operation[i][2], (o, n) -> o+n);
+            map.merge(operation[i][1], operation[i][2], (o, n) -> o+n);
+        }
+        System.out.println(map);
+        int opt = 0;
+        for (int i = len-1; i >= 0; i--) {
+            if (map.containsKey(i)) {
+                opt += map.get(i);
+            }
+            ans[i] = opt;
+        }
+        return ans;
+    }
+
+    //backward
+    public int[] updateArr1(int len, int[][] operation) {
+
+        int[] ans = new int[len];
+        int[] sum = new int[len +1]; //first ith sum
+        sum[0] = 0;
+        for (int i = 0; i < operation.length; i++) {
+            sum[operation[i][0]] += -operation[i][2];
+            sum[operation[i][1]+1] += operation[i][2];
+        }
+        System.out.println(Arrays.toString(sum));
+        ans[len - 1] = sum[len];
+        for (int i = len-1; i > 0; i--) {
+            ans[i-1] = ans[i] + sum[i];
+        }
+        return ans;
+    }
+    //forward
+    public int[] updateArr2(int len, int[][] operation) {
+        int[] ans = new int[len];
+        int[] sum = new int[len+1];//ith's operation KK
+        for (int i = 0; i < operation.length; i++) {
+            sum[operation[i][0]] += operation[i][2];
+            sum[operation[i][1]+1] += -operation[i][2];
+        }
+        System.out.println(Arrays.toString(sum));
+        int opt = 0;
+        for (int i = 0; i < len; i++) {
+            opt += sum[i];
+            ans[i] = opt;
+        }
+        return ans;
+
+    }
+
+    @Test
+    public void test_updateArr() {
+        int[][] matrix = {{1,3,2},{2, 4, 3}, {0,2, -2}};
+        System.out.println(Arrays.toString(updateArr2(5, matrix)));
+        int[][] matrix1 = {{2,5,1},{3,4,2}};
+        System.out.println(Arrays.toString(updateArr2(6, matrix1)));
     }
 
 
