@@ -4,10 +4,13 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -134,6 +137,10 @@ public class LambdaTest {
     }
 
     /**
+     * <R> Stream<R> map(Function<? super T, ? extends R> mapper)
+     */
+
+    /**
      * getter return Stream -> better encapsulation <- immutable
      */
     @Test
@@ -147,5 +154,51 @@ public class LambdaTest {
         System.out.println();
         object.getName().forEach(s -> System.out.print(s + " "));
     }
+
+    /**
+     * A higher-order function is a function that either takes another function
+     *    as an argument or returns a function as its result.
+     * Stream's method
+     * use lambda expressions to capture values rather than capturing variables.
+     */
+
+    @Test
+    public void test_CountLowerLetters() {
+        String word = "WERDSFiazSDSCiVS";
+        assertEquals(4L, countLowerLetters(word));
+    }
+
+    //a 97; z 122
+    public long countLowerLetters(String str) {
+        return str.chars().filter(i -> (i >= 97) && (i <= 122)).count();
+    }
+
+    public long countLowerLetters1(String str) {
+        return str.chars().filter(Character::isLowerCase).count();
+    }
+
+    public Optional<String> findStrWithMostLowerLetters(List<String> dict) {
+        if (dict == null || dict.isEmpty()) return Optional.empty();
+        String target = dict.stream().collect(Collectors.groupingBy(s -> countLowerLetters(s), TreeMap::new, Collectors.toList()))
+                .lastEntry().getValue().get(0);
+        return Optional.of(target);
+    }
+
+    public Optional<String> findStrWithMostLowerLetters1(List<String> dict) {
+        if (dict == null || dict.isEmpty()) return Optional.empty();
+        return dict.stream().max(Comparator.comparing(s -> countLowerLetters1(s)));
+    }
+
+    @Test
+    public void test_findStrWithMostLowerLetters() {
+        List<String> l1 = null;
+        List<String> l2 = new ArrayList<>();
+        List<String> l3 = Arrays.asList("WiLL", "BeSTy", "PASSed", "TesTed", "BiLL");
+        assertEquals(Optional.empty(), findStrWithMostLowerLetters(l1));
+        assertEquals(Optional.empty(), findStrWithMostLowerLetters(l2));
+        assertEquals("TesTed", findStrWithMostLowerLetters(l3).get());
+        assertEquals("TesTed", findStrWithMostLowerLetters1(l3).get());
+    }
+
 
 }

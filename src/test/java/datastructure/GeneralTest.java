@@ -15,6 +15,10 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collector;
 import java.util.zip.Inflater;
 
@@ -954,6 +958,113 @@ public class GeneralTest {
         int[][] matrix1 = {{2,5,1},{3,4,2}};
         System.out.println(Arrays.toString(updateArr2(6, matrix1)));
     }
+
+    @Test
+    public void test_bombBaby() {
+        assertEquals("1", bombBaby("2", "1"));
+        assertEquals("4", bombBaby("4", "7"));
+
+    }
+
+
+    static BigInteger TWO = new BigInteger("2");
+    public static boolean isSolvable(BigInteger big, BigInteger small) {
+        boolean solvable = true;
+        if (big.compareTo(BigInteger.ZERO) <= 0 || small.compareTo(BigInteger.ZERO) <= 0) solvable = false;
+        else if (big.remainder(TWO).equals(BigInteger.ZERO) && small.remainder(TWO).equals(BigInteger.ZERO)) solvable = false;
+        else if (big.equals(small) && !big.equals(BigInteger.ONE)) solvable = false;
+        return solvable;
+    }
+
+    public static BigInteger getBiger(BigInteger b1, BigInteger b2) {
+        return (b1.compareTo(b2) > 0) ? b1 : b2;
+    }
+
+    public static BigInteger getSmaller(BigInteger b1, BigInteger b2) {
+        return (b1.compareTo(b2) < 0) ? b1 : b2;
+    }
+
+    public static String bombBaby(String m, String f) {
+        BigInteger bm = new BigInteger(m);
+        BigInteger bf = new BigInteger(f);
+        BigInteger big = getBiger(bm, bf);
+        BigInteger small = getSmaller(bm, bf);
+        BigInteger count = new BigInteger("0");
+        while (!big.equals(BigInteger.ONE)) {
+            if (!isSolvable(big, small)) break;
+            else if (small.equals(BigInteger.ONE)) {
+                count = count.add(big.subtract(small));
+                break;
+            }
+            else {
+                BigInteger multiplier = big.divide(small);
+                if (multiplier.compareTo(BigInteger.ONE) > 1) {
+                    count = count.add(multiplier);
+                    big = big.subtract(small.multiply(multiplier));
+                } else {
+                    big = big.subtract(small);
+                    count = count.add(BigInteger.ONE);
+                }
+            }
+            BigInteger temp = getBiger(big, small);
+            small = getSmaller(big, small);
+            big = temp;
+
+        }
+        if (big.equals(BigInteger.ONE) || small.equals(BigInteger.ONE)) return count.toString();
+        else return "impossible";
+
+    }
+
+    @Test
+    public void test_ConcurrentHashMap_FailSafe() {
+        ConcurrentMap<String, Double> scores = new ConcurrentHashMap<>();
+        scores.put("Math", 98.5);
+        scores.put("English", 84.9);
+        scores.put("Chinese", 90.5);
+
+        Runnable task = () -> {
+            for (String name : scores.keySet()) {
+                System.out.println(name + " got " + scores.get(name));
+            }
+        };
+
+        Runnable task1 = () -> {
+            for (String name : scores.keySet()) {
+                scores.merge(name, 10.0, (a, b) -> a + b);
+            }
+        };
+
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(3);
+            service.execute(task);
+            service.execute(task1);
+            service.execute(task1);
+        } finally {
+            if (service != null) service.shutdown();
+        }
+    }
+
+    /**
+     * @see HashMap
+     * @see ArrayList
+     */
+    @Test
+    public void test_ConcurrentHashMap_FailSafe1() {
+        ConcurrentMap<String, Double> scores = new ConcurrentHashMap<>();
+        scores.put("Math", 98.5);
+        scores.put("English", 84.9);
+        scores.put("Chinese", 90.5);
+
+        for (String name : scores.keySet()) {
+            System.out.println(name + " got " + scores.get(name));
+            scores.merge("English", 10.0, (a, b) -> a+b);
+            scores.put("Physics", 95.0);
+        }
+        System.out.println(scores);
+    }
+
 
 
 }
