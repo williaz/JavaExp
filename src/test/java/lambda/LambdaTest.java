@@ -200,5 +200,24 @@ public class LambdaTest {
         assertEquals("TesTed", findStrWithMostLowerLetters1(l3).get());
     }
 
+    /**
+     *It’s a good idea to use the primitive specialized functions wherever possible
+     * because of the performance benefits
+     */
+
+    /**
+     * the parameter types of a lambda are inferred from the target type:
+     * 1. If there is a single possible target type, the lambda expression infers the type from
+     *    the corresponding argument on the functional interface.
+     • 2. If there are several possible target types, the most specific type is inferred.
+     * 3. If there are several possible target types and there is no most specific type,
+     *    you must manually provide a type.
+     */
+
+    /**
+     * A distinction between interfaces and abstract classes:
+     *    Interfaces give you multiple inheritance but no fields,
+     *    while abstract classes let you inherit fields but you don’t get multiple inheritance.
+     */
 
 }
