@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +23,7 @@ import static org.junit.Assert.*;
  */
 public class LambdaTest {
     /**
-     * lambda expressions—a compact way of passing around behavior.
+     * lambda expressions — a compact way of passing around behavior.
      * code as data—using an object represents an action.
      *   -> anonymous inner class
      * lambda expressions capture values, not variables.
@@ -219,5 +218,27 @@ public class LambdaTest {
      *    Interfaces give you multiple inheritance but no fields,
      *    while abstract classes let you inherit fields but you don’t get multiple inheritance.
      */
+
+    /**
+     * null - Tony Hoare, described it as “my billion-dollar mistake.”
+     * use: 1. guard any call to get() by checking isPresent()
+     *      2. to call the orElse() method, which provides an alternative value in case the Optional is empty.
+     *      3. use orElseGet() to pass in a Supplier
+     * @see Optional
+     */
+    @Test
+    public void test_Optional() {
+        Optional<String> emp = Optional.empty();
+        Optional<String> nul = Optional.ofNullable(null);
+        assertFalse(emp.isPresent());
+        assertFalse(nul.isPresent());
+        assertTrue(emp.equals(nul)); // empty is null!
+
+        Optional<String> op = Optional.of("Will");
+        if (op.isPresent()) assertEquals("Will", op.get());
+        assertEquals("Bill", emp.orElse("Bill"));
+        assertEquals("Bill", nul.orElseGet(() -> "Bill"));
+
+    }
 
 }
